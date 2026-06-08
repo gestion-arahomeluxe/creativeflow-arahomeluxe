@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CreativeFlow — Diseño para Redes Sociales</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- FFmpeg.wasm para generación de video -->
+<script async src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/ffmpeg.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0f0f13;color:#e2e8f0;overflow:hidden;height:100vh}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#1a1a2e}
+::-webkit-scrollbar-thumb{background:#4f46e5;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#7c3aed}
+
+/* Sidebar */
+.sidebar{width:64px;background:#111118;border-right:1px solid #1e1e2e;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:4px;transition:width .3s ease;position:relative;z-index:100;flex-shrink:0}
+.sidebar.expanded{width:220px}
+.sidebar-logo{width:40px;height:40px;background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:white;margin-bottom:16px;cursor:pointer;flex-shrink:0}
+.sidebar-logo span{font-family:'Space Grotesk',sans-serif}
+.nav-item{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:#6b7280;position:relative;flex-shrink:0}
+.sidebar.expanded .nav-item{width:196px;padding:0 12px;justify-content:flex-start;gap:10px}
+.nav-item:hover{background:#1e1e2e;color:#a78bfa}
+.nav-item.active{background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(79,70,229,.3));color:#a78bfa;border:1px solid rgba(124,58,237,.4)}
+.nav-item svg{flex-shrink:0;width:20px;height:20px}
+.nav-label{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden}
+
+/* Layout */
+.app{display:flex;height:100vh;overflow:hidden}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#0f0f13}
+.topbar{height:52px;background:#111118;border-bottom:1px solid #1e1e2e;display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.topbar-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#e2e8f0}
+.topbar-badge{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.5px}
+.content{flex:1;overflow-y:auto;overflow-x:hidden}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:none;outline:none}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 20px rgba(124,58,237,.4)}
+.btn-secondary{background:#1e1e2e;color:#a78bfa;border:1px solid #2d2d44}
+.btn-secondary:hover{background:#252538;border-color:#4f46e5}
+.btn-ghost{background:transparent;color:#6b7280}
+.btn-ghost:hover{background:#1a1a2e;color:#e2e8f0}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-danger{background:#7f1d1d;color:#fca5a5;border:1px solid #991b1b}
+.btn-danger:hover{background:#991b1b}
+.btn-success{background:linear-gradient(135deg,#059669,#047857);color:white}
+.btn-success:hover{opacity:.9;transform:translateY(-1px)}
+
+/* Cards */
+.card{background:#111118;border:1px solid #1e1e2e;border-radius:12px;overflow:hidden;transition:all .2s}
+.card:hover{border-color:#4f46e5;box-shadow:0 0 0 1px rgba(79,70,229,.2),0 8px 30px rgba(0,0,0,.3)}
+
+/* Template thumbnails */
+.template-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
+.template-thumb:hover{transform:scale(1.03);border-color:#7c3aed}
+.template-thumb.selected{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.3)}
+.template-overlay{position:absolute;inset:0;background:rgba(79,70,229,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;gap:8px}
+.template-thumb:hover .template-overlay{opacity:1}
+
+/* Canvas */
+.canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;background:#0a0a10;overflow:hidden;position:relative}
+.canvas-container{background:white;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 25px 80px rgba(0,0,0,.8);user-select:none}
+.canvas-element{position:absolute;cursor:move;outline:none}
+.canvas-element.selected{outline:2px solid #7c3aed;outline-offset:1px}
+.resize-handle{position:absolute;width:8px;height:8px;background:#7c3aed;border:1px solid white;border-radius:2px;z-index:10}
+
+/* Tool panels */
+.tool-panel{width:56px;background:#111118;border-right:1px solid #1e1e2e;display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:4px;flex-shrink:0}
+.tool-btn{width:40px;height:40px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:#6b7280;gap:2px;font-size:9px;font-weight:500}
+.tool-btn:hover{background:#1e1e2e;color:#a78bfa}
+.tool-btn.active{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid rgba(124,58,237,.3)}
+
+/* Properties panel */
+.props-panel{width:260px;background:#111118;border-left:1px solid #1e1e2e;overflow-y:auto;flex-shrink:0}
+.prop-section{padding:14px;border-bottom:1px solid #1e1e2e}
+.prop-label{font-size:10px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.prop-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.prop-input{background:#1a1a2e;border:1px solid #2d2d44;border-radius:6px;color:#e2e8f0;padding:5px 8px;font-size:12px;width:100%;outline:none;transition:border-color .2s}
+.prop-input:focus{border-color:#7c3aed}
+.prop-input-sm{width:64px;text-align:center}
+.color-swatch{width:28px;height:28px;border-radius:6px;cursor:pointer;border:2px solid #2d2d44;transition:all .2s;flex-shrink:0}
+.color-swatch:hover{border-color:#7c3aed;transform:scale(1.1)}
+
+/* Dashboard */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;padding:24px}
+.quick-card{background:linear-gradient(135deg,#1a1a2e,#1e1e3a);border:1px solid #2d2d44;border-radius:14px;padding:20px;cursor:pointer;transition:all .25s}
+.quick-card:hover{border-color:#7c3aed;transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.2)}
+.quick-card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-card{background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:20px}
+
+/* AI Generator */
+.ai-panel{max-width:680px;margin:0 auto;padding:32px}
+.style-chip{padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid #2d2d44;color:#9ca3af;background:#1a1a2e}
+.style-chip:hover,.style-chip.selected{border-color:#7c3aed;color:#a78bfa;background:rgba(124,58,237,.15)}
+
+/* Gradient text */
+.grad-text{background:linear-gradient(135deg,#a78bfa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Gallery */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:20px}
+.cat-filter{display:flex;gap:8px;overflow-x:auto;padding:16px 20px;flex-shrink:0}
+.cat-chip{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;border:1px solid #2d2d44;color:#9ca3af;background:#1a1a2e;transition:all .2s;flex-shrink:0}
+.cat-chip:hover,.cat-chip.active{border-color:#7c3aed;color:#a78bfa;background:rgba(124,58,237,.15)}
+
+/* Video section */
+.drop-zone{border:2px dashed #2d2d44;border-radius:16px;padding:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;transition:all .2s;background:#111118}
+.drop-zone:hover,.drop-zone.drag-over{border-color:#7c3aed;background:rgba(124,58,237,.05)}
+.effect-card{background:#1a1a2e;border:1px solid #2d2d44;border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;text-align:center}
+.effect-card:hover,.effect-card.selected{border-color:#7c3aed;background:rgba(124,58,237,.1)}
+
+/* Brand kit */
+.color-circle{width:48px;height:48px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s;position:relative}
+.color-circle:hover{transform:scale(1.1);border-color:rgba(255,255,255,.3)}
+.color-circle.add{background:#1e1e2e;border:2px dashed #4f46e5;display:flex;align-items:center;justify-content:center;color:#7c3aed;font-size:20px}
+
+/* Notification */
+.notif{position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:9999;box-shadow:0 8px 30px rgba(124,58,237,.4);animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spinner{animation:spin 1s linear infinite;display:inline-block}
+
+/* Progress bar */
+.progress{height:6px;background:#1e1e2e;border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#7c3aed,#4f46e5);border-radius:3px;transition:width .3s ease}
+
+/* Tooltip */
+.tooltip{position:relative}
+.tooltip-text{position:absolute;left:100%;top:50%;transform:translateY(-50%);background:#1e1e2e;color:#e2e8f0;padding:4px 8px;border-radius:6px;font-size:11px;white-space:nowrap;margin-left:8px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:200}
+.tooltip:hover .tooltip-text{opacity:1}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center}
+.modal{background:#111118;border:1px solid #2d2d44;border-radius:16px;padding:24px;max-width:480px;width:90%;box-shadow:0 25px 80px rgba(0,0,0,.8)}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid #1e1e2e;margin-bottom:20px}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;cursor:pointer;color:#6b7280;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:#a78bfa}
+.tab.active{color:#a78bfa;border-bottom-color:#7c3aed}
+
+/* Range input */
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:#2d2d44;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#7c3aed;cursor:pointer;border:2px solid white}
+input[type=color]{-webkit-appearance:none;border:none;padding:0;cursor:pointer;background:none;width:28px;height:28px;border-radius:6px;overflow:hidden}
+
+/* Social format badges */
+.format-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid #2d2d44;color:#9ca3af;background:#1a1a2e;display:flex;flex-direction:column;align-items:center;gap:3px}
+.format-btn:hover,.format-btn.active{border-color:#7c3aed;color:#a78bfa;background:rgba(124,58,237,.15)}
+
+select.prop-input{cursor:pointer}
+textarea.prop-input{resize:none;min-height:60px;font-family:inherit}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const {useState,useRef,useEffect,useCallback,useMemo}=React;
+
+/* ───────── ICONS ───────── */
+const Icon=({d,size=20,stroke="#current",fill="none"})=>(
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {Array.isArray(d)?d.map((p,i)=><path key={i} d={p}/>):<path d={d}/>}
+  </svg>
+);
+const icons={
+  home:"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10",
+  edit:"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z",
+  image:"M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14z M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M21 15l-5-5L5 21",
+  video:"M23 7l-7 5 7 5V7z M1 5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5z",
+  layers:"M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5",
+  star:"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z",
+  brand:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
+  download:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3",
+  plus:"M12 5v14 M5 12h14",
+  trash:"M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",
+  text:"M4 7V4h16v3 M9 20h6 M12 4v16",
+  rect:"M3 3h18v18H3z",
+  circle:"M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z",
+  triangle:"M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z",
+  line:"M5 12h14",
+  undo:"M1 4v6h6 M3.51 15a9 9 0 1 0 .49-5.39",
+  redo:"M23 4v6h-6 M20.49 15a9 9 0 1 1-.49-5.39",
+  copy:"M20 9H11a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 0 2 2v1",
+  lock:"M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z M7 11V7a5 5 0 0 1 10 0v4",
+  align_left:"M21 10H3 M21 6H3 M21 14H3 M21 18H3",
+  bold:"M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z",
+  italic:"M19 4h-9 M14 20H5 M15 4L9 20",
+  up:"M18 15l-6-6-6 6",
+  down:"M6 9l6 6 6-6",
+  close:"M18 6L6 18 M6 6l12 12",
+  check:"M20 6L9 17l-5-5",
+  grid:"M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z",
+  search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.35-4.35",
+  zap:"M13 2L3 14h9l-1 8 10-12h-9l1-8z",
+  magic:"M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8L19 13 M17.8 6.2L19 5 M3 21l9-9 M12.2 6.2L11 5",
+  instagram:"M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z M17.5 6.5h.01 M7 2H17a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z",
+  linkedin:"M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z M2 9h4v12H2z M4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+  twitter:"M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z",
+  cpu:"M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M9 9h6v6H9z M9 1v3 M15 1v3 M9 20v3 M15 20v3M20 9h3 M20 14h3 M1 9h3 M1 14h3",
+  settings:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z",
+  upload:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12",
+  film:"M4 2H20a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M16 2v20 M8 2v20 M2 12h20 M2 7h6 M2 17h6 M16 17h6 M16 7h6",
+  play:"M5 3l14 9-14 9V3z",
+  sparkles:"M12 3c-1 3-4 4-7 5 3 1 6 2 7 5 1-3 4-4 7-5-3-1-6-2-7-5z M5 17c-.5 1.5-2 2-3 2.5 1 .5 2.5 1 3 2.5.5-1.5 2-2 3-2.5-1-.5-2.5-1-3-2.5z M19 4c-.3 1-1.2 1.5-2 1.8.8.3 1.7.8 2 1.7.3-1 1.2-1.5 2-1.8-.8-.3-1.7-.8-2-1.7z",
+};
+const Ico=({n,size=18})=><Icon d={icons[n]||"M12 12"} size={size}/>;
+
+/* ───────── NOTIFICATION ───────── */
+function useNotif(){
+  const[notif,setNotif]=useState(null);
+  const show=(msg,dur=3000)=>{
+    setNotif(msg);
+    setTimeout(()=>setNotif(null),dur);
+  };
+  return{notif,show};
+}
+
+/* ───────── SAMPLE TEMPLATES ───────── */
+const TEMPLATE_COLORS=[
+  ['#FF6B6B','#FFA500'],['#4ECDC4','#556270'],['#FF9A9E','#FECFEF'],
+  ['#a18cd1','#fbc2eb'],['#ffecd2','#fcb69f'],['#a1c4fd','#c2e9fb'],
+  ['#fd7043','#ffb74d'],['#26c6da','#00acc1'],['#66bb6a','#43a047'],
+  ['#ab47bc','#7b1fa2'],['#ef5350','#b71c1c'],['#42a5f5','#1565c0'],
+];
+const CATEGORIES=['Todos','Negocios','Promociones','Eventos','Moda','Comida','Inmobiliaria','Fitness','Tecnología','Viajes'];
+const FORMATS=[
+  {id:'insta_sq',label:'Instagram',sub:'1080×1080',w:540,h:540},
+  {id:'insta_st',label:'Stories',sub:'1080×1920',w:304,h:540},
+  {id:'fb_post',label:'Facebook',sub:'1200×630',w:540,h:283},
+  {id:'twitter',label:'Twitter/X',sub:'1200×675',w:540,h:303},
+  {id:'linkedin',label:'LinkedIn',sub:'1200×627',w:540,h:282},
+  {id:'tiktok',label:'TikTok',sub:'1080×1920',w:304,h:540},
+  {id:'yt_thumb',label:'YouTube',sub:'1280×720',w:540,h:304},
+];
+const FONTS=['Inter','Space Grotesk','Georgia','Arial','Helvetica','Courier New','Times New Roman','Trebuchet MS','Impact'];
+
+const makeTemplates=()=>Array.from({length:30},(_,i)=>{
+  const [c1,c2]=TEMPLATE_COLORS[i%12];
+  const cats=CATEGORIES.slice(1);
+  return{id:i,cat:cats[i%9],c1,c2,
+    label:`Plantilla ${i+1}`,
+    type:['negocios','promo','evento','redes'][i%4]
+  };
+});
+const TEMPLATES=makeTemplates();
+
+/* ───────── CANVAS ELEMENT DEFAULTS ───────── */
+let EL_ID=1;
+const mkText=(x=80,y=80)=>({id:EL_ID++,type:'text',x,y,w:200,h:48,text:'Escribe aquí',fontSize:24,fontFamily:'Inter',color:'#111118',bold:false,italic:false,align:'left',opacity:100,rotation:0,zIndex:1});
+const mkRect=(x=60,y=60)=>({id:EL_ID++,type:'rect',x,y,w:140,h:90,fill:'#7c3aed',stroke:'transparent',strokeWidth:0,radius:0,opacity:100,rotation:0,zIndex:1});
+const mkCircle=(x=80,y=80)=>({id:EL_ID++,type:'circle',x,y,w:100,h:100,fill:'#4f46e5',stroke:'transparent',strokeWidth:0,opacity:100,rotation:0,zIndex:1});
+const mkLine=(x=60,y=120)=>({id:EL_ID++,type:'line',x,y,w:160,h:4,fill:'#7c3aed',opacity:100,rotation:0,zIndex:1});
+const mkStar=(x=80,y=80)=>({id:EL_ID++,type:'star',x,y,w:80,h:80,fill:'#f59e0b',opacity:100,rotation:0,zIndex:1});
+const mkImage=(x=60,y=60,src)=>({id:EL_ID++,type:'image',x,y,w:180,h:180,src,opacity:100,rotation:0,zIndex:1});
+
+/* ───────── CANVAS ELEMENT RENDERERS ───────── */
+function renderElement(el,selected,onMouseDown,onDblClick){
+  const style={
+    position:'absolute',left:el.x,top:el.y,width:el.w,height:el.h,
+    opacity:el.opacity/100,transform:`rotate(${el.rotation||0}deg)`,
+    zIndex:el.zIndex,
+    outline:selected?'2px solid #7c3aed':'none',
+    outlineOffset:'1px',cursor:'move',
+  };
+  if(el.type==='text'){
+    return(
+      <div key={el.id} style={{...style,fontSize:el.fontSize,fontFamily:el.fontFamily,color:el.color,fontWeight:el.bold?'bold':'normal',fontStyle:el.italic?'italic':'normal',textAlign:el.align,wordBreak:'break-word',lineHeight:1.2,whiteSpace:'pre-wrap',userSelect:'none'}}
+        onMouseDown={onMouseDown} onDoubleClick={onDblClick}>
+        {el.text}
+      </div>
+    );
+  }
+  if(el.type==='rect'){
+    return(
+      <div key={el.id} style={{...style,background:el.fill,border:`${el.strokeWidth}px solid ${el.stroke}`,borderRadius:el.radius}} onMouseDown={onMouseDown}/>
+    );
+  }
+  if(el.type==='circle'){
+    return(
+      <div key={el.id} style={{...style,background:el.fill,borderRadius:'50%',border:`${el.strokeWidth||0}px solid ${el.stroke||'transparent'}`}} onMouseDown={onMouseDown}/>
+    );
+  }
+  if(el.type==='line'){
+    return(
+      <div key={el.id} style={{...style,height:Math.max(el.h,2),background:el.fill}} onMouseDown={onMouseDown}/>
+    );
+  }
+  if(el.type==='star'){
+    return(
+      <div key={el.id} style={{...style,display:'flex',alignItems:'center',justifyContent:'center'}} onMouseDown={onMouseDown}>
+        <svg width={el.w} height={el.h} viewBox="0 0 100 100">
+          <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" fill={el.fill||'#f59e0b'}/>
+        </svg>
+      </div>
+    );
+  }
+  if(el.type==='image'){
+    return(
+      <img key={el.id} src={el.src} alt="" style={{...style,objectFit:'cover'}} onMouseDown={onMouseDown} draggable={false}/>
+    );
+  }
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN STUDIO
+═══════════════════════════════════════════════════════════════ */
+function DesignStudio({showNotif}){
+  const[elements,setElements]=useState([
+    {...mkRect(0,0),x:0,y:0,w:540,h:540,fill:'#f8f9ff',zIndex:0,id:-1},
+  ]);
+  const[selected,setSelected]=useState(null);
+  const[tool,setTool]=useState('select');
+  const[bg,setBg]=useState('#f8f9ff');
+  const[canvasSize,setCanvasSize]=useState({w:540,h:540,label:'Instagram'});
+  const[history,setHistory]=useState([]);
+  const[histIdx,setHistIdx]=useState(-1);
+  const[editingText,setEditingText]=useState(null);
+  const[showTemplates,setShowTemplates]=useState(false);
+  const[dragState,setDragState]=useState(null);
+  const[resizeState,setResizeState]=useState(null);
+  const canvasRef=useRef(null);
+  const fileRef=useRef(null);
+
+  const sel=useMemo(()=>elements.find(e=>e.id===selected),[elements,selected]);
+
+  const save=useCallback((els)=>{
+    setHistory(h=>{const nh=[...h.slice(0,histIdx+1),JSON.parse(JSON.stringify(els))];return nh.slice(-30)});
+    setHistIdx(h=>h+1);
+  },[histIdx]);
+
+  const setEls=useCallback((els)=>{setElements(els);save(els);},[save]);
+
+  const undo=()=>{if(histIdx>0){setHistIdx(h=>h-1);setElements(JSON.parse(JSON.stringify(history[histIdx-1])))}};
+  const redo=()=>{if(histIdx<history.length-1){setHistIdx(h=>h+1);setElements(JSON.parse(JSON.stringify(history[histIdx+1])))}};
+
+  const addEl=(el)=>{setEls([...elements,el]);setSelected(el.id);};
+
+  const updateEl=(id,patch)=>{
+    const els=elements.map(e=>e.id===id?{...e,...patch}:e);
+    setElements(els);
+  };
+  const commitUpdate=(id,patch)=>{
+    const els=elements.map(e=>e.id===id?{...e,...patch}:e);
+    setEls(els);
+  };
+
+  const deleteEl=()=>{if(selected&&selected!==-1){setEls(elements.filter(e=>e.id!==selected));setSelected(null);}};
+  const dupEl=()=>{if(sel&&sel.id!==-1){const ne={...sel,id:EL_ID++,x:sel.x+20,y:sel.y+20};addEl(ne);}};
+
+  /* Drag on canvas */
+  const onElMouseDown=(id,e)=>{
+    e.stopPropagation();
+    if(editingText!==null)return;
+    setSelected(id);
+    if(id===-1)return;
+    const start={mx:e.clientX,my:e.clientY,ox:elements.find(el=>el.id===id).x,oy:elements.find(el=>el.id===id).y};
+    setDragState({id,...start});
+  };
+
+  useEffect(()=>{
+    if(!dragState)return;
+    const move=(e)=>{
+      const dx=e.clientX-dragState.mx,dy=e.clientY-dragState.my;
+      updateEl(dragState.id,{x:dragState.ox+dx,y:dragState.oy+dy});
+    };
+    const up=()=>{
+      if(dragState){const el=elements.find(e=>e.id===dragState.id);if(el)save(elements);}
+      setDragState(null);
+    };
+    window.addEventListener('mousemove',move);
+    window.addEventListener('mouseup',up);
+    return()=>{window.removeEventListener('mousemove',move);window.removeEventListener('mouseup',up)};
+  },[dragState,elements]);
+
+  const onCanvasClick=(e)=>{
+    if(e.target===canvasRef.current||e.target.dataset.bg){setSelected(null);}
+    if(tool==='text'){addEl(mkText(e.nativeEvent.offsetX-100,e.nativeEvent.offsetY-24));setTool('select');}
+    if(tool==='rect'){addEl(mkRect(e.nativeEvent.offsetX-70,e.nativeEvent.offsetY-45));}
+    if(tool==='circle'){addEl(mkCircle(e.nativeEvent.offsetX-50,e.nativeEvent.offsetY-50));}
+    if(tool==='line'){addEl(mkLine(e.nativeEvent.offsetX-80,e.nativeEvent.offsetY-2));}
+    if(tool==='star'){addEl(mkStar(e.nativeEvent.offsetX-40,e.nativeEvent.offsetY-40));}
+  };
+
+  const onDblClick=(id)=>{
+    if(elements.find(e=>e.id===id)?.type==='text')setEditingText(id);
+  };
+
+  const onImageUpload=(e)=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>addEl(mkImage(40,40,ev.target.result));
+    reader.readAsDataURL(file);
+    fileRef.current.value='';
+  };
+
+  const applyTemplate=(t)=>{
+    const newEls=[
+      {id:-1,type:'rect',x:0,y:0,w:canvasSize.w,h:canvasSize.h,fill:`linear-gradient(135deg,${t.c1},${t.c2})`,stroke:'transparent',strokeWidth:0,radius:0,opacity:100,zIndex:0},
+      {...mkText(40,canvasSize.h/2-60),text:'TU MARCA',fontSize:36,fontFamily:'Space Grotesk',color:'white',bold:true,w:canvasSize.w-80,zIndex:1},
+      {...mkText(40,canvasSize.h/2),text:'Eslogan poderoso aquí',fontSize:18,fontFamily:'Inter',color:'rgba(255,255,255,0.85)',w:canvasSize.w-80,zIndex:2},
+      {...mkRect(40,canvasSize.h-80),w:140,h:42,fill:'white',radius:21,zIndex:3},
+      {...mkText(60,canvasSize.h-69),text:'Ver más →',fontSize:14,color:t.c1,bold:true,fontFamily:'Inter',zIndex:4},
+    ];
+    setBg(t.c1);
+    setEls(newEls);
+    setShowTemplates(false);
+    showNotif('✨ Plantilla aplicada');
+  };
+
+  const changeFormat=(fmt)=>{
+    setCanvasSize({w:fmt.w,h:fmt.h,label:fmt.label});
+    const bg=elements.find(e=>e.id===-1);
+    if(bg)updateEl(-1,{w:fmt.w,h:fmt.h});
+  };
+
+  const exportPNG=()=>{
+    showNotif('📥 Imagen descargada (simulado)');
+  };
+
+  const gradients=['#7c3aed','#ef4444','#f59e0b','#10b981','#3b82f6','#ec4899','linear-gradient(135deg,#7c3aed,#4f46e5)','linear-gradient(135deg,#ff6b6b,#ffa500)','linear-gradient(135deg,#4ecdc4,#556270)','linear-gradient(135deg,#a18cd1,#fbc2eb)'];
+
+  return(
+    <div style={{display:'flex',flex:1,overflow:'hidden',height:'100%'}}>
+      {/* Tool panel */}
+      <div className="tool-panel">
+        {[
+          {id:'select',icon:'settings',label:'Selec'},
+          {id:'text',icon:'text',label:'Texto'},
+          {id:'rect',icon:'rect',label:'Rect'},
+          {id:'circle',icon:'circle',label:'Círculo'},
+          {id:'line',icon:'line',label:'Línea'},
+          {id:'star',icon:'star',label:'Estrella'},
+        ].map(t=>(
+          <div key={t.id} className={`tool-btn ${tool===t.id?'active':''}`} onClick={()=>setTool(t.id)} title={t.label}>
+            <Ico n={t.icon} size={16}/>
+            <span>{t.label}</span>
+          </div>
+        ))}
+        <div style={{flex:1}}/>
+        <div className="tool-btn" onClick={()=>fileRef.current.click()} title="Imagen">
+          <Ico n="image" size={16}/>
+          <span>Imagen</span>
+        </div>
+        <div className="tool-btn" onClick={undo} title="Deshacer"><Ico n="undo" size={16}/><span>Deshacer</span></div>
+        <div className="tool-btn" onClick={redo} title="Rehacer"><Ico n="redo" size={16}/><span>Rehacer</span></div>
+        <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={onImageUpload}/>
+      </div>
+
+      {/* Canvas area */}
+      <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
+        {/* Format bar */}
+        <div style={{background:'#111118',borderBottom:'1px solid #1e1e2e',padding:'8px 12px',display:'flex',gap:8,overflowX:'auto',flexShrink:0,alignItems:'center'}}>
+          <span style={{fontSize:11,color:'#6b7280',fontWeight:600,whiteSpace:'nowrap'}}>FORMATO:</span>
+          {FORMATS.map(f=>(
+            <button key={f.id} className={`format-btn ${canvasSize.label===f.label?'active':''}`} onClick={()=>changeFormat(f)}>
+              <span>{f.label}</span>
+              <span style={{fontSize:9,opacity:.7}}>{f.sub}</span>
+            </button>
+          ))}
+          <div style={{flex:1}}/>
+          <button className="btn btn-secondary btn-sm" onClick={()=>setShowTemplates(true)}>
+            <Ico n="grid" size={14}/> Plantillas
+          </button>
+          <button className="btn btn-primary btn-sm" onClick={exportPNG}>
+            <Ico n="download" size={14}/> Exportar
+          </button>
+        </div>
+
+        {/* Canvas */}
+        <div className="canvas-wrapper" onClick={onCanvasClick}>
+          <div ref={canvasRef} className="canvas-container"
+            style={{width:canvasSize.w,height:canvasSize.h,background:bg,cursor:tool==='select'?'default':'crosshair'}}>
+            {[...elements].sort((a,b)=>a.zIndex-b.zIndex).map(el=>{
+              const isSelected=el.id===selected;
+              if(editingText===el.id&&el.type==='text'){
+                return(
+                  <textarea key={el.id} autoFocus
+                    style={{position:'absolute',left:el.x,top:el.y,width:el.w,minHeight:el.h,fontSize:el.fontSize,fontFamily:el.fontFamily,color:el.color,fontWeight:el.bold?'bold':'normal',fontStyle:el.italic?'italic':'normal',textAlign:el.align,background:'rgba(255,255,255,.9)',border:'2px solid #7c3aed',borderRadius:4,resize:'none',outline:'none',zIndex:999,padding:2,lineHeight:1.2}}
+                    defaultValue={el.text}
+                    onChange={e=>updateEl(el.id,{text:e.target.value})}
+                    onBlur={e=>{commitUpdate(el.id,{text:e.target.value});setEditingText(null)}}
+                    onKeyDown={e=>{if(e.key==='Escape'){setEditingText(null);}}}
+                  />
+                );
+              }
+              return renderElement(el,isSelected,
+                (e)=>onElMouseDown(el.id,e),
+                ()=>onDblClick(el.id)
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Properties panel */}
+      <div className="props-panel">
+        {/* Canvas bg */}
+        <div className="prop-section">
+          <div className="prop-label">Fondo del lienzo</div>
+          <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+            {gradients.map((g,i)=>(
+              <div key={i} onClick={()=>setBg(g)} style={{width:28,height:28,borderRadius:6,background:g,cursor:'pointer',border:bg===g?'2px solid #a78bfa':'2px solid transparent',transition:'all .2s'}}/>
+            ))}
+            <label style={{width:28,height:28,borderRadius:6,border:'1px solid #4f46e5',cursor:'pointer',overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <input type="color" value={typeof bg==='string'&&bg.startsWith('#')?bg:'#ffffff'} onChange={e=>setBg(e.target.value)} style={{width:36,height:36,border:'none',cursor:'pointer'}}/>
+            </label>
+          </div>
+        </div>
+
+        {!sel||sel.id===-1?(
+          <div className="prop-section">
+            <div className="prop-label">Herramientas rápidas</div>
+            <div style={{display:'flex',flexDirection:'column',gap:6}}>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={()=>addEl(mkText(80,80))}><Ico n="text" size={14}/> Agregar texto</button>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={()=>addEl(mkRect(60,60))}><Ico n="rect" size={14}/> Agregar rectángulo</button>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={()=>addEl(mkCircle(80,80))}><Ico n="circle" size={14}/> Agregar círculo</button>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={()=>fileRef.current.click()}><Ico n="image" size={14}/> Subir imagen</button>
+            </div>
+          </div>
+        ):(
+          <>
+          {/* Position & Size */}
+          <div className="prop-section">
+            <div className="prop-label">Posición y Tamaño</div>
+            <div className="prop-row">
+              <span style={{fontSize:11,color:'#6b7280',width:16}}>X</span>
+              <input className="prop-input prop-input-sm" type="number" value={Math.round(sel.x)} onChange={e=>commitUpdate(sel.id,{x:+e.target.value})}/>
+              <span style={{fontSize:11,color:'#6b7280',width:16}}>Y</span>
+              <input className="prop-input prop-input-sm" type="number" value={Math.round(sel.y)} onChange={e=>commitUpdate(sel.id,{y:+e.target.value})}/>
+            </div>
+            <div className="prop-row">
+              <span style={{fontSize:11,color:'#6b7280',width:16}}>W</span>
+              <input className="prop-input prop-input-sm" type="number" value={Math.round(sel.w)} onChange={e=>commitUpdate(sel.id,{w:+e.target.value})}/>
+              <span style={{fontSize:11,color:'#6b7280',width:16}}>H</span>
+              <input className="prop-input prop-input-sm" type="number" value={Math.round(sel.h)} onChange={e=>commitUpdate(sel.id,{h:+e.target.value})}/>
+            </div>
+          </div>
+
+          {/* Opacity */}
+          <div className="prop-section">
+            <div className="prop-label">Opacidad: {sel.opacity}%</div>
+            <input type="range" min="0" max="100" value={sel.opacity} onChange={e=>updateEl(sel.id,{opacity:+e.target.value})} onMouseUp={e=>commitUpdate(sel.id,{opacity:+e.target.value})}/>
+          </div>
+
+          {/* Rotation */}
+          <div className="prop-section">
+            <div className="prop-label">Rotación: {sel.rotation||0}°</div>
+            <input type="range" min="-180" max="180" value={sel.rotation||0} onChange={e=>updateEl(sel.id,{rotation:+e.target.value})} onMouseUp={e=>commitUpdate(sel.id,{rotation:+e.target.value})}/>
+          </div>
+
+          {/* Text props */}
+          {sel.type==='text'&&(
+            <>
+            <div className="prop-section">
+              <div className="prop-label">Texto</div>
+              <textarea className="prop-input" value={sel.text} onChange={e=>commitUpdate(sel.id,{text:e.target.value})}/>
+            </div>
+            <div className="prop-section">
+              <div className="prop-label">Tipografía</div>
+              <select className="prop-input" value={sel.fontFamily} onChange={e=>commitUpdate(sel.id,{fontFamily:e.target.value})} style={{marginBottom:6}}>
+                {FONTS.map(f=><option key={f} value={f}>{f}</option>)}
+              </select>
+              <div className="prop-row">
+                <input className="prop-input prop-input-sm" type="number" value={sel.fontSize} min="8" max="120" onChange={e=>commitUpdate(sel.id,{fontSize:+e.target.value})}/>
+                <span style={{fontSize:11,color:'#6b7280'}}>px</span>
+                <div style={{display:'flex',gap:4,marginLeft:'auto'}}>
+                  <button className={`btn btn-sm ${sel.bold?'btn-primary':'btn-secondary'}`} style={{padding:'4px 8px'}} onClick={()=>commitUpdate(sel.id,{bold:!sel.bold})}><b>B</b></button>
+                  <button className={`btn btn-sm ${sel.italic?'btn-primary':'btn-secondary'}`} style={{padding:'4px 8px'}} onClick={()=>commitUpdate(sel.id,{italic:!sel.italic})}><i>I</i></button>
+                </div>
+              </div>
+              <div className="prop-row">
+                <span style={{fontSize:11,color:'#6b7280'}}>Alinear:</span>
+                {['left','center','right'].map(a=>(
+                  <button key={a} className={`btn btn-sm ${sel.align===a?'btn-primary':'btn-secondary'}`} style={{padding:'4px 8px',flex:1}} onClick={()=>commitUpdate(sel.id,{align:a})}>
+                    {a==='left'?'⬅':a==='center'?'≡':'➡'}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="prop-section">
+              <div className="prop-label">Color de texto</div>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                {['#111118','#ffffff','#7c3aed','#ef4444','#f59e0b','#10b981','#3b82f6'].map(c=>(
+                  <div key={c} onClick={()=>commitUpdate(sel.id,{color:c})} style={{width:24,height:24,borderRadius:6,background:c,cursor:'pointer',border:sel.color===c?'2px solid #a78bfa':'2px solid transparent',boxShadow:c==='#ffffff'?'inset 0 0 0 1px #444':''}}/>
+                ))}
+                <label style={{width:24,height:24,borderRadius:6,border:'1px solid #4f46e5',cursor:'pointer',overflow:'hidden'}}>
+                  <input type="color" value={sel.color} onChange={e=>commitUpdate(sel.id,{color:e.target.value})} style={{width:30,height:30,border:'none',cursor:'pointer',marginLeft:-3,marginTop:-3}}/>
+                </label>
+              </div>
+            </div>
+            </>
+          )}
+
+          {/* Shape props */}
+          {(sel.type==='rect'||sel.type==='circle'||sel.type==='line'||sel.type==='star')&&(
+            <div className="prop-section">
+              <div className="prop-label">Color de relleno</div>
+              <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+                {['#7c3aed','#4f46e5','#ef4444','#f59e0b','#10b981','#3b82f6','#111118','#ffffff','#ec4899'].map(c=>(
+                  <div key={c} onClick={()=>commitUpdate(sel.id,{fill:c})} style={{width:24,height:24,borderRadius:6,background:c,cursor:'pointer',border:(sel.fill===c)?'2px solid #a78bfa':'2px solid transparent',boxShadow:c==='#ffffff'?'inset 0 0 0 1px #444':''}}/>
+                ))}
+                <label style={{width:24,height:24,borderRadius:6,border:'1px solid #4f46e5',cursor:'pointer',overflow:'hidden'}}>
+                  <input type="color" value={sel.fill&&sel.fill.startsWith('#')?sel.fill:'#7c3aed'} onChange={e=>commitUpdate(sel.id,{fill:e.target.value})} style={{width:30,height:30,border:'none',cursor:'pointer',marginLeft:-3,marginTop:-3}}/>
+                </label>
+              </div>
+              {sel.type==='rect'&&(
+                <div className="prop-row" style={{marginTop:8}}>
+                  <span style={{fontSize:11,color:'#6b7280'}}>Radio:</span>
+                  <input className="prop-input" type="number" min="0" max="100" value={sel.radius||0} onChange={e=>commitUpdate(sel.id,{radius:+e.target.value})}/>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="prop-section">
+            <div className="prop-label">Acciones</div>
+            <div style={{display:'flex',flexDirection:'column',gap:6}}>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={dupEl}><Ico n="copy" size={14}/> Duplicar</button>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={()=>commitUpdate(sel.id,{zIndex:(sel.zIndex||1)+1})}><Ico n="up" size={14}/> Traer adelante</button>
+              <button className="btn btn-secondary btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={()=>commitUpdate(sel.id,{zIndex:Math.max(1,(sel.zIndex||1)-1)})}><Ico n="down" size={14}/> Enviar atrás</button>
+              <button className="btn btn-danger btn-sm" style={{width:'100%',justifyContent:'center'}} onClick={deleteEl}><Ico n="trash" size={14}/> Eliminar</button>
+            </div>
+          </div>
+          </>
+        )}
+      </div>
+
+      {/* Template picker modal */}
+      {showTemplates&&(
+        <div className="modal-overlay" onClick={()=>setShowTemplates(false)}>
+          <div className="modal" style={{maxWidth:680,maxHeight:'80vh',overflow:'hidden',display:'flex',flexDirection:'column'}} onClick={e=>e.stopPropagation()}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+              <h3 style={{fontFamily:'Space Grotesk',fontWeight:700}}>Plantillas</h3>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setShowTemplates(false)}><Ico n="close" size={16}/></button>
+            </div>
+            <div style={{overflowY:'auto',display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))',gap:12,paddingRight:4}}>
+              {TEMPLATES.map(t=>(
+                <div key={t.id} className="template-thumb" onClick={()=>applyTemplate(t)}>
+                  <div style={{width:'100%',height:130,background:`linear-gradient(135deg,${t.c1},${t.c2})`,display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'flex-end',padding:10}}>
+                    <div style={{fontSize:10,fontWeight:800,color:'white',fontFamily:'Space Grotesk'}}>TU MARCA</div>
+                    <div style={{fontSize:7,color:'rgba(255,255,255,.8)',marginTop:2}}>Eslogan aquí</div>
+                    <div style={{marginTop:6,background:'white',borderRadius:8,padding:'2px 8px',fontSize:7,color:t.c1,fontWeight:700}}>Ver más →</div>
+                  </div>
+                  <div className="template-overlay">
+                    <Ico n="check" size={24}/>
+                    <span style={{fontSize:12,fontWeight:600}}>Usar</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AI IMAGE GENERATOR
+═══════════════════════════════════════════════════════════════ */
+function AIGenerator({showNotif}){
+  const[prompt,setPrompt]=useState('');
+  const[style,setStyle]=useState('professional');
+  const[ratio,setRatio]=useState('1:1');
+  const[loading,setLoading]=useState(false);
+  const[progress,setProgress]=useState(0);
+  const[results,setResults]=useState([]);
+
+  const styles=[
+    {id:'professional',label:'Profesional',emoji:'💼'},
+    {id:'realistic',label:'Fotorrealista',emoji:'📷'},
+    {id:'artistic',label:'Artístico',emoji:'🎨'},
+    {id:'cartoon',label:'Ilustración',emoji:'✏️'},
+    {id:'minimalist',label:'Minimalista',emoji:'⬜'},
+    {id:'3d',label:'3D Render',emoji:'🧊'},
+  ];
+  const ratios=['1:1','4:5','9:16','16:9','3:2'];
+
+  const COLORS_BY_STYLE={
+    professional:['#1e3a5f','#2d5986','#4a90d9'],
+    realistic:['#5d4037','#795548','#a1887f'],
+    artistic:['#7b1fa2','#ab47bc','#ce93d8'],
+    cartoon:['#1565c0','#42a5f5','#90caf9'],
+    minimalist:['#eceff1','#cfd8dc','#b0bec5'],
+    '3d':['#00695c','#26a69a','#80cbc4'],
+  };
+
+  const generate=async()=>{
+    if(!prompt.trim()){showNotif('⚠️ Escribe una descripción primero');return;}
+    setLoading(true);setProgress(0);
+    for(let i=0;i<=100;i+=5){await new Promise(r=>setTimeout(r,80));setProgress(i);}
+    const colors=COLORS_BY_STYLE[style]||COLORS_BY_STYLE.professional;
+    const newImg={id:Date.now(),prompt,style,ratio,colors,ts:new Date().toLocaleTimeString()};
+    setResults(r=>[newImg,...r].slice(0,12));
+    setLoading(false);
+    showNotif('✨ Imagen generada con éxito');
+  };
+
+  return(
+    <div style={{padding:'32px',maxWidth:800,margin:'0 auto'}}>
+      <div style={{marginBottom:32}}>
+        <h2 style={{fontFamily:'Space Grotesk',fontWeight:700,fontSize:28,marginBottom:8}}>
+          <span className="grad-text">Generador IA</span> de Imágenes
+        </h2>
+        <p style={{color:'#6b7280',fontSize:14}}>Crea imágenes únicas para tu empresa con inteligencia artificial</p>
+      </div>
+
+      <div className="card" style={{padding:24,marginBottom:24}}>
+        <div style={{marginBottom:16}}>
+          <label style={{fontSize:12,fontWeight:600,color:'#a78bfa',display:'block',marginBottom:8}}>DESCRIBE TU IMAGEN</label>
+          <textarea className="prop-input" rows={3} placeholder="Ej: Logo moderno de una empresa de tecnología con colores azul y morado, estilo minimalista, fondo blanco..." value={prompt} onChange={e=>setPrompt(e.target.value)} style={{width:'100%',resize:'vertical'}}/>
+        </div>
+
+        <div style={{marginBottom:16}}>
+          <label style={{fontSize:12,fontWeight:600,color:'#a78bfa',display:'block',marginBottom:10}}>ESTILO</label>
+          <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+            {styles.map(s=>(
+              <button key={s.id} className={`style-chip ${style===s.id?'selected':''}`} onClick={()=>setStyle(s.id)}>
+                {s.emoji} {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{marginBottom:20}}>
+          <label style={{fontSize:12,fontWeight:600,color:'#a78bfa',display:'block',marginBottom:10}}>PROPORCIÓN</label>
+          <div style={{display:'flex',gap:8}}>
+            {ratios.map(r=>(
+              <button key={r} className={`style-chip ${ratio===r?'selected':''}`} onClick={()=>setRatio(r)}>{r}</button>
+            ))}
+          </div>
+        </div>
+
+        {loading&&(
+          <div style={{marginBottom:16}}>
+            <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+              <span style={{fontSize:12,color:'#a78bfa'}}>Generando imagen...</span>
+              <span style={{fontSize:12,color:'#6b7280'}}>{progress}%</span>
+            </div>
+            <div className="progress"><div className="progress-bar" style={{width:`${progress}%`}}/></div>
+          </div>
+        )}
+
+        <button className="btn btn-primary" style={{width:'100%',justifyContent:'center',padding:'12px'}} onClick={generate} disabled={loading}>
+          {loading?<><span className="spinner">⟳</span> Generando...</>:<><Ico n="sparkles" size={18}/> Generar Imagen</>}
+        </button>
+      </div>
+
+      {results.length>0&&(
+        <>
+        <h3 style={{fontFamily:'Space Grotesk',fontWeight:600,marginBottom:16,fontSize:16}}>Imágenes generadas</h3>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:12}}>
+          {results.map(img=>{
+            const [c1,c2,c3]=img.colors;
+            const ar=img.ratio==='1:1'?1:img.ratio==='9:16'?9/16:img.ratio==='16:9'?16/9:img.ratio==='4:5'?4/5:1.5;
+            return(
+              <div key={img.id} className="card" style={{overflow:'hidden'}}>
+                <div style={{width:'100%',paddingTop:`${(1/ar)*100}%`,background:`linear-gradient(135deg,${c1},${c2},${c3})`,position:'relative'}}>
+                  <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:16,gap:8}}>
+                    <div style={{width:48,height:48,background:'rgba(255,255,255,.2)',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <span style={{fontSize:10,color:'rgba(255,255,255,.8)',textAlign:'center',lineHeight:1.3}}>{img.prompt.slice(0,40)}...</span>
+                  </div>
+                  <div style={{position:'absolute',top:8,right:8,background:'rgba(0,0,0,.5)',borderRadius:4,padding:'2px 6px',fontSize:9,color:'white'}}>{img.ratio}</div>
+                </div>
+                <div style={{padding:'10px 12px',display:'flex',gap:6}}>
+                  <button className="btn btn-secondary btn-sm" style={{flex:1,justifyContent:'center'}} onClick={()=>showNotif('📥 Descargando...')}><Ico n="download" size={12}/></button>
+                  <button className="btn btn-primary btn-sm" style={{flex:1,justifyContent:'center'}} onClick={()=>showNotif('✏️ Abierto en editor')}>Editar</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        </>
+      )}
+
+      {results.length===0&&!loading&&(
+        <div style={{textAlign:'center',padding:'48px',color:'#4b5563'}}>
+          <div style={{fontSize:48,marginBottom:12}}>🎨</div>
+          <p style={{fontSize:14}}>Tus imágenes generadas aparecerán aquí</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   IMAGE TO VIDEO
+═══════════════════════════════════════════════════════════════ */
+function ImageToVideo({showNotif}){
+  const[img,setImg]=useState(null);
+  const[effect,setEffect]=useState('zoom_in');
+  const[duration,setDuration]=useState(5);
+  const[fps,setFps]=useState(30);
+  const[format,setFormat]=useState('MP4');
+  const[loading,setLoading]=useState(false);
+  const[progress,setProgress]=useState(0);
+  const[videoReady,setVideoReady]=useState(false);
+  const[videoBlob,setVideoBlob]=useState(null);
+  const[drag,setDrag]=useState(false);
+  const fileRef=useRef(null);
+  const canvasRef=useRef(null);
+
+  const effects=[
+    {id:'zoom_in',label:'Zoom In',emoji:'🔍',desc:'Acercamiento suave'},
+    {id:'zoom_out',label:'Zoom Out',emoji:'🔭',desc:'Alejamiento suave'},
+    {id:'pan_left',label:'Pan Izquierda',emoji:'⬅️',desc:'Deslizamiento izquierda'},
+    {id:'pan_right',label:'Pan Derecha',emoji:'➡️',desc:'Deslizamiento derecha'},
+    {id:'pan_up',label:'Pan Arriba',emoji:'⬆️',desc:'Deslizamiento arriba'},
+    {id:'ken_burns',label:'Ken Burns',emoji:'🎬',desc:'Zoom + movimiento'},
+    {id:'rotate',label:'Rotación',emoji:'🔄',desc:'Rotación suave'},
+    {id:'pulse',label:'Pulso',emoji:'💫',desc:'Efecto latido'},
+  ];
+
+  const onDrop=(e)=>{e.preventDefault();setDrag(false);const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const r=new FileReader();r.onload=ev=>setImg(ev.target.result);r.readAsDataURL(f);}};
+  const onFile=(e)=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>setImg(ev.target.result);r.readAsDataURL(f);}};
+
+  const generateFrames=(imageSrc,frameCount,effectType)=>{
+    // Generar frames con efectos Ken Burns
+    const frames=[];
+    const canvas=document.createElement('canvas');
+    canvas.width=1080;canvas.height=1080;
+    const ctx=canvas.getContext('2d');
+
+    // Cargar imagen
+    return new Promise((resolve,reject)=>{
+      const imgEl=new Image();
+      imgEl.crossOrigin='anonymous';
+      imgEl.onload=()=>{
+        // Calcular zoom y pan based on effect
+        const getTransform=(frameIdx)=>{
+          const progress=frameIdx/frameCount;
+          let sx=0,sy=0,sWidth=imgEl.width,sHeight=imgEl.height;
+          let dx=0,dy=0,dWidth=1080,dHeight=1080;
+
+          if(effectType==='zoom_in'){
+            const scale=1+(progress*0.3);
+            sx=(imgEl.width*(1-1/scale))/2;
+            sy=(imgEl.height*(1-1/scale))/2;
+            sWidth/=scale;sHeight/=scale;
+          }else if(effectType==='zoom_out'){
+            const scale=1+(progress*0.3);
+            sWidth=imgEl.width/scale;sHeight=imgEl.height/scale;
+            sx=(imgEl.width-sWidth)/2;sy=(imgEl.height-sHeight)/2;
+          }else if(effectType==='pan_left'){
+            const panX=imgEl.width*progress*0.3;
+            sx+=panX;
+          }else if(effectType==='pan_right'){
+            const panX=-imgEl.width*progress*0.3;
+            sx+=panX;
+          }else if(effectType==='ken_burns'){
+            const scale=1+(progress*0.2);
+            const panX=-imgEl.width*progress*0.15;
+            sx=(imgEl.width*(1-1/scale))/2+panX;
+            sy=(imgEl.height*(1-1/scale))/2;
+            sWidth/=scale;sHeight/=scale;
+          }
+
+          return {sx,sy,sWidth,sHeight,dx,dy,dWidth,dHeight};
+        };
+
+        for(let i=0;i<frameCount;i++){
+          const {sx,sy,sWidth,sHeight,dx,dy,dWidth,dHeight}=getTransform(i);
+          ctx.fillStyle='#000';
+          ctx.fillRect(0,0,1080,1080);
+          ctx.drawImage(imgEl,sx,sy,sWidth,sHeight,dx,dy,dWidth,dHeight);
+          frames.push(canvas.toDataURL('image/png'));
+        }
+        resolve(frames);
+      };
+      imgEl.onerror=()=>reject(new Error('Failed to load image'));
+      imgEl.src=imageSrc;
+    });
+  };
+
+  const convert=async()=>{
+    if(!img) return;
+    setLoading(true);setProgress(0);setVideoReady(false);
+    try {
+      // Cargar FFmpeg
+      const {FFmpeg,fetchFile}=window.FFmpeg;
+      const ffmpeg=new FFmpeg();
+
+      setProgress(10);
+      if(!ffmpeg.isLoaded()){
+        await ffmpeg.load();
+      }
+
+      setProgress(20);
+      // Generar frames
+      const frameCount=Math.round(duration*fps);
+      const frames=await generateFrames(img,frameCount,effect);
+
+      setProgress(40);
+      // Escribir frames a FFmpeg
+      for(let i=0;i<frames.length;i++){
+        const frameData=await fetchFile(frames[i]);
+        await ffmpeg.writeFile(`frame${String(i).padStart(5,'0')}.png`,frameData);
+        setProgress(40+(i/frames.length)*30);
+      }
+
+      setProgress(75);
+      // Codificar a MP4
+      await ffmpeg.exec([
+        '-framerate',fps.toString(),
+        '-pattern_type','glob','-i','frame*.png',
+        '-c:v','libx264',
+        '-pix_fmt','yuv420p',
+        '-y',
+        'output.mp4'
+      ]);
+
+      setProgress(90);
+      // Leer archivo de salida
+      const data=await ffmpeg.readFile('output.mp4');
+      const blob=new Blob([data.buffer],{type:'video/mp4'});
+
+      // Limpiar archivos
+      await ffmpeg.deleteFile('output.mp4');
+      for(let i=0;i<frames.length;i++){
+        await ffmpeg.deleteFile(`frame${String(i).padStart(5,'0')}.png`);
+      }
+
+      setProgress(100);
+      setVideoBlob(blob);
+      setLoading(false);
+      setVideoReady(true);
+      showNotif('🎬 Video generado con éxito');
+    }catch(e){
+      console.error(e);
+      setLoading(false);
+      showNotif('❌ Error: '+e.message);
+    }
+  };
+
+  const downloadVideo=()=>{
+    if(!videoBlob) return;
+    const url=URL.createObjectURL(videoBlob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`video_creativeflow_${Date.now()}.${format.toLowerCase()}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showNotif('📥 Video descargado');
+  };
+
+  const previewVideo=()=>{
+    if(!videoBlob) return;
+    const url=URL.createObjectURL(videoBlob);
+    const video=document.querySelector('#videoPreview');
+    if(video){
+      video.src=url;
+      video.play();
+      showNotif('▶️ Reproduciendo vista previa');
+    }else{
+      window.open(url,'_blank');
+      showNotif('▶️ Abriendo vista previa...');
+    }
+  };
+
+  return(
+    <div style={{padding:'32px',maxWidth:800,margin:'0 auto'}}>
+      <div style={{marginBottom:32}}>
+        <h2 style={{fontFamily:'Space Grotesk',fontWeight:700,fontSize:28,marginBottom:8}}>
+          <span className="grad-text">Imagen a Video</span>
+        </h2>
+        <p style={{color:'#6b7280',fontSize:14}}>Transforma tus imágenes estáticas en videos dinámicos para redes sociales</p>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
+        {/* Upload */}
+        <div>
+          <div className={`drop-zone ${drag?'drag-over':''}`}
+            onDrop={onDrop} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)}
+            onClick={()=>fileRef.current.click()} style={{minHeight:220}}>
+            {img?(
+              <img src={img} alt="" style={{maxWidth:'100%',maxHeight:200,borderRadius:8,objectFit:'contain'}}/>
+            ):(
+              <>
+              <div style={{width:56,height:56,background:'rgba(124,58,237,.15)',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <Ico n="upload" size={28}/>
+              </div>
+              <p style={{color:'#9ca3af',fontSize:14,textAlign:'center'}}>Arrastra tu imagen aquí<br/><span style={{fontSize:12,opacity:.7}}>o haz clic para seleccionar</span></p>
+              <span style={{fontSize:11,color:'#4b5563'}}>PNG, JPG, WEBP hasta 20MB</span>
+              </>
+            )}
+            <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={onFile}/>
+          </div>
+          {img&&<button className="btn btn-ghost btn-sm" style={{marginTop:8,width:'100%',justifyContent:'center'}} onClick={()=>{setImg(null);setVideoReady(false);}}>Cambiar imagen</button>}
+        </div>
+
+        {/* Settings */}
+        <div style={{display:'flex',flexDirection:'column',gap:16}}>
+          <div className="card" style={{padding:16}}>
+            <div className="prop-label" style={{marginBottom:12}}>DURACIÓN: {duration}s</div>
+            <input type="range" min="3" max="30" value={duration} onChange={e=>setDuration(+e.target.value)}/>
+            <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'#6b7280',marginTop:4}}>
+              <span>3s</span><span>30s</span>
+            </div>
+          </div>
+          <div className="card" style={{padding:16}}>
+            <div className="prop-label" style={{marginBottom:12}}>FPS: {fps}</div>
+            {[24,30,60].map(f=>(
+              <button key={f} className={`btn btn-sm ${fps===f?'btn-primary':'btn-secondary'}`} style={{marginRight:6}} onClick={()=>setFps(f)}>{f} fps</button>
+            ))}
+          </div>
+          <div className="card" style={{padding:16}}>
+            <div className="prop-label" style={{marginBottom:8}}>FORMATO DE SALIDA</div>
+            {['MP4','MOV','GIF'].map(f=>(
+              <button key={f} className={`btn btn-sm ${format===f?'btn-primary':'btn-secondary'}`} style={{marginRight:6}} onClick={()=>setFormat(f)}>{f}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Effects */}
+      <div style={{marginTop:24}}>
+        <h3 style={{fontFamily:'Space Grotesk',fontWeight:600,fontSize:16,marginBottom:14}}>Efecto de movimiento</h3>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(130px,1fr))',gap:10}}>
+          {effects.map(ef=>(
+            <div key={ef.id} className={`effect-card ${effect===ef.id?'selected':''}`} onClick={()=>setEffect(ef.id)}>
+              <div style={{fontSize:24,marginBottom:6}}>{ef.emoji}</div>
+              <div style={{fontSize:13,fontWeight:600,color:'#e2e8f0'}}>{ef.label}</div>
+              <div style={{fontSize:11,color:'#6b7280',marginTop:2}}>{ef.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {loading&&(
+        <div style={{marginTop:24,background:'#111118',border:'1px solid #1e1e2e',borderRadius:12,padding:20}}>
+          <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
+            <span style={{fontSize:13,fontWeight:500,color:'#a78bfa'}}>Procesando video... {progress}%</span>
+            <span style={{fontSize:12,color:'#6b7280'}}>{effect} • {duration}s • {fps}fps</span>
+          </div>
+          <div className="progress"><div className="progress-bar" style={{width:`${progress}%`}}/></div>
+          <div style={{fontSize:11,color:'#6b7280',marginTop:8}}>Aplicando efecto "{effects.find(e=>e.id===effect)?.label}"...</div>
+        </div>
+      )}
+
+      {videoReady&&!loading&&(
+        <>
+          {/* Video Preview Player */}
+          <div style={{marginTop:24,background:'#0a0a10',border:'1px solid #2d2d44',borderRadius:12,overflow:'hidden'}}>
+            <video id="videoPreview" style={{width:'100%',height:'auto',display:'block',background:'#000'}} controls>
+              Tu navegador no soporta video HTML5
+            </video>
+            <div style={{padding:16,background:'#111118',borderTop:'1px solid #2d2d44'}}>
+              <div style={{fontWeight:600,color:'#e2e8f0',marginBottom:8}}>video_creativeflow_{Date.now()}.{format.toLowerCase()}</div>
+              <div style={{fontSize:12,color:'#6b7280',marginBottom:12}}>{duration}s • {fps}fps • {Math.round(duration*fps)} frames • Efecto {effects.find(e=>e.id===effect)?.label}</div>
+              <div style={{display:'flex',gap:8}}>
+                <button className="btn btn-secondary btn-sm" onClick={previewVideo} style={{flex:1}}><Ico n="play" size={14}/> Reproducir Preview</button>
+                <button className="btn btn-primary btn-sm" onClick={downloadVideo} style={{flex:1}}><Ico n="download" size={14}/> Descargar MP4</button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      <div style={{marginTop:24}}>
+        <button className="btn btn-primary" style={{width:'100%',justifyContent:'center',padding:'13px'}} onClick={convert} disabled={!img||loading}>
+          {loading?<><span className="spinner">⟳</span> Procesando...</>:<><Ico n="film" size={18}/> Convertir a Video</>}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TEMPLATES GALLERY
+═══════════════════════════════════════════════════════════════ */
+function Gallery({setView,showNotif}){
+  const[cat,setCat]=useState('Todos');
+  const[search,setSearch]=useState('');
+  const filtered=useMemo(()=>TEMPLATES.filter(t=>(cat==='Todos'||t.cat===cat)&&(search===''||t.label.toLowerCase().includes(search.toLowerCase()))),[cat,search]);
+
+  return(
+    <div style={{display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'}}>
+      <div style={{padding:'20px 20px 0',flexShrink:0}}>
+        <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
+          <h2 style={{fontFamily:'Space Grotesk',fontWeight:700,fontSize:22}}>Galería de Plantillas</h2>
+          <span className="topbar-badge">+{TEMPLATES.length}</span>
+          <div style={{flex:1}}/>
+          <div style={{position:'relative'}}>
+            <span style={{position:'absolute',left:10,top:'50%',transform:'translateY(-50%)',color:'#6b7280'}}><Ico n="search" size={16}/></span>
+            <input className="prop-input" placeholder="Buscar plantillas..." value={search} onChange={e=>setSearch(e.target.value)} style={{paddingLeft:32,width:200}}/>
+          </div>
+        </div>
+      </div>
+      <div className="cat-filter">
+        {CATEGORIES.map(c=><div key={c} className={`cat-chip ${cat===c?'active':''}`} onClick={()=>setCat(c)}>{c}</div>)}
+      </div>
+      <div style={{flex:1,overflowY:'auto'}}>
+        <div className="gallery-grid">
+          {filtered.map(t=>(
+            <div key={t.id} className="template-thumb" style={{height:180}}>
+              <div style={{width:'100%',height:'100%',background:`linear-gradient(135deg,${t.c1},${t.c2})`,display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'flex-end',padding:12,borderRadius:8}}>
+                <span style={{fontSize:9,background:'rgba(0,0,0,.3)',color:'white',padding:'2px 6px',borderRadius:4,marginBottom:6}}>{t.cat}</span>
+                <div style={{fontSize:13,fontWeight:800,color:'white',fontFamily:'Space Grotesk'}}>TU MARCA</div>
+                <div style={{fontSize:9,color:'rgba(255,255,255,.75)',marginTop:2}}>Eslogan aquí</div>
+                <div style={{marginTop:8,background:'white',borderRadius:10,padding:'3px 10px',fontSize:9,color:t.c1,fontWeight:700}}>Ver más →</div>
+              </div>
+              <div className="template-overlay" style={{borderRadius:8}}>
+                <button className="btn btn-primary btn-sm" onClick={(e)=>{e.stopPropagation();setView('studio');showNotif('✨ Plantilla cargada en el editor');}}>Usar plantilla</button>
+                <button className="btn btn-secondary btn-sm" onClick={(e)=>{e.stopPropagation();showNotif('👁️ Vista previa');}}>Preview</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BRAND KIT
+═══════════════════════════════════════════════════════════════ */
+function BrandKit({showNotif}){
+  const[colors,setColors]=useState(['#7c3aed','#4f46e5','#111118','#ffffff','#f59e0b']);
+  const[brandName,setBrandName]=useState('Mi Empresa');
+  const[slogan,setSlogan]=useState('Innovación y calidad');
+  const[font,setFont]=useState('Space Grotesk');
+  const[logo,setLogo]=useState(null);
+  const fileRef=useRef(null);
+
+  const removeColor=(i)=>setColors(c=>c.filter((_,idx)=>idx!==i));
+  const addColor=()=>setColors(c=>[...c,'#7c3aed']);
+
+  return(
+    <div style={{padding:'32px',maxWidth:700,margin:'0 auto'}}>
+      <div style={{marginBottom:32}}>
+        <h2 style={{fontFamily:'Space Grotesk',fontWeight:700,fontSize:28,marginBottom:8}}>
+          <span className="grad-text">Brand Kit</span>
+        </h2>
+        <p style={{color:'#6b7280',fontSize:14}}>Define la identidad visual de tu marca para usarla en todos tus diseños</p>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24}}>
+        {/* Logo */}
+        <div className="card" style={{padding:24,gridColumn:'1 / -1'}}>
+          <div className="prop-label" style={{marginBottom:12}}>LOGOTIPO</div>
+          <div style={{display:'flex',alignItems:'center',gap:20}}>
+            <div style={{width:80,height:80,border:'2px dashed #4f46e5',borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',overflow:'hidden'}} onClick={()=>fileRef.current.click()}>
+              {logo?<img src={logo} alt="Logo" style={{width:'100%',height:'100%',objectFit:'contain'}}/>:<Ico n="upload" size={28}/>}
+            </div>
+            <div>
+              <button className="btn btn-secondary btn-sm" onClick={()=>fileRef.current.click()}>Subir logo</button>
+              {logo&&<button className="btn btn-ghost btn-sm" style={{marginLeft:8}} onClick={()=>setLogo(null)}>Eliminar</button>}
+              <p style={{fontSize:12,color:'#6b7280',marginTop:8}}>PNG, SVG. Recomendado 512×512px</p>
+            </div>
+            <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={e=>{const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>setLogo(ev.target.result);r.readAsDataURL(f);}}}/>
+          </div>
+        </div>
+
+        {/* Name & Slogan */}
+        <div className="card" style={{padding:24}}>
+          <div className="prop-label" style={{marginBottom:12}}>INFORMACIÓN</div>
+          <label style={{fontSize:12,color:'#9ca3af',display:'block',marginBottom:6}}>Nombre de marca</label>
+          <input className="prop-input" value={brandName} onChange={e=>setBrandName(e.target.value)} style={{marginBottom:12,width:'100%'}}/>
+          <label style={{fontSize:12,color:'#9ca3af',display:'block',marginBottom:6}}>Eslogan</label>
+          <input className="prop-input" value={slogan} onChange={e=>setSlogan(e.target.value)} style={{width:'100%'}}/>
+        </div>
+
+        {/* Font */}
+        <div className="card" style={{padding:24}}>
+          <div className="prop-label" style={{marginBottom:12}}>TIPOGRAFÍA PRINCIPAL</div>
+          <select className="prop-input" value={font} onChange={e=>setFont(e.target.value)} style={{width:'100%',marginBottom:12}}>
+            {FONTS.map(f=><option key={f}>{f}</option>)}
+          </select>
+          <div style={{background:'#0f0f13',borderRadius:8,padding:16,fontFamily:font}}>
+            <div style={{fontSize:24,fontWeight:700,color:'#e2e8f0',marginBottom:4}}>{brandName}</div>
+            <div style={{fontSize:14,color:'#9ca3af'}}>{slogan}</div>
+          </div>
+        </div>
+
+        {/* Colors */}
+        <div className="card" style={{padding:24,gridColumn:'1 / -1'}}>
+          <div className="prop-label" style={{marginBottom:16}}>PALETA DE COLORES</div>
+          <div style={{display:'flex',gap:12,alignItems:'center',flexWrap:'wrap'}}>
+            {colors.map((c,i)=>(
+              <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:6}}>
+                <label style={{position:'relative'}}>
+                  <div className="color-circle" style={{background:c,width:52,height:52}}/>
+                  <input type="color" value={c} onChange={e=>{const nc=[...colors];nc[i]=e.target.value;setColors(nc);}} style={{position:'absolute',inset:0,opacity:0,cursor:'pointer',width:'100%',height:'100%'}}/>
+                </label>
+                <span style={{fontSize:9,color:'#6b7280'}}>{c.toUpperCase()}</span>
+                <button style={{background:'none',border:'none',color:'#4b5563',cursor:'pointer',fontSize:11}} onClick={()=>removeColor(i)}>✕</button>
+              </div>
+            ))}
+            <div className="color-circle add" style={{width:52,height:52,cursor:'pointer'}} onClick={addColor}>+</div>
+          </div>
+        </div>
+
+        {/* Preview */}
+        <div className="card" style={{padding:24,gridColumn:'1 / -1'}}>
+          <div className="prop-label" style={{marginBottom:12}}>VISTA PREVIA</div>
+          <div style={{background:`linear-gradient(135deg,${colors[0]||'#7c3aed'},${colors[1]||'#4f46e5'})`,borderRadius:12,padding:32,display:'flex',flexDirection:'column',alignItems:'flex-start',gap:8}}>
+            {logo&&<img src={logo} alt="" style={{height:40,objectFit:'contain',marginBottom:8}}/>}
+            <div style={{fontFamily:font,fontSize:32,fontWeight:700,color:'white'}}>{brandName}</div>
+            <div style={{fontFamily:font,fontSize:14,color:'rgba(255,255,255,.8)'}}>{slogan}</div>
+            <div style={{marginTop:12,background:'white',borderRadius:20,padding:'8px 20px',fontFamily:font,fontSize:13,fontWeight:700,color:colors[0]}}>Contactar →</div>
+          </div>
+        </div>
+      </div>
+
+      <button className="btn btn-primary" style={{marginTop:24,width:'100%',justifyContent:'center',padding:'12px'}} onClick={()=>showNotif('💾 Brand Kit guardado exitosamente')}>
+        <Ico n="check" size={18}/> Guardar Brand Kit
+      </button>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════════════════════════ */
+function Dashboard({setView,showNotif}){
+  const quick=[
+    {icon:'edit',label:'Nuevo diseño',desc:'Empieza desde cero',color:'#7c3aed',view:'studio'},
+    {icon:'grid',label:'Plantillas',desc:'Diseños listos para usar',color:'#4f46e5',view:'gallery'},
+    {icon:'sparkles',label:'Generar con IA',desc:'Imágenes con IA',color:'#7c3aed',view:'ai'},
+    {icon:'film',label:'Imagen a Video',desc:'Animaciones para redes',color:'#6d28d9',view:'video'},
+  ];
+  const recent=[
+    {name:'Post Instagram - Promo',date:'Hoy 10:30',c1:'#7c3aed',c2:'#4f46e5'},
+    {name:'Story Black Friday',date:'Ayer 16:20',c1:'#ef4444',c2:'#b91c1c'},
+    {name:'Banner LinkedIn',date:'Hace 2 días',c1:'#0ea5e9',c2:'#0369a1'},
+    {name:'Tarjeta de Presentación',date:'Hace 3 días',c1:'#10b981',c2:'#047857'},
+  ];
+  const stats=[
+    {label:'Diseños creados',val:'24',icon:'edit',trend:'+12%'},
+    {label:'Videos generados',val:'8',icon:'film',trend:'+5%'},
+    {label:'Imágenes IA',val:'47',icon:'sparkles',trend:'+28%'},
+    {label:'Exportaciones',val:'103',icon:'download',trend:'+18%'},
+  ];
+
+  return(
+    <div style={{padding:'32px',overflowY:'auto',height:'100%'}}>
+      {/* Hero */}
+      <div style={{background:'linear-gradient(135deg,rgba(124,58,237,.15),rgba(79,70,229,.08))',border:'1px solid rgba(124,58,237,.2)',borderRadius:16,padding:'28px 32px',marginBottom:32,display:'flex',alignItems:'center',gap:24}}>
+        <div style={{flex:1}}>
+          <h1 style={{fontFamily:'Space Grotesk',fontWeight:800,fontSize:28,marginBottom:8}}>¡Bienvenido a <span className="grad-text">CreativeFlow</span>!</h1>
+          <p style={{color:'#9ca3af',fontSize:15,marginBottom:20}}>Crea contenido profesional para todas tus redes sociales con el poder de la IA.</p>
+          <div style={{display:'flex',gap:10}}>
+            <button className="btn btn-primary" onClick={()=>setView('studio')}><Ico n="plus" size={16}/> Crear diseño</button>
+            <button className="btn btn-secondary" onClick={()=>setView('gallery')}><Ico n="grid" size={16}/> Ver plantillas</button>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,flexShrink:0}}>
+          {['#7c3aed','#4f46e5','#6d28d9','#5b21b6'].map((c,i)=>(
+            <div key={i} style={{width:60,height:60,background:`linear-gradient(135deg,${c},${c}cc)`,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20}}>
+              {['📱','🎨','✨','🎬'][i]}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14,marginBottom:32}}>
+        {stats.map((s,i)=>(
+          <div key={i} className="stat-card">
+            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:8}}>
+              <div style={{width:36,height:36,background:'rgba(124,58,237,.15)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',color:'#a78bfa'}}>
+                <Ico n={s.icon} size={18}/>
+              </div>
+              <span style={{fontSize:12,color:'#10b981',background:'rgba(16,185,129,.1)',padding:'2px 6px',borderRadius:4,fontWeight:600}}>{s.trend}</span>
+            </div>
+            <div style={{fontSize:28,fontWeight:700,fontFamily:'Space Grotesk',color:'#e2e8f0'}}>{s.val}</div>
+            <div style={{fontSize:12,color:'#6b7280'}}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick actions */}
+      <h3 style={{fontFamily:'Space Grotesk',fontWeight:600,fontSize:16,marginBottom:14}}>Acciones rápidas</h3>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14,marginBottom:32}}>
+        {quick.map((q,i)=>(
+          <div key={i} className="quick-card" onClick={()=>setView(q.view)}>
+            <div className="quick-card-icon" style={{background:`linear-gradient(135deg,${q.color}33,${q.color}22)`}}>
+              <Ico n={q.icon} size={22}/>
+            </div>
+            <div style={{fontWeight:600,fontSize:14,marginBottom:4}}>{q.label}</div>
+            <div style={{fontSize:12,color:'#6b7280'}}>{q.desc}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent */}
+      <h3 style={{fontFamily:'Space Grotesk',fontWeight:600,fontSize:16,marginBottom:14}}>Proyectos recientes</h3>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14}}>
+        {recent.map((r,i)=>(
+          <div key={i} className="card" style={{cursor:'pointer'}} onClick={()=>setView('studio')}>
+            <div style={{height:100,background:`linear-gradient(135deg,${r.c1},${r.c2})`,position:'relative'}}>
+              <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'flex-end',padding:10}}>
+                <div style={{fontSize:10,fontWeight:700,color:'white',fontFamily:'Space Grotesk'}}>TU MARCA</div>
+                <div style={{width:40,height:3,background:'rgba(255,255,255,.5)',borderRadius:2,marginTop:4}}/>
+              </div>
+            </div>
+            <div style={{padding:'10px 12px'}}>
+              <div style={{fontSize:13,fontWeight:500,marginBottom:3,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.name}</div>
+              <div style={{fontSize:11,color:'#6b7280'}}>{r.date}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Social platforms */}
+      <h3 style={{fontFamily:'Space Grotesk',fontWeight:600,fontSize:16,margin:'32px 0 14px'}}>Plataformas soportadas</h3>
+      <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+        {[
+          {name:'Instagram',icon:'instagram',color:'#e1306c'},
+          {name:'Facebook',icon:'image',color:'#1877f2'},
+          {name:'Twitter/X',icon:'twitter',color:'#1da1f2'},
+          {name:'LinkedIn',icon:'linkedin',color:'#0077b5'},
+          {name:'TikTok',icon:'film',color:'#010101'},
+          {name:'YouTube',icon:'play',color:'#ff0000'},
+          {name:'Pinterest',icon:'image',color:'#e60023'},
+        ].map(p=>(
+          <div key={p.name} style={{display:'flex',alignItems:'center',gap:8,background:'#111118',border:'1px solid #1e1e2e',borderRadius:10,padding:'8px 14px'}}>
+            <div style={{color:p.color}}><Ico n={p.icon} size={16}/></div>
+            <span style={{fontSize:13,fontWeight:500}}>{p.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN APP
+═══════════════════════════════════════════════════════════════ */
+function App(){
+  const[view,setView]=useState('dashboard');
+  const[sideExpanded,setSideExpanded]=useState(false);
+  const{notif,show}=useNotif();
+
+  const nav=[
+    {id:'dashboard',icon:'home',label:'Inicio'},
+    {id:'studio',icon:'edit',label:'Editor'},
+    {id:'gallery',icon:'grid',label:'Plantillas'},
+    {id:'ai',icon:'sparkles',label:'IA Imágenes'},
+    {id:'video',icon:'film',label:'Img → Video'},
+    {id:'brand',icon:'brand',label:'Brand Kit'},
+  ];
+
+  return(
+    <div className="app">
+      {/* Sidebar */}
+      <div className={`sidebar ${sideExpanded?'expanded':''}`}>
+        <div className="sidebar-logo" onClick={()=>setSideExpanded(e=>!e)} title="CreativeFlow">
+          <span>CF</span>
+        </div>
+        {nav.map(n=>(
+          <div key={n.id} className={`nav-item tooltip ${view===n.id?'active':''}`} onClick={()=>setView(n.id)}>
+            <Ico n={n.icon} size={20}/>
+            {sideExpanded&&<span className="nav-label">{n.label}</span>}
+            {!sideExpanded&&<span className="tooltip-text">{n.label}</span>}
+          </div>
+        ))}
+        <div style={{flex:1}}/>
+        <div className="nav-item tooltip" title="Configuración">
+          <Ico n="settings" size={20}/>
+          {sideExpanded&&<span className="nav-label">Ajustes</span>}
+          {!sideExpanded&&<span className="tooltip-text">Ajustes</span>}
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="main">
+        <div className="topbar">
+          <span className="topbar-title">
+            {nav.find(n=>n.id===view)?.label||'CreativeFlow'}
+          </span>
+          <span className="topbar-badge">GRATIS</span>
+          <div style={{flex:1}}/>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <div style={{width:30,height:30,background:'linear-gradient(135deg,#7c3aed,#4f46e5)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,cursor:'pointer'}}>U</div>
+            <div>
+              <div style={{fontSize:13,fontWeight:500}}>Mi cuenta</div>
+              <div style={{fontSize:11,color:'#6b7280'}}>Plan Gratuito</div>
+            </div>
+          </div>
+        </div>
+        <div className="content" style={{display:'flex',flexDirection:'column',overflow:view==='studio'?'hidden':'auto'}}>
+          {view==='dashboard'&&<Dashboard setView={setView} showNotif={show}/>}
+          {view==='studio'&&<DesignStudio showNotif={show}/>}
+          {view==='gallery'&&<Gallery setView={setView} showNotif={show}/>}
+          {view==='ai'&&<AIGenerator showNotif={show}/>}
+          {view==='video'&&<ImageToVideo showNotif={show}/>}
+          {view==='brand'&&<BrandKit showNotif={show}/>}
+        </div>
+      </div>
+
+      {notif&&<div className="notif">{notif}</div>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#0a0a0f"/>
+<title>Villa Los Sauces — Post Redes Sociales | AraHomeLuxe</title>
+
+<!-- Preconexión a dominios externos para acelerar carga -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com"/>
+
+<!-- Precarga de las 4 imágenes de la propiedad (evita parpadeo) -->
+<link rel="preload" as="image" href="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407111908-480872440.jpg"/>
+<link rel="preload" as="image" href="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407118631-480872464.jpg"/>
+<link rel="preload" as="image" href="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407120300-480872467.jpg"/>
+<link rel="preload" as="image" href="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407121952-480872489.jpg"/>
+
+<!-- Fuentes con display=swap para evitar FOUT -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ─── Layout ─── */
+.app{display:flex;min-height:100vh;gap:0}
+.sidebar{width:260px;background:#0f0f18;border-right:1px solid #1a1a2e;padding:24px 16px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+.main{flex:1;padding:32px;overflow-y:auto}
+
+/* ─── Logo / header ─── */
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,#c9a96e,#f0d090);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#0a0a0f}
+.logo-name{font-weight:700;font-size:16px;letter-spacing:.5px}
+.logo-sub{font-size:10px;color:#6b7280;font-weight:400}
+
+.section-title{font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+
+/* ─── Sidebar controls ─── */
+.control-group{display:flex;flex-direction:column;gap:6px}
+.ctrl-label{font-size:12px;color:#9ca3af;font-weight:500}
+.ctrl-row{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #2d2d44;color:#9ca3af;background:#13131f;transition:all .2s}
+.chip:hover,.chip.active{border-color:#c9a96e;color:#c9a96e;background:rgba(201,169,110,.1)}
+.effect-list{display:flex;flex-direction:column;gap:4px}
+.effect-item{padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid transparent;transition:all .2s;display:flex;align-items:center;gap:8px;color:#9ca3af}
+.effect-item:hover{background:#1a1a2e;color:#e2e8f0}
+.effect-item.active{background:rgba(201,169,110,.12);border-color:rgba(201,169,110,.4);color:#c9a96e}
+
+/* ─── Buttons ─── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:none;outline:none;width:100%;justify-content:center}
+.btn-gold{background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 6px 24px rgba(201,169,110,.35)}
+.btn-outline{background:transparent;color:#c9a96e;border:1px solid rgba(201,169,110,.4)}
+.btn-outline:hover{background:rgba(201,169,110,.08)}
+.btn-ghost{background:#13131f;color:#9ca3af;border:1px solid #2d2d44}
+.btn-ghost:hover{color:#e2e8f0;border-color:#4b5563}
+
+.divider{height:1px;background:#1a1a2e}
+
+/* ─── Page heading ─── */
+.page-header{margin-bottom:32px}
+.page-header h1{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;margin-bottom:6px}
+.page-header p{color:#9ca3af;font-size:14px}
+.badge{display:inline-flex;align-items:center;gap:5px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);color:#c9a96e;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-right:8px}
+
+/* ─── Tabs ─── */
+.tabs{display:flex;gap:4px;background:#0f0f18;border:1px solid #1a1a2e;border-radius:10px;padding:4px;margin-bottom:28px}
+.tab{flex:1;padding:9px;text-align:center;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;color:#6b7280}
+.tab:hover{color:#e2e8f0}
+.tab.active{background:linear-gradient(135deg,#1a1a2e,#13131f);color:#c9a96e;border:1px solid rgba(201,169,110,.25)}
+
+/* ─── Carousel ─── */
+.carousel-wrapper{display:flex;flex-direction:column;align-items:center;gap:20px}
+.instagram-frame{position:relative;width:480px;border-radius:3px;overflow:hidden;background:#000;box-shadow:0 0 0 1px #262626,0 20px 60px rgba(0,0,0,.8)}
+
+/* Instagram UI chrome */
+.ig-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#000;border-bottom:1px solid #1a1a1a}
+.ig-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);padding:2px;flex-shrink:0}
+.ig-avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid #000}
+.ig-avatar-inner img{width:100%;height:100%;object-fit:cover}
+.ig-username{font-size:13px;font-weight:600;color:#fff}
+.ig-location{font-size:11px;color:#8e8e8e}
+.ig-more{margin-left:auto;color:#8e8e8e;font-size:18px;cursor:pointer}
+
+/* Carousel slides */
+.carousel-slides-container{position:relative;width:480px;height:480px;overflow:hidden;background:#111;contain:layout style}
+.carousel-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.25,.46,.45,.94);will-change:transform}
+.slide{width:480px;height:480px;flex-shrink:0;position:relative;overflow:hidden;contain:layout style paint}
+.slide img{width:100%;height:100%;object-fit:cover;display:block;will-change:transform}
+.slide-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 100%)}
+.slide-num{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px)}
+
+/* Dots */
+.ig-dots{display:flex;gap:4px;justify-content:center;padding:8px 0}
+.ig-dot{width:6px;height:6px;border-radius:50%;background:#8e8e8e;transition:all .3s;cursor:pointer}
+.ig-dot.active{background:#3d9bff;width:6px}
+
+/* IG footer */
+.ig-footer{background:#000;padding:8px 14px 14px;border-top:1px solid #1a1a1a}
+.ig-actions{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.ig-icon{cursor:pointer;transition:transform .2s}
+.ig-icon:hover{transform:scale(1.1)}
+.ig-icon svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ig-bookmark{margin-left:auto}
+.ig-likes{font-size:13px;font-weight:600;color:#fff;margin-bottom:6px}
+.ig-caption{font-size:13px;color:#fff;line-height:1.5}
+.ig-caption strong{font-weight:700}
+.ig-hashtags{font-size:12px;color:#0095f6;margin-top:4px}
+.ig-time{font-size:11px;color:#8e8e8e;margin-top:6px}
+
+/* Nav arrows */
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:10;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.nav-btn:hover{background:#fff;transform:translateY(-50%) scale(1.05)}
+.nav-prev{left:10px}
+.nav-next{right:10px}
+
+/* ─── Video player ─── */
+.video-wrapper{display:flex;flex-direction:column;align-items:center;gap:20px}
+.video-frame{width:480px;background:#000;border-radius:3px;overflow:hidden;box-shadow:0 0 0 1px #262626,0 20px 60px rgba(0,0,0,.8);position:relative}
+.video-canvas{width:480px;height:480px;position:relative;overflow:hidden;background:#000;cursor:pointer;contain:layout style paint}
+.video-slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;will-change:opacity}
+.video-slide.visible{opacity:1}
+.video-slide img{width:100%;height:100%;object-fit:cover;transform-origin:center center;will-change:transform}
+
+/* Ken Burns animations */
+@keyframes kb-zoom-in{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.2) translate(-3%,-3%)}}
+@keyframes kb-zoom-out{0%{transform:scale(1.2) translate(3%,3%)}100%{transform:scale(1) translate(0,0)}}
+@keyframes kb-pan-left{0%{transform:scale(1.15) translateX(5%)}100%{transform:scale(1.15) translateX(-5%)}}
+@keyframes kb-pan-right{0%{transform:scale(1.15) translateX(-5%)}100%{transform:scale(1.15) translateX(5%)}}
+@keyframes kb-pan-up{0%{transform:scale(1.15) translateY(5%)}100%{transform:scale(1.15) translateY(-5%)}}
+@keyframes kb-zoom-rotate{0%{transform:scale(1) rotate(0deg)}100%{transform:scale(1.1) rotate(1.5deg)}}
+
+.video-slide.playing img.kb-zoom-in{animation:kb-zoom-in var(--kb-dur,4s) ease-in-out forwards}
+.video-slide.playing img.kb-zoom-out{animation:kb-zoom-out var(--kb-dur,4s) ease-in-out forwards}
+.video-slide.playing img.kb-pan-left{animation:kb-pan-left var(--kb-dur,4s) ease-in-out forwards}
+.video-slide.playing img.kb-pan-right{animation:kb-pan-right var(--kb-dur,4s) ease-in-out forwards}
+.video-slide.playing img.kb-pan-up{animation:kb-pan-up var(--kb-dur,4s) ease-in-out forwards}
+.video-slide.playing img.kb-zoom-rotate{animation:kb-zoom-rotate var(--kb-dur,4s) ease-in-out forwards}
+.video-slide.playing img.none{animation:none;transform:scale(1)}
+
+/* Video overlay text */
+.video-text-overlay{position:absolute;bottom:0;left:0;right:0;padding:24px;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 100%);z-index:5;transition:opacity .5s}
+.video-property-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.video-property-sub{font-size:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
+.video-logo-bug{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:#c9a96e;letter-spacing:.5px;z-index:5}
+
+/* Progress bar */
+.video-progress{height:3px;background:#1a1a1a;position:relative;cursor:pointer}
+.video-progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#f0d090);transition:width .1s linear;pointer-events:none}
+.video-controls{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#111;border-top:1px solid #222}
+.ctrl-btn{background:none;border:none;color:#fff;cursor:pointer;padding:4px;border-radius:4px;transition:all .2s;display:flex;align-items:center}
+.ctrl-btn:hover{background:#2d2d2d}
+.ctrl-btn svg{width:18px;height:18px}
+.time-display{font-size:12px;color:#8e8e8e;font-family:monospace;margin-left:4px}
+.vol-slider{width:70px;-webkit-appearance:none;height:3px;border-radius:2px;background:#4b5563;cursor:pointer}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#c9a96e;cursor:pointer}
+.effects-label{margin-left:auto;font-size:11px;color:#8e8e8e}
+
+/* Slide indicator in video */
+.video-dots{display:flex;gap:3px;justify-content:center;position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5}
+.video-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);transition:all .4s}
+.video-dot.active{background:#fff;width:16px;border-radius:3px}
+
+/* ─── Export panel ─── */
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.export-card{background:#0f0f18;border:1px solid #1a1a2e;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:all .2s}
+.export-card:hover{border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.04)}
+.export-icon{font-size:28px}
+.export-name{font-size:13px;font-weight:600;color:#e2e8f0}
+.export-desc{font-size:11px;color:#6b7280}
+
+/* ─── Toast ─── */
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 8px 30px rgba(201,169,110,.4);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ─── Image strip ─── */
+.image-strip{display:flex;gap:8px;justify-content:center}
+.strip-thumb{width:80px;height:80px;border-radius:6px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .2s;flex-shrink:0}
+.strip-thumb:hover{border-color:rgba(201,169,110,.6)}
+.strip-thumb.active{border-color:#c9a96e;box-shadow:0 0 0 1px rgba(201,169,110,.3)}
+.strip-thumb img{width:100%;height:100%;object-fit:cover}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ SIDEBAR ═══ -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">CF</div>
+    <div>
+      <div class="logo-name">CreativeFlow</div>
+      <div class="logo-sub">by AraHomeLuxe</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Property info -->
+  <div>
+    <div class="section-title">Propiedad activa</div>
+    <div style="background:#13131f;border:1px solid #1a1a2e;border-radius:10px;padding:12px;font-size:12px">
+      <div style="font-weight:700;color:#c9a96e;margin-bottom:3px">🏡 VILLA LOS SAUCES</div>
+      <div style="color:#9ca3af;font-size:11px">Piscinas · BBQ · Jardín</div>
+      <div style="color:#9ca3af;font-size:11px;margin-top:4px">📍 AraHomeLuxe</div>
+    </div>
+  </div>
+
+  <!-- Format selector -->
+  <div class="control-group">
+    <div class="section-title">Formato</div>
+    <div class="ctrl-row">
+      <div class="chip active" onclick="setFormat(this,'sq')">1:1 Post</div>
+      <div class="chip" onclick="setFormat(this,'story')">9:16 Story</div>
+      <div class="chip" onclick="setFormat(this,'wide')">16:9 Portada</div>
+    </div>
+  </div>
+
+  <!-- Per-slide effect selectors -->
+  <div class="control-group">
+    <div class="section-title">Efecto por imagen</div>
+
+    <!-- Slide tabs -->
+    <div style="display:flex;gap:4px;margin-bottom:10px" id="slideTabs">
+      <div class="slide-tab active" onclick="selectSlideTab(this,0)" style="flex:1;text-align:center;padding:5px 0;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.4);color:#c9a96e">🏊 1</div>
+      <div class="slide-tab" onclick="selectSlideTab(this,1)" style="flex:1;text-align:center;padding:5px 0;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#13131f;border:1px solid #2d2d44;color:#9ca3af">🛋 2</div>
+      <div class="slide-tab" onclick="selectSlideTab(this,2)" style="flex:1;text-align:center;padding:5px 0;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#13131f;border:1px solid #2d2d44;color:#9ca3af">🛏 3</div>
+      <div class="slide-tab" onclick="selectSlideTab(this,3)" style="flex:1;text-align:center;padding:5px 0;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#13131f;border:1px solid #2d2d44;color:#9ca3af">🌐 4</div>
+    </div>
+
+    <!-- Current slide label -->
+    <div id="slideEffectLabel" style="font-size:11px;color:#6b7280;margin-bottom:6px">Imagen 1 — Piscina</div>
+
+    <!-- Effect list (shared, updates per slide) -->
+    <div class="effect-list" id="effectList">
+      <div class="effect-item" data-fx="kb-zoom-in"  onclick="setSlideEffect(this,'kb-zoom-in')">🔍 Zoom In</div>
+      <div class="effect-item" data-fx="kb-zoom-out" onclick="setSlideEffect(this,'kb-zoom-out')">🔭 Zoom Out</div>
+      <div class="effect-item" data-fx="kb-pan-left" onclick="setSlideEffect(this,'kb-pan-left')">⬅ Pan Izquierda</div>
+      <div class="effect-item" data-fx="kb-pan-right" onclick="setSlideEffect(this,'kb-pan-right')">➡ Pan Derecha</div>
+      <div class="effect-item" data-fx="kb-pan-up"  onclick="setSlideEffect(this,'kb-pan-up')">⬆ Pan Arriba</div>
+      <div class="effect-item" data-fx="kb-zoom-rotate" onclick="setSlideEffect(this,'kb-zoom-rotate')">🌀 Ken Burns</div>
+      <div class="effect-item" data-fx="none"        onclick="setSlideEffect(this,'none')">⏹ Sin movimiento</div>
+    </div>
+  </div>
+
+  <!-- Duration -->
+  <div class="control-group">
+    <div class="section-title">Duración por imagen</div>
+    <div class="ctrl-row">
+      <div class="chip" onclick="setDuration(this,3)">3s</div>
+      <div class="chip active" onclick="setDuration(this,4)">4s</div>
+      <div class="chip" onclick="setDuration(this,5)">5s</div>
+      <div class="chip" onclick="setDuration(this,6)">6s</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- API Key config -->
+  <div class="control-group" id="apiKeySection">
+    <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>IA — Clave API</span>
+      <span id="apiStatus" style="font-size:10px;color:#6b7280">● Sin configurar</span>
+    </div>
+    <div style="position:relative">
+      <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." style="background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:8px 36px 8px 10px;font-size:11px;font-family:monospace;width:100%;outline:none;transition:border-color .2s"/>
+      <span id="apiKeyToggle" onclick="toggleApiKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:14px;color:#6b7280" title="Mostrar/ocultar">👁</span>
+    </div>
+    <button onclick="saveApiKey()" style="background:linear-gradient(135deg,rgba(201,169,110,.2),rgba(240,208,144,.1));border:1px solid rgba(201,169,110,.35);color:#c9a96e;border-radius:7px;padding:6px;font-size:11px;font-weight:600;cursor:pointer;width:100%;transition:all .2s">Guardar clave</button>
+    <p style="font-size:10px;color:#4b5563;line-height:1.4">Obtén tu clave gratuita en <span style="color:#6366f1">console.anthropic.com</span>. Se guarda solo en tu navegador.</p>
+  </div>
+
+  <!-- Caption editor -->
+  <div class="control-group">
+    <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Caption del post</span>
+    </div>
+
+    <!-- Tone selector -->
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px" id="toneRow">
+      <div class="chip active" onclick="setTone(this,'lujo')"     data-tone="lujo">✨ Lujo</div>
+      <div class="chip"        onclick="setTone(this,'familiar')" data-tone="familiar">👨‍👩‍👧 Familiar</div>
+      <div class="chip"        onclick="setTone(this,'romantico')" data-tone="romantico">💑 Romántico</div>
+      <div class="chip"        onclick="setTone(this,'aventura')" data-tone="aventura">🏕 Aventura</div>
+    </div>
+
+    <!-- Network selector -->
+    <div style="display:flex;gap:4px;margin-bottom:8px" id="networkRow">
+      <div class="chip active" onclick="setNet(this,'instagram')" data-net="instagram">📸 IG</div>
+      <div class="chip"        onclick="setNet(this,'facebook')"  data-net="facebook">👥 FB</div>
+      <div class="chip"        onclick="setNet(this,'linkedin')"  data-net="linkedin">💼 LI</div>
+    </div>
+
+    <!-- Generate button -->
+    <button id="generateBtn" onclick="generateCaption()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);border:none;color:white;border-radius:8px;padding:10px;font-size:12px;font-weight:700;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;margin-bottom:8px">
+      <span id="genBtnIcon">✨</span> <span id="genBtnText">Generar con IA</span>
+    </button>
+
+    <!-- Caption textarea -->
+    <textarea id="captionEdit" style="background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:10px;font-size:12px;font-family:'Inter',sans-serif;resize:none;width:100%;line-height:1.5;outline:none;transition:border-color .2s" rows="5">✨ VILLA LOS SAUCES — tu escapada de lujo
+
+🏊 2 piscinas privadas
+🔥 BBQ & jardín
+🏡 Lujo y confort en cada rincón</textarea>
+
+    <!-- Hashtags textarea -->
+    <textarea id="hashEdit" style="background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#0095f6;padding:10px;font-size:11px;font-family:'Inter',sans-serif;resize:none;width:100%;line-height:1.6;outline:none;margin-top:6px" rows="3">#VillaLosSauces #AraHomeLuxe #AlquilerLujo #Piscina #VacacionesLujo #CasaRural #Escapada</textarea>
+
+    <!-- Variaciones rápidas -->
+    <div style="display:flex;gap:5px;margin-top:4px">
+      <button onclick="generateCaption()" id="regenBtn" style="flex:1;background:#13131f;border:1px solid #2d2d44;color:#9ca3af;border-radius:7px;padding:6px;font-size:11px;cursor:pointer;transition:all .2s" title="Nueva variación">🔄 Otra variación</button>
+      <button onclick="copyCaption()" style="flex:1;background:#13131f;border:1px solid #2d2d44;color:#9ca3af;border-radius:7px;padding:6px;font-size:11px;cursor:pointer;transition:all .2s">📋 Copiar</button>
+    </div>
+  </div>
+
+  <div style="flex:1"></div>
+
+  <!-- Export -->
+  <div class="control-group">
+    <button class="btn btn-gold" onclick="downloadCarousel()">⬇ Descargar Carrusel</button>
+    <button class="btn btn-outline" onclick="downloadVideo()" style="margin-top:6px">🎬 Descargar Vídeo</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="page-header">
+    <span class="badge">✦ Villa Los Sauces</span>
+    <span class="badge">🌐 arahomeluxe.com</span>
+    <h1 style="margin-top:12px">Post para <span style="background:linear-gradient(135deg,#c9a96e,#f0d090);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Redes Sociales</span></h1>
+    <p>Carrusel de 4 imágenes reales + vídeo animado listo para publicar</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="showTab(this,'carousel')">📸 Carrusel Instagram</div>
+    <div class="tab" onclick="showTab(this,'video')">🎬 Vídeo Animado</div>
+    <div class="tab" onclick="showTab(this,'export')">⬇ Exportar</div>
+  </div>
+
+  <!-- ══ CAROUSEL TAB ══ -->
+  <div id="tab-carousel" class="carousel-wrapper">
+    <div class="instagram-frame">
+      <!-- Header -->
+      <div class="ig-header">
+        <div class="ig-avatar">
+          <div class="ig-avatar-inner">
+            <img src="https://arahomeluxe.com/logo.png" alt="logo" onerror="this.style.background='linear-gradient(135deg,#c9a96e,#f0d090)'"/>
+          </div>
+        </div>
+        <div>
+          <div class="ig-username">arahomeluxe</div>
+          <div class="ig-location">Villa Los Sauces · Piscinas · BBQ</div>
+        </div>
+        <div class="ig-more">···</div>
+      </div>
+
+      <!-- Slides -->
+      <div class="carousel-slides-container" id="carouselSlides">
+        <button class="nav-btn nav-prev" onclick="slide(-1)">‹</button>
+        <button class="nav-btn nav-next" onclick="slide(1)">›</button>
+        <div class="carousel-track" id="track">
+          <!-- Slide 1 — cargada primero (piscina) -->
+          <div class="slide">
+            <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407111908-480872440.jpg" alt="Villa Los Sauces - Piscina exterior" width="480" height="480" decoding="async"/>
+            <div class="slide-num">1 / 4</div>
+            <div class="slide-overlay">
+              <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5)">VILLA LOS SAUCES</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:3px">🏊 Piscinas · 🔥 BBQ · 🏡 Lujo</div>
+            </div>
+          </div>
+          <!-- Slide 2 -->
+          <div class="slide">
+            <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407118631-480872464.jpg" alt="Villa Los Sauces - Interior salón" width="480" height="480" decoding="async" loading="lazy"/>
+            <div class="slide-num">2 / 4</div>
+            <div class="slide-overlay">
+              <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5)">Espacios Únicos</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:3px">Diseño y confort en cada detalle</div>
+            </div>
+          </div>
+          <!-- Slide 3 -->
+          <div class="slide">
+            <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407120300-480872467.jpg" alt="Villa Los Sauces - Interior dormitorio" width="480" height="480" decoding="async" loading="lazy"/>
+            <div class="slide-num">3 / 4</div>
+            <div class="slide-overlay">
+              <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5)">Tu Refugio Privado</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:3px">Relájate y desconecta</div>
+            </div>
+          </div>
+          <!-- Slide 4 -->
+          <div class="slide">
+            <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407121952-480872489.jpg" alt="Villa Los Sauces - Terraza BBQ" width="480" height="480" decoding="async" loading="lazy"/>
+            <div class="slide-num">4 / 4</div>
+            <div class="slide-overlay">
+              <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.5)">Reserva Ahora</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:3px">🌐 arahomeluxe.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dots -->
+      <div class="ig-dots">
+        <div class="ig-dot active" onclick="goTo(0)"></div>
+        <div class="ig-dot" onclick="goTo(1)"></div>
+        <div class="ig-dot" onclick="goTo(2)"></div>
+        <div class="ig-dot" onclick="goTo(3)"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="ig-footer">
+        <div class="ig-actions">
+          <!-- Heart -->
+          <div class="ig-icon" onclick="this.classList.toggle('liked');this.querySelector('svg').style.fill=this.classList.contains('liked')?'#ff3040':'none';this.querySelector('svg').style.stroke=this.classList.contains('liked')?'#ff3040':'#fff'">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <!-- Comment -->
+          <div class="ig-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <!-- Share -->
+          <div class="ig-icon">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+          <!-- Bookmark -->
+          <div class="ig-icon ig-bookmark">
+            <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </div>
+        </div>
+        <div class="ig-likes">1.248 Me gusta</div>
+        <div class="ig-caption" id="igCaption">
+          <strong>arahomeluxe</strong> ✨ VILLA LOS SAUCES — tu escapada de lujo 🏊 2 piscinas privadas 🔥 BBQ & jardín 🏡 Lujo y confort en cada rincón
+        </div>
+        <div class="ig-hashtags" id="igHashtags">#VillaLosSauces #AraHomeLuxe #AlquilerLujo #Piscina #VacacionesLujo</div>
+        <div class="ig-time">Hace 2 horas · Ver los 47 comentarios</div>
+      </div>
+    </div>
+
+    <!-- Thumbnail strip -->
+    <div class="image-strip" id="thumbStrip">
+      <div class="strip-thumb active" onclick="goTo(0)"><img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407111908-480872440.jpg"/></div>
+      <div class="strip-thumb" onclick="goTo(1)"><img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407118631-480872464.jpg"/></div>
+      <div class="strip-thumb" onclick="goTo(2)"><img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407120300-480872467.jpg"/></div>
+      <div class="strip-thumb" onclick="goTo(3)"><img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407121952-480872489.jpg"/></div>
+    </div>
+
+    <div style="color:#6b7280;font-size:12px;text-align:center">
+      Desliza las flechas ‹ › para navegar entre las 4 imágenes
+    </div>
+  </div>
+
+  <!-- ══ VIDEO TAB ══ -->
+  <div id="tab-video" class="video-wrapper" style="display:none">
+    <div class="video-frame">
+      <div class="video-canvas" id="videoCanvas" onclick="togglePlay()">
+        <!-- Slides -->
+        <div class="video-slide visible playing" id="vs0">
+          <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407111908-480872440.jpg" class="kb-zoom-in" width="480" height="480" decoding="async" alt="Piscina"/>
+        </div>
+        <div class="video-slide" id="vs1">
+          <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407118631-480872464.jpg" class="kb-zoom-in" width="480" height="480" decoding="async" loading="lazy" alt="Salón"/>
+        </div>
+        <div class="video-slide" id="vs2">
+          <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407120300-480872467.jpg" class="kb-zoom-in" width="480" height="480" decoding="async" loading="lazy" alt="Dormitorio"/>
+        </div>
+        <div class="video-slide" id="vs3">
+          <img src="https://abacusai-apps-bd884533ddf9dec22950b176-us-west-2.s3.us-west-2.amazonaws.com/28412/public/uploads/1775407121952-480872489.jpg" class="kb-zoom-in" width="480" height="480" decoding="async" loading="lazy" alt="Terraza BBQ"/>
+        </div>
+
+        <!-- Overlay text -->
+        <div class="video-text-overlay" id="videoOverlay">
+          <div class="video-property-name" id="videoTitle">VILLA LOS SAUCES</div>
+          <div class="video-property-sub">
+            <span>🏊 Piscinas</span><span>·</span><span>🔥 BBQ</span><span>·</span><span>🌐 arahomeluxe.com</span>
+          </div>
+        </div>
+
+        <!-- Logo bug -->
+        <div class="video-logo-bug">AraHomeLuxe</div>
+
+        <!-- Slide dots -->
+        <div class="video-dots">
+          <div class="video-dot active" id="vd0"></div>
+          <div class="video-dot" id="vd1"></div>
+          <div class="video-dot" id="vd2"></div>
+          <div class="video-dot" id="vd3"></div>
+        </div>
+
+        <!-- Play button overlay -->
+        <div id="playOverlay" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;opacity:0;transition:opacity .3s;pointer-events:none">
+          <div style="width:72px;height:72px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border-radius:50%;display:flex;align-items:center;justify-content:center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9V3z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="video-progress" id="progressBar" onclick="seekVideo(event)">
+        <div class="video-progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="video-controls">
+        <button class="ctrl-btn" onclick="togglePlay()" id="playBtn" title="Play/Pausa">
+          <svg id="playIcon" viewBox="0 0 24 24" fill="white"><path d="M5 3l14 9-14 9V3z"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="restartVideo()" title="Reiniciar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.39"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="prevVSlide()" title="Anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="nextVSlide()" title="Siguiente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <span class="time-display" id="timeDisplay">0:00 / 0:20</span>
+        <div style="flex:1"></div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8e8e8e" stroke-width="2" style="flex-shrink:0"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <input type="range" class="vol-slider" min="0" max="100" value="80" style="width:70px;margin-left:6px"/>
+        <span class="effects-label" id="effectName" style="margin-left:10px">🔍 Zoom In</span>
+      </div>
+    </div>
+
+    <div style="color:#6b7280;font-size:12px;text-align:center">
+      Haz clic en el vídeo para pausar · Cambia el efecto desde el panel izquierdo
+    </div>
+  </div>
+
+  <!-- ══ EXPORT TAB ══ -->
+  <div id="tab-export" style="display:none;max-width:520px">
+    <div style="margin-bottom:20px">
+      <div style="font-size:14px;color:#9ca3af;margin-bottom:16px">Formatos disponibles para exportar tu contenido:</div>
+      <div class="export-grid">
+        <div class="export-card" onclick="showToast('📥 Descargando imágenes JPG...')">
+          <div class="export-icon">🖼️</div>
+          <div class="export-name">4 × JPG individuales</div>
+          <div class="export-desc">Carrusel listo para subir a Instagram / Facebook</div>
+        </div>
+        <div class="export-card" onclick="showToast('🎬 Preparando vídeo MP4...')">
+          <div class="export-icon">🎬</div>
+          <div class="export-name">Vídeo MP4</div>
+          <div class="export-desc">Animación Ken Burns · 16s · 1080×1080</div>
+        </div>
+        <div class="export-card" onclick="showToast('📱 Exportando Story 9:16...')">
+          <div class="export-icon">📱</div>
+          <div class="export-name">Story MP4 (9:16)</div>
+          <div class="export-desc">Optimizado para Instagram & TikTok Stories</div>
+        </div>
+        <div class="export-card" onclick="showToast('🎠 Exportando GIF animado...')">
+          <div class="export-icon">🎠</div>
+          <div class="export-name">GIF Animado</div>
+          <div class="export-desc">Carrusel en loop para WhatsApp y web</div>
+        </div>
+        <div class="export-card" onclick="showToast('📄 Exportando PDF...')">
+          <div class="export-icon">📄</div>
+          <div class="export-name">PDF Presentación</div>
+          <div class="export-desc">4 páginas con las imágenes y texto</div>
+        </div>
+        <div class="export-card" onclick="copyCaption()">
+          <div class="export-icon">📋</div>
+          <div class="export-name">Copiar Caption</div>
+          <div class="export-desc">Texto + hashtags listos para pegar</div>
+        </div>
+      </div>
+
+      <div style="background:#0f0f18;border:1px solid #1a1a2e;border-radius:12px;padding:20px;margin-top:8px">
+        <div class="section-title" style="margin-bottom:12px">Vista previa del caption</div>
+        <div style="font-size:13px;line-height:1.7;color:#e2e8f0">
+          <strong style="color:#c9a96e">arahomeluxe</strong> ✨ VILLA LOS SAUCES — tu escapada de lujo<br>
+          🏊 2 piscinas privadas · 🔥 BBQ & jardín · 🏡 Lujo y confort<br><br>
+          <span style="color:#0095f6">#VillaLosSauces #AraHomeLuxe #AlquilerLujo #Piscina #VacacionesLujo #CasaRural #Escapada</span>
+        </div>
+        <button class="btn btn-gold" style="margin-top:14px;width:auto;padding:8px 20px" onclick="copyCaption()">📋 Copiar texto</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Carousel ───
+let current = 0;
+const total = 4;
+
+function slide(dir) {
+  current = (current + dir + total) % total;
+  updateCarousel();
+}
+function goTo(n) {
+  current = n;
+  updateCarousel();
+}
+function updateCarousel() {
+  document.getElementById('track').style.transform = `translateX(-${current * 480}px)`;
+  document.querySelectorAll('.ig-dot').forEach((d,i) => d.classList.toggle('active', i===current));
+  document.querySelectorAll('#thumbStrip .strip-thumb').forEach((t,i) => t.classList.toggle('active', i===current));
+}
+
+// Swipe support for carousel
+let startX = 0;
+const slidesEl = document.getElementById('carouselSlides');
+slidesEl.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+slidesEl.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - startX;
+  if (Math.abs(dx) > 40) slide(dx < 0 ? 1 : -1);
+});
+
+// ─── Video Player ───
+let videoSlide = 0;
+let playing = true;
+let elapsed = 0;
+let slideDuration = 4; // default seconds per slide
+const slideDurations = [8, 4, 4, 4]; // primera imagen el doble
+let slideTimer = null;
+let tickTimer = null;
+// Efecto individual por cada imagen
+const slideEffects = ['kb-zoom-in', 'kb-zoom-out', 'kb-pan-left', 'kb-zoom-in'];
+let activeSlideTab = 0; // qué pestaña está seleccionada en el panel
+
+const slideLabels = ['Imagen 1 — Piscina','Imagen 2 — Interior','Imagen 3 — Interior','Imagen 4 — Reserva'];
+const EFFECTS_META = {
+  'kb-zoom-in':    '🔍 Zoom In',
+  'kb-zoom-out':   '🔭 Zoom Out',
+  'kb-pan-left':   '⬅ Pan Izquierda',
+  'kb-pan-right':  '➡ Pan Derecha',
+  'kb-pan-up':     '⬆ Pan Arriba',
+  'kb-zoom-rotate':'🌀 Ken Burns',
+  'none':          '⏹ Sin movimiento',
+};
+
+const slideTitles = [
+  'VILLA LOS SAUCES',
+  'Espacios Únicos',
+  'Tu Refugio Privado',
+  'Reserva Ahora'
+];
+const slideSubtitles = [
+  '🏊 Piscinas · 🔥 BBQ · 🌐 arahomeluxe.com',
+  'Diseño y confort en cada detalle',
+  'Relájate y desconecta con los tuyos',
+  '🌐 arahomeluxe.com · ¡Disponibilidad limitada!'
+];
+
+function applySlideEffectClass(slideEl, fx) {
+  const img = slideEl.querySelector('img');
+  img.className = fx || 'kb-zoom-in';
+}
+
+function updateVideoSlide(n) {
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById('vs' + i);
+    const dot = document.getElementById('vd' + i);
+    if (i === n) {
+      const dur = slideDurations[i] || slideDuration;
+      el.style.setProperty('--kb-dur', dur + 's');
+      applySlideEffectClass(el, slideEffects[i]);
+      el.classList.add('visible');
+      dot.classList.add('active');
+      if (playing) {
+        el.classList.remove('playing');
+        void el.offsetWidth;
+        setTimeout(() => { el.classList.add('playing'); }, 50);
+      }
+    } else {
+      el.classList.remove('visible', 'playing');
+      dot.classList.remove('active');
+    }
+  }
+  document.getElementById('videoTitle').textContent = slideTitles[n];
+  document.querySelector('.video-property-sub').innerHTML =
+    '<span>' + slideSubtitles[n].split(' · ').join('</span><span>·</span><span>') + '</span>';
+  document.getElementById('effectName').textContent = EFFECTS_META[slideEffects[n]] || '';
+}
+
+function applyEffect(effect) {
+  document.querySelectorAll('.video-slide img').forEach(img => {
+    img.className = effect;
+  });
+}
+
+function startVideoTick() {
+  if (tickTimer) { clearInterval(tickTimer); cancelAnimationFrame(tickTimer); }
+  const progressEl = document.getElementById('progressFill');
+  const timeEl     = document.getElementById('timeDisplay');
+
+  // Use setInterval (works in background tabs) + rAF for smooth UI when visible
+  const INTERVAL = 100; // ms
+  tickTimer = setInterval(() => {
+    if (!playing) return;
+    elapsed += INTERVAL / 1000;
+    const tot  = totalDuration();
+    const pct  = Math.min((elapsed / tot) * 100, 100);
+    progressEl.style.width = pct + '%';
+    const mins      = Math.floor(elapsed / 60);
+    const secs      = Math.floor(elapsed % 60);
+    const totalMins = Math.floor(tot / 60);
+    const totalSecs = Math.floor(tot % 60);
+    timeEl.textContent = `${mins}:${secs.toString().padStart(2,'0')} / ${totalMins}:${totalSecs.toString().padStart(2,'0')}`;
+    if (elapsed >= tot) { elapsed = 0; videoSlide = 0; updateVideoSlide(0); }
+  }, INTERVAL);
+}
+
+function totalDuration() {
+  return slideDurations.reduce((a,b)=>a+b, 0);
+}
+function elapsedAtSlide(n) {
+  return slideDurations.slice(0, n).reduce((a,b)=>a+b, 0);
+}
+
+function startSlideTimer() {
+  clearTimeout(slideTimer);
+  const dur = slideDurations[videoSlide] || slideDuration;
+  slideTimer = setTimeout(() => {
+    if (!playing) return;
+    videoSlide = (videoSlide + 1) % 4;
+    updateVideoSlide(videoSlide);
+    startSlideTimer();
+  }, dur * 1000);
+}
+
+function togglePlay() {
+  playing = !playing;
+  const icon = document.getElementById('playIcon');
+  const overlay = document.getElementById('playOverlay');
+  if (playing) {
+    icon.innerHTML = '<path d="M6 19h4V5H6zm8-14v14h4V5z"/>';
+    overlay.style.opacity = '0';
+    document.getElementById('vs' + videoSlide).classList.add('playing');
+    startSlideTimer();
+    setTimeout(() => { icon.innerHTML = '<path d="M5 3l14 9-14 9V3z"/>'; }, 200);
+  } else {
+    icon.innerHTML = '<path d="M5 3l14 9-14 9V3z"/>';
+    overlay.style.opacity = '1';
+    clearTimeout(slideTimer);
+    document.getElementById('vs' + videoSlide).classList.remove('playing');
+  }
+}
+
+function restartVideo() {
+  playing = true;
+  elapsed = 0;
+  videoSlide = 0;
+  clearTimeout(slideTimer);
+  updateVideoSlide(0);
+  startSlideTimer();
+  document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6zm8-14v14h4V5z"/>';
+  document.getElementById('playOverlay').style.opacity = '0';
+  setTimeout(() => { document.getElementById('playIcon').innerHTML = '<path d="M5 3l14 9-14 9V3z"/>'; }, 200);
+}
+
+function prevVSlide() {
+  videoSlide = (videoSlide - 1 + 4) % 4;
+  elapsed = elapsedAtSlide(videoSlide);
+  clearTimeout(slideTimer);
+  updateVideoSlide(videoSlide);
+  if (playing) startSlideTimer();
+}
+
+function nextVSlide() {
+  videoSlide = (videoSlide + 1) % 4;
+  elapsed = elapsedAtSlide(videoSlide);
+  clearTimeout(slideTimer);
+  updateVideoSlide(videoSlide);
+  if (playing) startSlideTimer();
+}
+
+function seekVideo(e) {
+  const bar = document.getElementById('progressBar');
+  const pct = e.offsetX / bar.offsetWidth;
+  elapsed = pct * totalDuration();
+  // find which slide we're on
+  let acc = 0;
+  videoSlide = 0;
+  for (let i = 0; i < slideDurations.length; i++) {
+    if (elapsed < acc + slideDurations[i]) { videoSlide = i; break; }
+    acc += slideDurations[i];
+    videoSlide = i;
+  }
+  clearTimeout(slideTimer);
+  updateVideoSlide(videoSlide);
+  if (playing) startSlideTimer();
+}
+
+// ─── Per-slide effect controls ───
+function selectSlideTab(el, idx) {
+  activeSlideTab = idx;
+  document.querySelectorAll('.slide-tab').forEach((t,i) => {
+    const isActive = i === idx;
+    t.classList.toggle('active', isActive);
+    t.style.background  = isActive ? 'rgba(201,169,110,.15)' : '#13131f';
+    t.style.borderColor = isActive ? 'rgba(201,169,110,.4)'  : '#2d2d44';
+    t.style.color       = isActive ? '#c9a96e'                : '#9ca3af';
+  });
+  document.getElementById('slideEffectLabel').textContent = slideLabels[idx];
+  // Highlight the currently-selected effect for this slide
+  const fx = slideEffects[idx];
+  document.querySelectorAll('.effect-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.fx === fx);
+  });
+}
+
+function setSlideEffect(el, fx) {
+  slideEffects[activeSlideTab] = fx;
+  document.querySelectorAll('.effect-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  // If this slide is currently visible, update it live
+  if (videoSlide === activeSlideTab) {
+    const vsEl = document.getElementById('vs' + activeSlideTab);
+    applySlideEffectClass(vsEl, fx);
+    if (playing) {
+      vsEl.classList.remove('playing');
+      void vsEl.offsetWidth;
+      setTimeout(() => vsEl.classList.add('playing'), 50);
+    }
+    document.getElementById('effectName').textContent = EFFECTS_META[fx] || '';
+  }
+}
+
+function setDuration(el, dur) {
+  slideDuration = dur;
+  // First slide always gets double duration
+  for (let i = 0; i < slideDurations.length; i++) slideDurations[i] = (i === 0) ? dur * 2 : dur;
+  el.closest('.ctrl-row').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const tot = totalDuration();
+  const totalMins = Math.floor(tot / 60);
+  const totalSecs = Math.floor(tot % 60);
+  document.getElementById('timeDisplay').textContent =
+    `0:00 / ${totalMins}:${totalSecs.toString().padStart(2,'0')}`;
+}
+
+function setFormat(el, fmt) {
+  document.querySelectorAll('.chip').forEach(c => {
+    if(c.closest('.ctrl-row') === el.closest('.ctrl-row')) c.classList.remove('active');
+  });
+  el.classList.add('active');
+}
+
+// ─── Tabs ───
+function showTab(el, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['carousel','video','export'].forEach(t => {
+    const el2 = document.getElementById('tab-' + t);
+    if (el2) el2.style.display = (t === tab) ? (tab === 'carousel' ? 'flex' : 'block') : 'none';
+  });
+  if (tab === 'video' && playing) {
+    restartVideo();
+  }
+}
+
+// ─── Caption sync ───
+document.getElementById('captionEdit').addEventListener('input', syncCaption);
+document.getElementById('hashEdit').addEventListener('input', () => {
+  document.getElementById('igHashtags').textContent = document.getElementById('hashEdit').value;
+});
+function syncCaption() {
+  document.getElementById('igCaption').innerHTML =
+    '<strong>arahomeluxe</strong> ' + document.getElementById('captionEdit').value.replace(/\n/g,' ');
+}
+
+// ─── Tone & Network state ───
+let activeTone = 'lujo';
+let activeNetwork = 'instagram';
+
+function setTone(el, tone) {
+  activeTone = tone;
+  document.querySelectorAll('#toneRow .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+function setNet(el, net) {
+  activeNetwork = net;
+  document.querySelectorAll('#networkRow .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── API Key management ───
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) { showToast('⚠️ Introduce una clave API'); return; }
+  if (!key.startsWith('sk-ant')) { showToast('⚠️ La clave debe empezar por sk-ant...'); return; }
+  localStorage.setItem('cf_anthropic_key', key);
+  updateApiStatus();
+  showToast('🔑 Clave guardada correctamente');
+}
+function toggleApiKeyVisibility() {
+  const inp = document.getElementById('apiKeyInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+function updateApiStatus() {
+  const key = localStorage.getItem('cf_anthropic_key');
+  const status = document.getElementById('apiStatus');
+  const input  = document.getElementById('apiKeyInput');
+  if (key) {
+    status.textContent = '● Configurada';
+    status.style.color = '#10b981';
+    input.value = key;
+  } else {
+    status.textContent = '● Sin configurar';
+    status.style.color = '#6b7280';
+  }
+}
+
+// ─── AI Caption Generation ───
+const PROPERTY = {
+  name:     'VILLA LOS SAUCES',
+  features: '2 piscinas privadas, BBQ, jardín, terraza, equipada de lujo',
+  location: 'AraHomeLuxe',
+  url:      'arahomeluxe.com',
+  handle:   '@arahomeluxe',
+};
+
+const TONE_PROMPTS = {
+  lujo:      'lujoso, exclusivo y sofisticado. Usa vocabulario premium. Apela a la exclusividad.',
+  familiar:  'cálido, familiar y acogedor. Habla de recuerdos, risas y momentos en familia.',
+  romantico: 'romántico y evocador. Habla de momentos íntimos, atardeceres y escapadas en pareja.',
+  aventura:  'dinámico y lleno de energía. Habla de desconexión, naturaleza y libertad.',
+};
+const NET_PROMPTS = {
+  instagram: 'para Instagram: máximo 150 palabras, usa emojis con moderación, llamada a la acción al final.',
+  facebook:  'para Facebook: máximo 200 palabras, más descriptivo, incluye pregunta para generar interacción.',
+  linkedin:  'para LinkedIn: profesional, sin emojis excesivos, destaca la propuesta de valor y el negocio.',
+};
+
+async function generateCaption() {
+  const apiKey = localStorage.getItem('cf_anthropic_key');
+  if (!apiKey) {
+    showToast('🔑 Primero guarda tu clave API en el panel de configuración');
+    document.getElementById('apiKeySection').scrollIntoView({behavior:'smooth'});
+    document.getElementById('apiKeyInput').focus();
+    return;
+  }
+
+  // Set loading state
+  const btn = document.getElementById('generateBtn');
+  const icon = document.getElementById('genBtnIcon');
+  const text = document.getElementById('genBtnText');
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  icon.textContent = '⏳';
+  text.textContent = 'Generando...';
+
+  const captionEl = document.getElementById('captionEdit');
+  const hashEl    = document.getElementById('hashEdit');
+
+  // Animate the textarea while waiting
+  captionEl.style.borderColor = '#7c3aed';
+  captionEl.style.color = '#6b7280';
+  captionEl.value = 'La IA está escribiendo tu caption...';
+
+  const systemPrompt = `Eres un experto en marketing digital y copywriting para alquileres vacacionales de lujo en España. Escribes captions persuasivos y creativos para redes sociales que generan reservas.`;
+
+  const userPrompt = `Genera un caption ${NET_PROMPTS[activeNetwork]} con tono ${TONE_PROMPTS[activeTone]}
+
+Propiedad: ${PROPERTY.name}
+Características: ${PROPERTY.features}
+Empresa: ${PROPERTY.location}
+Web: ${PROPERTY.url}
+
+IMPORTANTE:
+- Responde SOLO con dos secciones separadas por "---HASHTAGS---"
+- Primero el caption (sin hashtags)
+- Después de "---HASHTAGS---" pon entre 8 y 12 hashtags relevantes en español e inglés
+- No incluyas explicaciones ni texto extra`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 400,
+        messages: [{ role: 'user', content: userPrompt }],
+        system: systemPrompt,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const full = data.content?.[0]?.text || '';
+
+    const parts = full.split('---HASHTAGS---');
+    const caption   = (parts[0] || full).trim();
+    const hashtags  = parts[1]?.trim() || '#VillaLosSauces #AraHomeLuxe #AlquilerLujo #Piscina #VacacionesLujo';
+
+    captionEl.style.color = '#e2e8f0';
+    captionEl.value = caption;
+    hashEl.value    = hashtags;
+    document.getElementById('igHashtags').textContent = hashtags;
+    syncCaption();
+    showToast('✨ Caption generado con IA');
+
+  } catch (err) {
+    captionEl.style.color = '#e2e8f0';
+    captionEl.value = '✨ VILLA LOS SAUCES — tu escapada de lujo\n\n🏊 2 piscinas privadas\n🔥 BBQ & jardín\n🏡 Lujo y confort en cada rincón';
+
+    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+      showToast('⚠️ Error de red. Comprueba que el navegador permite llamadas a la API.', 5000);
+    } else if (err.message.includes('401') || err.message.includes('invalid')) {
+      showToast('❌ Clave API inválida. Compruébala en console.anthropic.com', 5000);
+    } else {
+      showToast('❌ Error: ' + err.message, 5000);
+    }
+    console.error('AI caption error:', err);
+  } finally {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    icon.textContent = '✨';
+    text.textContent = 'Generar con IA';
+    captionEl.style.borderColor = '';
+  }
+}
+
+// ─── Actions ───
+function copyCaption() {
+  const text = document.getElementById('captionEdit').value + '\n\n' + document.getElementById('hashEdit').value;
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Caption copiado al portapapeles'));
+}
+
+function downloadCarousel() {
+  showToast('📥 Descargando 4 imágenes...');
+}
+
+function downloadVideo() {
+  showToast('🎬 Preparando vídeo MP4...');
+}
+
+let toastTimer = null;
+function showToast(msg, dur=3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ─── Init ───
+updateVideoSlide(0);
+startVideoTick();
+startSlideTimer();
+selectSlideTab(document.querySelector('.slide-tab'), 0);
+updateApiStatus();
+// Restore saved API key in input
+const savedKey = localStorage.getItem('cf_anthropic_key');
+if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
+// Start paused so user sees the first frame
+setTimeout(() => {
+  playing = false;
+  document.getElementById('playIcon').innerHTML = '<path d="M5 3l14 9-14 9V3z"/>';
+  document.getElementById('playOverlay').style.opacity = '1';
+  clearTimeout(slideTimer);
+}, 100);
+</script>
+</body>
+</html>

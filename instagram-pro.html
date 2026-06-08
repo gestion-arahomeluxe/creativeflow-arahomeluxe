@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Instagram Content Generator Pro — AraHomeLuxe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script async src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0f0f13;color:#e2e8f0;overflow-x:hidden;min-height:100vh}
+
+/* Layout */
+.container{max-width:1400px;margin:0 auto;padding:24px}
+.header{text-align:center;margin-bottom:48px}
+.header h1{font-family:'Playfair Display',serif;font-size:48px;font-weight:700;margin-bottom:12px;background:linear-gradient(135deg,#c9a96e,#f0d090);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:#9ca3af;font-size:16px;max-width:600px;margin:0 auto}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:48px}
+@media(max-width:1024px){.grid{grid-template-columns:1fr}}
+
+/* Card */
+.card{background:#111118;border:1px solid #2d2d44;border-radius:16px;padding:28px;transition:all .3s}
+.card:hover{border-color:#c9a96e;box-shadow:0 20px 60px rgba(201,169,110,.15)}
+.card-title{font-size:14px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px}
+
+/* Preview */
+.preview-box{aspect-ratio:1;background:#1a1a2e;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:20px;border:1px solid #2d2d44}
+.preview-box img, .preview-box canvas{width:100%;height:100%;object-fit:cover}
+
+/* Controls */
+.controls{display:flex;flex-direction:column;gap:16px}
+.control-group{display:flex;flex-direction:column;gap:8px}
+.control-label{font-size:12px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.8px}
+
+input[type="text"], input[type="range"], select{
+  background:#1a1a2e;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:10px 12px;
+  font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;width:100%
+}
+input[type="text"]:focus, select:focus{border-color:#c9a96e}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 16px;border-radius:20px;border:1px solid #2d2d44;background:#13131f;color:#9ca3af;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.chip:hover{border-color:#c9a96e;color:#c9a96e}
+.chip.active{background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;border-color:#c9a96e}
+
+.btn{padding:12px 24px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.btn-gold{background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f}
+.btn-gold:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,169,110,.35)}
+.btn-secondary{background:#2d2d44;color:#9ca3af;border:1px solid #4b5563}
+.btn-secondary:hover{background:#3a3a54;color:#c9a96e}
+.btn-full{width:100%}
+
+/* Instagram Preview */
+.ig-mockup{background:#000;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px #262626,0 20px 60px rgba(0,0,0,.8);margin-bottom:20px}
+.ig-header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1a1a1a}
+.ig-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:12px}
+.ig-meta{flex:1}
+.ig-username{font-size:13px;font-weight:600;color:#fff}
+.ig-location{font-size:11px;color:#8e8e8e}
+.ig-content{width:100%;aspect-ratio:1;overflow:hidden;background:#111}
+.ig-content img, .ig-content canvas{width:100%;height:100%;object-fit:cover}
+.ig-footer{padding:12px 14px;border-top:1px solid #1a1a1a;color:#8e8e8e;font-size:12px}
+
+/* Loading */
+.loader{display:inline-block;width:20px;height:20px;border:3px solid rgba(201,169,110,.3);border-top-color:#c9a96e;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Success */
+.success{background:linear-gradient(135deg,rgba(5,150,105,.1),rgba(4,120,87,.1));border:1px solid rgba(5,150,105,.3);padding:16px;border-radius:10px;color:#a7f3d0;font-size:13px;margin-bottom:16px}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;padding:14px 20px;border-radius:10px;font-weight:600;z-index:9999;box-shadow:0 8px 30px rgba(201,169,110,.4);animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Variations */
+.variations-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.variation-item{background:#1a1a2e;border:1px solid #2d2d44;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.variation-item:hover{border-color:#c9a96e;box-shadow:0 8px 20px rgba(201,169,110,.15)}
+.variation-preview{aspect-ratio:1;overflow:hidden}
+.variation-preview img, .variation-preview canvas{width:100%;height:100%;object-fit:cover}
+.variation-info{padding:12px;border-top:1px solid #2d2d44;font-size:11px;color:#9ca3af}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-box{background:#1a1a2e;border:1px solid #2d2d44;border-radius:10px;padding:16px;text-align:center}
+.stat-value{font-size:24px;font-weight:700;color:#c9a96e;margin-bottom:4px}
+.stat-label{font-size:11px;color:#6b7280;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🏰 Instagram Content Generator Pro</h1>
+    <p>Crea contenido profesional de impacto para Villa Los Sauces en segundos. Optimizado para algoritmo de Instagram.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-box">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Imágenes Premium</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">12</div>
+      <div class="stat-label">Variaciones Automáticas</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Formatos (Post, Reel, Story)</div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="grid">
+    <!-- Left: Controls -->
+    <div>
+      <div class="card">
+        <div class="card-title">📝 Configuración de Contenido</div>
+
+        <div class="control-group">
+          <label class="control-label">Tipo de Contenido</label>
+          <div class="chips">
+            <div class="chip active" onclick="setContentType('carousel')">📸 Carrusel Post</div>
+            <div class="chip" onclick="setContentType('reel')">🎬 Reel Vertical</div>
+            <div class="chip" onclick="setContentType('story')">📱 Story</div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Tono de Voz</label>
+          <div class="chips">
+            <div class="chip active" onclick="setTone('luxury')">✨ Lujo Minimalista</div>
+            <div class="chip" onclick="setTone('adventure')">🌍 Aventura</div>
+            <div class="chip" onclick="setTone('lifestyle')">🌟 Lifestyle</div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Paleta de Color</label>
+          <div class="chips">
+            <div class="chip active" onclick="setPalette('gold')">🟡 Oro & Blanco</div>
+            <div class="chip" onclick="setPalette('ocean')">🔵 Azul Océano</div>
+            <div class="chip" onclick="setPalette('sunset')">🔴 Atardecer</div>
+            <div class="chip" onclick="setPalette('green')">💚 Verde Lujo</div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Hashtags Personalizados</label>
+          <input type="text" id="hashtags" value="#VillaLosSauces #AraHomeLuxe #AlquilerLujo #Piscina" placeholder="Añade hashtags..."/>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Llamada a Acción</label>
+          <select id="cta">
+            <option value="reserve">📅 Reserva Ahora</option>
+            <option value="inquire">💬 Consulta Disponibilidad</option>
+            <option value="discover">🔍 Descubre Más</option>
+            <option value="visit">🌐 Visita Nuestro Sitio</option>
+          </select>
+        </div>
+
+        <button class="btn btn-gold btn-full" onclick="generateContent()" style="margin-top:24px">
+          <span id="genIcon">⚡</span>
+          <span id="genText">Generar Contenido Profesional</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: Preview -->
+    <div>
+      <div class="card">
+        <div class="card-title">📺 Vista Previa Instagram</div>
+
+        <div class="ig-mockup">
+          <div class="ig-header">
+            <div class="ig-avatar">🏰</div>
+            <div class="ig-meta">
+              <div class="ig-username">arahomeluxe</div>
+              <div class="ig-location">Villa Los Sauces • Mallorca</div>
+            </div>
+          </div>
+          <div class="ig-content">
+            <canvas id="previewCanvas" style="width:100%;height:100%"></canvas>
+          </div>
+          <div class="ig-footer">
+            <div style="margin-bottom:8px;color:#fff">✨ VILLA LOS SAUCES — tu escapada de lujo</div>
+            <div>🏊 2 piscinas privadas • 🔥 BBQ & jardín • 🏡 Lujo y confort en cada rincón</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-full" onclick="shareToInstagram()">Share ↗️</button>
+          <button class="btn btn-secondary btn-full" onclick="downloadContent()">⬇️ Descargar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Variations -->
+  <div class="card">
+    <div class="card-title">🎨 Variaciones Automáticas (12 Opciones)</div>
+    <div class="variations-grid" id="variationsGrid">
+      <!-- Generated by JS -->
+    </div>
+    <button class="btn btn-gold btn-full" onclick="downloadAllVariations()" style="margin-top:24px">
+      📦 Descargar Todo (ZIP)
+    </button>
+  </div>
+</div>
+
+<script>
+// State
+let contentType = 'carousel';
+let tone = 'luxury';
+let palette = 'gold';
+
+const palettes = {
+  gold: {primary:'#c9a96e',secondary:'#f0d090',dark:'#0a0a0f',light:'#ffffff'},
+  ocean: {primary:'#0095f6',secondary:'#00b4d8',dark:'#000000',light:'#ffffff'},
+  sunset: {primary:'#ff6b35',secondary:'#f7931e',dark:'#1a1a1a',light:'#ffffff'},
+  green: {primary:'#2d7a4d',secondary:'#4fa86d',dark:'#0a0a0f',light:'#ffffff'}
+};
+
+const tones = {
+  luxury: 'Lujo minimalista para una escapada exclusiva',
+  adventure: 'Descubre aventuras en paraíso',
+  lifestyle: 'Vive la vida que mereces'
+};
+
+function setContentType(type){
+  contentType = type;
+  document.querySelectorAll('[onclick*="setContentType"]').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  generateContent();
+}
+
+function setTone(t){
+  tone = t;
+  document.querySelectorAll('[onclick*="setTone"]').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  generateContent();
+}
+
+function setPalette(p){
+  palette = p;
+  document.querySelectorAll('[onclick*="setPalette"]').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+  generateContent();
+}
+
+function showToast(msg){
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+async function generateContent(){
+  const canvas = document.getElementById('previewCanvas');
+  const ctx = canvas.getContext('2d');
+  const colors = palettes[palette];
+
+  // Establecer tamaño según tipo de contenido
+  if(contentType === 'carousel'){
+    canvas.width = 1080;
+    canvas.height = 1080;
+  }else{
+    canvas.width = 1080;
+    canvas.height = 1920;
+  }
+
+  // Fondo con gradiente
+  const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+  gradient.addColorStop(0, colors.dark);
+  gradient.addColorStop(1, colors.primary + '40');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // Borde superior dorado
+  ctx.fillStyle = colors.primary;
+  ctx.fillRect(0,0,canvas.width,8);
+
+  // Título
+  ctx.fillStyle = colors.light;
+  ctx.font = 'bold 60px "Playfair Display"';
+  ctx.textAlign = 'center';
+  const title = '✨ VILLA LOS SAUCES';
+  ctx.fillText(title, canvas.width/2, 150);
+
+  // Subtítulo
+  ctx.fillStyle = colors.secondary;
+  ctx.font = '20px Inter';
+  ctx.fillText(tones[tone], canvas.width/2, 200);
+
+  // Features
+  ctx.fillStyle = colors.light;
+  ctx.font = '18px Inter';
+  ctx.textAlign = 'left';
+  const features = ['🏊 2 Piscinas Privadas', '🔥 BBQ & Jardín', '🏡 Lujo en Cada Rincón'];
+  features.forEach((f, i) => {
+    ctx.fillText(f, 80, 400 + i*60);
+  });
+
+  // CTA
+  ctx.fillStyle = colors.primary;
+  ctx.fillRect(80, canvas.height - 200, canvas.width - 160, 100);
+  ctx.fillStyle = colors.dark;
+  ctx.font = 'bold 24px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('📅 RESERVA AHORA', canvas.width/2, canvas.height - 140);
+  ctx.fillStyle = colors.secondary;
+  ctx.font = '16px Inter';
+  ctx.fillText('www.arahomeluxe.com', canvas.width/2, canvas.height - 100);
+
+  // Hashtags
+  ctx.fillStyle = '#8e8e8e';
+  ctx.font = '14px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('#VillaLosSauces #AraHomeLuxe #AlquilerLujo', canvas.width/2, canvas.height - 30);
+
+  generateVariations();
+  showToast('✅ Contenido generado exitosamente');
+}
+
+async function generateVariations(){
+  const grid = document.getElementById('variationsGrid');
+  grid.innerHTML = '';
+
+  // Generar 12 variaciones
+  for(let i = 0; i < 12; i++){
+    const paletteNames = Object.keys(palettes);
+    const selectedPalette = paletteNames[i % paletteNames.length];
+
+    const div = document.createElement('div');
+    div.className = 'variation-item';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1080;
+
+    const ctx = canvas.getContext('2d');
+    const colors = palettes[selectedPalette];
+
+    // Renderizar variación
+    const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+    gradient.addColorStop(0, colors.dark);
+    gradient.addColorStop(1, colors.primary + '60');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = colors.primary;
+    ctx.fillRect(0,0,canvas.width,6);
+
+    ctx.fillStyle = colors.light;
+    ctx.font = 'bold 48px "Playfair Display"';
+    ctx.textAlign = 'center';
+    ctx.fillText('VILLA LOS SAUCES', canvas.width/2, 120);
+
+    ctx.fillStyle = colors.secondary;
+    ctx.font = '16px Inter';
+    ctx.fillText(`Variación ${i+1}`, canvas.width/2, canvas.height - 40);
+
+    div.innerHTML = `
+      <div class="variation-preview"></div>
+      <div class="variation-info">Opción ${i+1} - ${selectedPalette}</div>
+    `;
+
+    div.querySelector('.variation-preview').appendChild(canvas);
+    div.onclick = () => downloadVariation(canvas, `variacion-${i+1}`);
+    grid.appendChild(div);
+  }
+}
+
+function downloadContent(){
+  const canvas = document.getElementById('previewCanvas');
+  const link = document.createElement('a');
+  link.href = canvas.toDataURL('image/png');
+  link.download = `AraHomeLuxe-${contentType}-${Date.now()}.png`;
+  link.click();
+  showToast('📥 Contenido descargado');
+}
+
+function downloadVariation(canvas, name){
+  const link = document.createElement('a');
+  link.href = canvas.toDataURL('image/png');
+  link.download = `${name}.png`;
+  link.click();
+  showToast('✅ Variación descargada');
+}
+
+async function downloadAllVariations(){
+  showToast('⏳ Preparando descarga ZIP...');
+  setTimeout(() => {
+    showToast('📦 12 variaciones listas para descargar (simulated)');
+  }, 1000);
+}
+
+function shareToInstagram(){
+  showToast('📱 Abre Instagram, ve a "Crear" y sube la imagen descargada');
+}
+
+// Initialize
+generateContent();
+</script>
+
+</body>
+</html>
