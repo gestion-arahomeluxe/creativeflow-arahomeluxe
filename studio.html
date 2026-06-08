@@ -308,6 +308,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
       <button class="btn btn-ghost btn-sm btn-w" onclick="generarBrief()">🗂️ Brief de cliente</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="generarEnIngles()">🌍 Captions en inglés</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="exportParaScheduler()">📆 Exportar para planificador</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="convertirAStories()">📱 Generar versiones Story</button>
       <button class="btn btn-gold btn-sm btn-w" style="margin-top:4px" onclick="downloadAll()">⬇️ Descargar todo (PNG)</button>
     </div>
     <div style="margin-top:10px">
@@ -424,6 +425,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
     <!-- Canvas preview -->
     <div class="modal-canvas">
       <button class="close-modal" onclick="closeEditor()">✕</button>
+      <!-- Creative navigator -->
+      <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border-radius:20px;padding:5px 12px;z-index:5">
+        <button onclick="navigateCreative(-1)" style="background:none;border:none;color:#c9a96e;font-size:18px;cursor:pointer;padding:0 4px;line-height:1" title="Creative anterior (←)">‹</button>
+        <span id="editorNavLabel" style="font-size:11px;font-weight:700;color:#f0eeec;min-width:60px;text-align:center">1 / 1</span>
+        <button onclick="navigateCreative(+1)" style="background:none;border:none;color:#c9a96e;font-size:18px;cursor:pointer;padding:0 4px;line-height:1" title="Creative siguiente (→)">›</button>
+      </div>
       <div class="pf" id="pf">
         <img class="pf-bg" id="pfImg" src="" alt=""/>
         <div class="pf-ov" id="pfOv"></div>
@@ -1118,6 +1125,7 @@ function openEditor(id){
   setActiveChip('kbChips', `'${c.kbfx || 'kbDefault'}'`);
   livePreview();
   updateCharCount();
+  updateEditorNav();
   document.getElementById('editorBg').classList.add('open');
 }
 
@@ -2695,13 +2703,74 @@ document.getElementById('gridPreviewBg').addEventListener('click', e => {
   if(e.target === document.getElementById('gridPreviewBg')) closeGridPreview();
 });
 
+// ──────────────────────────────────────────────────────────────
+// EDITOR PREV/NEXT NAVIGATION
+// ──────────────────────────────────────────────────────────────
+function navigateCreative(dir){
+  if(!ST.creatives.length) return;
+  const idx = ST.creatives.findIndex(x => x.id === ST.activeId);
+  const next = (idx + dir + ST.creatives.length) % ST.creatives.length;
+  openEditor(ST.creatives[next].id);
+}
+
+function updateEditorNav(){
+  const idx = ST.creatives.findIndex(x => x.id === ST.activeId);
+  const el  = document.getElementById('editorNavLabel');
+  if(el) el.textContent = `${idx+1} / ${ST.creatives.length}`;
+}
+
+// ──────────────────────────────────────────────────────────────
+// CONVERT ALL POSTS TO STORY VERSIONS
+// ──────────────────────────────────────────────────────────────
+function convertirAStories(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+  const posts = ST.creatives.filter(c => (c.fmt||'post') === 'post');
+  if(!posts.length){ toast('⚠️ Ya tienes versiones Story — no hay Posts para convertir'); return; }
+
+  const grid = document.getElementById('galGrid');
+  let added = 0;
+  posts.forEach(c => {
+    // Check if story version already exists for this image
+    const exists = ST.creatives.some(x => x.imageId === c.imageId && x.fmt === 'story');
+    if(exists) return;
+
+    const storyC = {
+      ...c,
+      id: Date.now() + Math.random(),
+      fmt: 'story',
+      layout: c.layout === 'bar' ? 'bottom' : c.layout, // bar looks odd in story
+      kbfx: KB_FX[Math.floor(Math.random()*KB_FX.length)]
+    };
+    ST.creatives.push(storyC);
+    const div = document.createElement('div');
+    div.innerHTML = cardHTML(storyC, ST.creatives.length-1);
+    grid.appendChild(div.firstElementChild);
+    added++;
+  });
+
+  if(added === 0){
+    toast('⚠️ Ya existen versiones Story para todas las imágenes');
+  } else {
+    const countEl = document.getElementById('galCount');
+    if(countEl) countEl.textContent = `${ST.creatives.length} creatives`;
+    toast(`📱 ${added} versiones Story creadas (9:16)`);
+  }
+}
+
 // Keyboard shortcuts
 document.addEventListener('keydown', e => {
+  const editorOpen = document.getElementById('editorBg').classList.contains('open');
   if(e.key === 'Escape'){
     closeEditor();
     closeAnim();
     closeIgFeed();
     closeGridPreview();
+  }
+  // Arrow navigation inside editor
+  if(editorOpen && !e.target.matches('textarea, input')){
+    if(e.key === 'ArrowLeft')  navigateCreative(-1);
+    if(e.key === 'ArrowRight') navigateCreative(+1);
+    if(e.key === 'd' || e.key === 'D') exportCurrent();
   }
 });
 
