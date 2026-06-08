@@ -231,6 +231,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
     <a class="hdr-btn active" href="studio.html">🎨 Studio</a>
     <a class="hdr-btn" href="brand-book.html">📖 Brand Book</a>
     <a class="hdr-btn" href="carousel-template.html">🖼️ Carrusel</a>
+    <button class="hdr-btn" onclick="showHelp()" title="Ayuda y atajos de teclado">?</button>
   </nav>
 </header>
 
@@ -769,6 +770,50 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ══════════ HELP MODAL ══════════ -->
+<div class="modal-bg" id="helpBg" style="z-index:80" onclick="if(event.target===this)closeHelp()">
+  <div style="background:#111118;border-radius:16px;padding:28px;max-width:640px;width:92%;max-height:88vh;overflow-y:auto;border:1px solid #2d2d44">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#f0d090">✦ CreativeFlow AI Studio</div>
+      <button onclick="closeHelp()" style="background:none;border:none;color:#9ca3af;font-size:20px;cursor:pointer">✕</button>
+    </div>
+    <!-- Shortcuts -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:10px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">⌨️ Atajos de teclado</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px;display:flex;gap:8px;align-items:center"><kbd style="background:#2d2d44;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;color:#c9a96e;font-family:monospace">Esc</kbd><span style="font-size:11px;color:#9ca3af">Cerrar cualquier modal</span></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px;display:flex;gap:8px;align-items:center"><kbd style="background:#2d2d44;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;color:#c9a96e;font-family:monospace">← →</kbd><span style="font-size:11px;color:#9ca3af">Navegar entre creatives (editor)</span></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px;display:flex;gap:8px;align-items:center"><kbd style="background:#2d2d44;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;color:#c9a96e;font-family:monospace">D</kbd><span style="font-size:11px;color:#9ca3af">Descargar creative actual (editor)</span></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px;display:flex;gap:8px;align-items:center"><kbd style="background:#2d2d44;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;color:#c9a96e;font-family:monospace">?</kbd><span style="font-size:11px;color:#9ca3af">Abrir esta ventana de ayuda</span></div>
+      </div>
+    </div>
+    <!-- Features -->
+    <div>
+      <div style="font-size:10px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">🚀 Funciones disponibles (15+)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">⚡ Titulares con IA</div><div style="font-size:10px;color:#6b7280">Claude genera titulares únicos</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">🎬 Ken Burns 6 efectos</div><div style="font-size:10px;color:#6b7280">Animación profesional para Stories</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">📱 Mockup Instagram</div><div style="font-size:10px;color:#6b7280">Story y Feed con UI realista</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">🎞️ 8 Filtros fotográficos</div><div style="font-size:10px;color:#6b7280">Luxury, Warm, Cool, Vintage, Cinematic…</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">📅 Calendario 4 semanas</div><div style="font-size:10px;color:#6b7280">Plan editorial completo con IA</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">🗂️ Brief de cliente</div><div style="font-size:10px;color:#6b7280">Documento HTML profesional imprimible</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">🎬 Script Reel 30s</div><div style="font-size:10px;color:#6b7280">Guión completo con música y escenas</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">⭐ Post de reseña</div><div style="font-size:10px;color:#6b7280">Convierte reviews en contenido social</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">📆 Export planificador</div><div style="font-size:10px;color:#6b7280">Compatible con Buffer, Hootsuite, Later</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">🌍 Captions en inglés</div><div style="font-size:10px;color:#6b7280">Adaptación cultural para audiencia global</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">🎲 Surprise Me</div><div style="font-size:10px;color:#6b7280">Combinación aleatoria de diseño</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">📱 Generar Stories</div><div style="font-size:10px;color:#6b7280">Convierte Posts en formato 9:16</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">⬇️ PNG 1080×1080</div><div style="font-size:10px;color:#6b7280">Exportación profesional en alta resolución</div></div>
+        <div style="background:#13131f;border-radius:6px;padding:7px 10px"><div style="font-size:11px;font-weight:700;color:#f0eeec">📋 Caption instantáneo</div><div style="font-size:10px;color:#6b7280">Urgencia, Lifestyle u Oferta con IA</div></div>
+      </div>
+    </div>
+    <div style="margin-top:18px;padding:12px;background:#0c0c16;border-radius:8px;font-size:11px;color:#6b7280;text-align:center;line-height:1.6">
+      CreativeFlow AI Studio · Powered by Claude (Anthropic) · AraHomeLuxe 2026<br>
+      <a href="brand-book.html" style="color:#c9a96e;text-decoration:none">📖 Ver Brand Book →</a>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════ -->
 <script>
@@ -2782,6 +2827,7 @@ document.addEventListener('keydown', e => {
     closeGridPreview();
   }
   // Arrow navigation inside editor
+  if(e.key === '?'&& !e.target.matches('textarea, input')) showHelp();
   if(editorOpen && !e.target.matches('textarea, input')){
     if(e.key === 'ArrowLeft')  navigateCreative(-1);
     if(e.key === 'ArrowRight') navigateCreative(+1);
@@ -2789,7 +2835,13 @@ document.addEventListener('keydown', e => {
   }
 });
 
-console.log('%c✦ CreativeFlow AI Studio cargado', 'color:#c9a96e;font-size:14px;font-weight:bold');
+// ──────────────────────────────────────────────────────────────
+// HELP MODAL
+// ──────────────────────────────────────────────────────────────
+function showHelp(){ document.getElementById('helpBg').classList.add('open'); }
+function closeHelp(){ document.getElementById('helpBg').classList.remove('open'); }
+
+console.log('%c✦ CreativeFlow AI Studio cargado — 15+ funciones IA', 'color:#c9a96e;font-size:14px;font-weight:bold');
 </script>
 </body>
 </html>
