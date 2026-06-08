@@ -123,14 +123,25 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
 .range-val{font-size:11px;color:#c9a96e;font-weight:700;min-width:28px;text-align:right}
 
 /* ─── ANIMATE MODAL ─── */
-.anim-modal{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:60;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.anim-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:60;display:none;align-items:center;justify-content:center;flex-direction:row;gap:48px;padding:24px}
 .anim-modal.open{display:flex}
-.anim-frame{position:relative;width:420px;height:420px;overflow:hidden;border-radius:6px;flex-shrink:0;background:#000}
+
+/* Phone frame */
+.phone{position:relative;flex-shrink:0}
+.phone-shell{width:290px;background:#0a0a0f;border-radius:40px;border:2px solid #2d2d44;box-shadow:0 0 0 4px #1a1a2e,0 30px 80px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;position:relative}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100px;height:28px;background:#0a0a0f;border-radius:0 0 18px 18px;z-index:10}
+.phone-camera{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#1a1a2e;z-index:11}
+.phone-status{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 0;height:36px;font-size:11px;font-weight:700;color:#f0eeec;position:relative;z-index:5}
+.phone-screen{background:#000;overflow:hidden}
+
+/* Instagram story inside phone */
+.ig-story-wrap{position:relative;width:286px;height:508px;overflow:hidden;background:#000}
+.anim-frame{position:absolute;inset:0;overflow:hidden;background:#000}
 .anim-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .anim-ov{position:absolute;inset:0}
 .anim-tx{position:absolute;bottom:0;left:0;right:0;padding:22px}
-.anim-h{font-family:'Playfair Display',serif;color:#fff;font-size:26px;line-height:1.2;text-shadow:0 2px 14px rgba(0,0,0,.6);opacity:0;transform:translateY(18px);transition:opacity .7s .3s ease,transform .7s .3s ease}
-.anim-s{color:rgba(255,255,255,.78);font-size:13px;font-weight:300;margin-top:6px;line-height:1.4;opacity:0;transform:translateY(14px);transition:opacity .6s .7s ease,transform .6s .7s ease}
+.anim-h{font-family:'Playfair Display',serif;color:#fff;font-size:24px;line-height:1.2;text-shadow:0 2px 14px rgba(0,0,0,.6);opacity:0;transform:translateY(18px);transition:opacity .7s .3s ease,transform .7s .3s ease}
+.anim-s{color:rgba(255,255,255,.78);font-size:12px;font-weight:300;margin-top:6px;line-height:1.4;opacity:0;transform:translateY(14px);transition:opacity .6s .7s ease,transform .6s .7s ease}
 .anim-frame.playing .anim-h{opacity:1;transform:translateY(0)}
 .anim-frame.playing .anim-s{opacity:1;transform:translateY(0)}
 .anim-frame.playing .anim-img{animation:kbDefault 7s ease-in-out forwards}
@@ -140,6 +151,27 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
 @keyframes kbRight{from{transform:scale(1.18) translateX(0)}to{transform:scale(1.18) translateX(9%)}}
 @keyframes kbUp{from{transform:scale(1.18) translateY(0)}to{transform:scale(1.18) translateY(-8%)}}
 @keyframes kbRotate{from{transform:scale(1) rotate(0deg)}to{transform:scale(1.25) rotate(3deg)}}
+
+/* Instagram story UI overlaid on video */
+.ig-story-ui{position:absolute;inset:0;pointer-events:none;z-index:8}
+.ig-story-top{position:absolute;top:0;left:0;right:0;padding:10px 12px;display:flex;align-items:center;gap:10px;background:linear-gradient(to bottom,rgba(0,0,0,.55),transparent)}
+.ig-prog{height:2px;background:rgba(255,255,255,.35);border-radius:2px;flex:1;position:relative}
+.ig-prog-fill{height:100%;width:0%;background:#fff;border-radius:2px;transition:width 7s linear}
+.ig-prog-fill.playing{width:100%}
+.ig-avt{width:28px;height:28px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#bc1888);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:10px;flex-shrink:0;border:1.5px solid #fff}
+.ig-uname{font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.ig-time{font-size:10px;color:rgba(255,255,255,.7);margin-left:4px}
+.ig-story-actions{position:absolute;bottom:0;left:0;right:0;padding:12px;display:flex;align-items:center;gap:8px;background:linear-gradient(to top,rgba(0,0,0,.5),transparent)}
+.ig-reply{flex:1;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:7px 14px;font-size:11px;color:rgba(255,255,255,.8)}
+.ig-icons{display:flex;gap:14px}
+.ig-icons span{color:#fff;font-size:18px}
+
+/* Right panel info */
+.anim-info{flex:1;max-width:320px;display:flex;flex-direction:column;gap:20px}
+.anim-info-title{font-family:'Playfair Display',serif;font-size:22px;color:#f0d090;line-height:1.3}
+.anim-info-sub{font-size:13px;color:#9ca3af;line-height:1.6}
+.anim-caption-box{background:#111118;border:1px solid #c9a96e33;border-radius:10px;padding:14px;font-size:12px;color:#9ca3af;line-height:1.6;max-height:140px;overflow-y:auto;white-space:pre-wrap}
+.anim-btns{display:flex;gap:8px;flex-wrap:wrap}
 
 /* ─── LOADING ─── */
 .loader{position:fixed;inset:0;background:rgba(9,9,15,.94);backdrop-filter:blur(14px);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px}
@@ -483,22 +515,88 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
   </div>
 </div>
 
-<!-- ══════════ ANIMATE MODAL ══════════ -->
-<div class="anim-modal" id="animModal">
-  <div class="anim-frame" id="animFrame">
-    <img class="anim-img" id="animImg" src="" alt=""/>
-    <div class="anim-ov" id="animOv"></div>
-    <div class="anim-tx">
-      <div class="anim-h" id="animH"></div>
-      <div class="anim-s" id="animS"></div>
+<!-- ══════════ ANIMATE MODAL (phone mockup) ══════════ -->
+<div class="anim-modal" id="animModal" onclick="if(event.target===this)closeAnim()">
+
+  <!-- iPhone-style phone -->
+  <div class="phone">
+    <div class="phone-shell">
+      <div class="phone-notch"><div class="phone-camera"></div></div>
+      <div class="phone-status">
+        <span id="animClock">9:41</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:10px">
+          <span>▲▲▲</span>
+          <span>WiFi</span>
+          <span>🔋</span>
+        </span>
+      </div>
+      <!-- Instagram app bar -->
+      <div style="background:#000;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a">
+        <span style="font-size:12px;color:#fff;font-weight:700">arahomeluxe</span>
+        <span style="display:flex;gap:14px">
+          <span style="color:#fff;font-size:15px">⋯</span>
+          <span style="color:#fff;font-size:15px">✕</span>
+        </span>
+      </div>
+      <div class="phone-screen">
+        <div class="ig-story-wrap">
+          <!-- Ken Burns frame -->
+          <div class="anim-frame" id="animFrame">
+            <img class="anim-img" id="animImg" src="" alt=""/>
+            <div class="anim-ov" id="animOv"></div>
+            <div class="anim-tx">
+              <div class="anim-h" id="animH"></div>
+              <div class="anim-s" id="animS"></div>
+            </div>
+          </div>
+          <!-- Instagram story UI overlay -->
+          <div class="ig-story-ui">
+            <div class="ig-story-top">
+              <div class="ig-prog"><div class="ig-prog-fill" id="animProgFill"></div></div>
+              <div class="ig-avt">A</div>
+              <div>
+                <div class="ig-uname">arahomeluxe</div>
+                <div class="ig-time">Ahora</div>
+              </div>
+              <span style="color:#fff;font-size:16px;margin-left:auto">⋯</span>
+            </div>
+            <div class="ig-story-actions">
+              <div class="ig-reply">Enviar mensaje</div>
+              <div class="ig-icons">
+                <span>♡</span>
+                <span>✉</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div style="display:flex;gap:10px;align-items:center">
-    <button class="btn btn-gold" onclick="replayAnim()">▶ Replay</button>
-    <button class="btn btn-outline" onclick="exportAnimFrame()">⬇️ Descargar frame</button>
-    <button class="btn btn-ghost" onclick="closeAnim()">✕ Cerrar</button>
+
+  <!-- Right info panel -->
+  <div class="anim-info">
+    <div>
+      <div style="font-size:10px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Vista previa animada</div>
+      <div class="anim-info-title" id="animInfoTitle">Titular</div>
+      <div class="anim-info-sub" id="animInfoSub"></div>
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Caption</div>
+      <div class="anim-caption-box" id="animInfoCaption"></div>
+    </div>
+    <div class="anim-btns">
+      <button class="btn btn-gold" onclick="replayAnim()">▶ Replay</button>
+      <button class="btn btn-outline" onclick="exportAnimFrame()">⬇️ PNG 1080×1080</button>
+    </div>
+    <div class="anim-btns">
+      <button class="btn btn-ghost" onclick="switchAnimView()">🔄 Vista cuadrada</button>
+      <button class="btn btn-ghost" onclick="closeAnim()">✕ Cerrar</button>
+    </div>
+    <div style="font-size:10px;color:#4b5563;line-height:1.5">
+      ✦ Efecto Ken Burns · AraHomeLuxe<br>
+      Pulsa ESC para cerrar
+    </div>
   </div>
-  <div style="font-size:11px;color:#6b7280;text-align:center">Vista previa de animación · Efecto Ken Burns</div>
 </div>
 
 <!-- ══════════ IG GRID PREVIEW ══════════ -->
@@ -523,6 +621,69 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="btn btn-gold btn-w" onclick="downloadAll()">⬇️ Descargar todos</button>
       <button class="btn btn-ghost" onclick="closeGridPreview()" style="flex-shrink:0">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ IG FEED PREVIEW MODAL ══════════ -->
+<div class="modal-bg" id="igFeedBg" style="z-index:70" onclick="if(event.target===this)closeIgFeed()">
+  <div style="background:#111118;border-radius:20px;width:340px;max-height:94vh;overflow-y:auto;border:1px solid #2d2d44;scrollbar-width:none">
+    <!-- IG app top bar -->
+    <div style="background:#0a0a0f;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;position:sticky;top:0;z-index:5">
+      <span style="font-size:18px;color:#fff;font-style:italic;font-weight:700;font-family:Georgia,serif">Instagram</span>
+      <div style="display:flex;gap:16px">
+        <span style="color:#fff;font-size:18px">♡</span>
+        <span style="color:#fff;font-size:18px">✉</span>
+      </div>
+    </div>
+    <!-- Post header -->
+    <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;background:#000">
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#bc1888);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0;border:2px solid transparent;outline:2px solid transparent">A</div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#fff">arahomeluxe</div>
+        <div style="font-size:10px;color:#999">Mallorca, España</div>
+      </div>
+      <span style="color:#fff;font-size:18px;margin-left:auto">⋯</span>
+    </div>
+    <!-- Post image -->
+    <div id="igFeedImage" style="position:relative;width:100%;aspect-ratio:1;overflow:hidden;background:#000">
+      <img id="igFeedImg" src="" style="width:100%;height:100%;object-fit:cover"/>
+      <div id="igFeedOv" style="position:absolute;inset:0"></div>
+      <div id="igFeedTxt" style="position:absolute"></div>
+    </div>
+    <!-- Action bar -->
+    <div style="padding:10px 14px;display:flex;align-items:center;gap:14px;background:#000;border-top:1px solid #111">
+      <span style="color:#fff;font-size:22px;cursor:pointer" id="igLikeBtn" onclick="toggleIgLike()">♡</span>
+      <span style="color:#fff;font-size:20px">💬</span>
+      <span style="color:#fff;font-size:20px">✈</span>
+      <span style="color:#fff;font-size:20px;margin-left:auto">🔖</span>
+    </div>
+    <!-- Likes -->
+    <div style="padding:0 14px 6px;background:#000">
+      <div style="font-size:12px;font-weight:700;color:#fff" id="igLikesCount">1.247 Me gusta</div>
+    </div>
+    <!-- Caption -->
+    <div style="padding:0 14px 10px;background:#000">
+      <div style="font-size:12px;color:#fff;line-height:1.5" id="igCaption">
+        <strong>arahomeluxe</strong> <span id="igCaptionText"></span>
+      </div>
+    </div>
+    <!-- Comments -->
+    <div style="padding:0 14px 10px;background:#000">
+      <div style="font-size:12px;color:#999;cursor:pointer">Ver los 24 comentarios</div>
+      <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
+        <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(45deg,#c9a96e,#f0d090);flex-shrink:0"></div>
+        <div style="background:#111;border-radius:18px;padding:5px 12px;font-size:11px;color:#9ca3af;flex:1">Añade un comentario...</div>
+      </div>
+    </div>
+    <!-- Timestamp -->
+    <div style="padding:0 14px 14px;background:#000;font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.5px">
+      Hace 2 horas
+    </div>
+    <!-- Buttons -->
+    <div style="padding:14px;display:flex;gap:8px;border-top:1px solid #1a1a1a;background:#111118">
+      <button class="btn btn-gold btn-w" onclick="exportIgFeedCard()">⬇️ Descargar PNG</button>
+      <button class="btn btn-ghost" onclick="closeIgFeed()" style="flex-shrink:0">✕</button>
     </div>
   </div>
 </div>
@@ -808,10 +969,10 @@ function cardHTML(c, i){
   </div>
   <div class="cc-acts">
     <button class="cc-act" onclick="openEditor(${c.id})">✏️ Editar</button>
-    <button class="cc-act" onclick="animateCard(${c.id})">🎬 Animar</button>
+    <button class="cc-act" onclick="animateCard(${c.id})">🎬 Story</button>
+    <button class="cc-act" onclick="openIgFeed(${c.id})">📱 Feed</button>
     <button class="cc-act" onclick="exportCard(${c.id})">⬇️ PNG</button>
-    <button class="cc-act" onclick="dupeCard(${c.id})" title="Duplicar con layout diferente">⧉</button>
-    <button class="cc-act" onclick="compartirCard(${c.id})" title="Compartir">📤</button>
+    <button class="cc-act" onclick="dupeCard(${c.id})" title="Duplicar">⧉</button>
     <button class="cc-act gold" onclick="copyCardCaption(${c.id})">📋</button>
   </div>
 </div>`;
@@ -1012,17 +1173,48 @@ function playAnimation(c){
   h.style.fontSize = (c.fs || 26) + 'px';
   s.textContent = c.subtitle || '';
 
-  // Remove playing class, force reflow, re-add
+  // Update info panel
+  document.getElementById('animInfoTitle').textContent = c.headline || '';
+  document.getElementById('animInfoSub').textContent = c.subtitle || '';
+  document.getElementById('animInfoCaption').textContent = (c.caption || '').split('\n\n')[0]; // show caption without hashtags
+
+  // Live clock
+  const now = new Date();
+  document.getElementById('animClock').textContent = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+
+  // Reset playing class, progress bar, force reflow, re-add
   frame.classList.remove('playing');
   img.style.animation = 'none';
+  const fill = document.getElementById('animProgFill');
+  if(fill){ fill.classList.remove('playing'); void fill.offsetWidth; }
   void frame.offsetWidth;
 
   const kbAnim = c.kbfx || 'kbDefault';
   const dur = 7;
   img.style.animation = `${kbAnim} ${dur}s ease-in-out forwards`;
   frame.classList.add('playing');
+  if(fill){ fill.classList.add('playing'); }
 
   document.getElementById('animModal').classList.add('open');
+}
+
+let _animViewMode = 'story'; // 'story' or 'square'
+function switchAnimView(){
+  const wrap = document.querySelector('.ig-story-wrap');
+  const frame = document.getElementById('animFrame');
+  const btn = event.target;
+  if(_animViewMode === 'story'){
+    _animViewMode = 'square';
+    wrap.style.cssText = 'position:relative;width:286px;height:286px;overflow:hidden;background:#000';
+    btn.textContent = '📱 Vista story';
+  } else {
+    _animViewMode = 'story';
+    wrap.style.cssText = 'position:relative;width:286px;height:508px;overflow:hidden;background:#000';
+    btn.textContent = '🔄 Vista cuadrada';
+  }
+  // Replay in new format
+  const c = ST.creatives.find(x => x.id === ST.activeId);
+  if(c){ setTimeout(()=>playAnimation(c), 80); }
 }
 
 function replayAnim(){
@@ -1566,6 +1758,59 @@ function toast(msg){
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ──────────────────────────────────────────────────────────────
+// INSTAGRAM FEED PREVIEW MODAL
+// ──────────────────────────────────────────────────────────────
+let _igLiked = false;
+function openIgFeed(id){
+  const c = ST.creatives.find(x => x.id === id);
+  if(!c) return;
+  ST.activeId = id;
+
+  document.getElementById('igFeedImg').src = c.imageDataURL;
+  document.getElementById('igFeedOv').style.cssText = `position:absolute;inset:0;${overlayCSS(c.layout, c.ov)}`;
+  const tx = document.getElementById('igFeedTxt');
+  tx.style.cssText = `position:absolute;${textPosStyle(c.layout)}padding:12px`;
+  tx.innerHTML = `<div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:${c.color};text-shadow:0 2px 8px rgba(0,0,0,.6);line-height:1.2">${escHtml(c.headline)}</div>
+    ${c.subtitle ? `<div style="font-size:10px;color:rgba(255,255,255,.78);margin-top:3px">${escHtml(c.subtitle)}</div>` : ''}`;
+
+  // Caption (truncated)
+  const cap = (c.caption || '').replace(/\n+/g,' ').substring(0, 120);
+  document.getElementById('igCaptionText').textContent = cap + (c.caption?.length > 120 ? '... más' : '');
+
+  // Random likes
+  const likes = (1200 + Math.floor(Math.random()*800)).toLocaleString('es-ES');
+  document.getElementById('igLikesCount').textContent = likes + ' Me gusta';
+
+  // Apply image filter if any
+  if(c.imgFilter) {
+    const f = c.imgFilter;
+    const parts = [`brightness(${f.brightness||100}%)`,`contrast(${f.contrast||100}%)`,`saturate(${f.saturation||100}%)`];
+    if(f.sepia) parts.push(`sepia(${f.sepia}%)`);
+    if(f.hueRotate) parts.push(`hue-rotate(${f.hueRotate}deg)`);
+    document.getElementById('igFeedImg').style.filter = parts.join(' ');
+  } else {
+    document.getElementById('igFeedImg').style.filter = 'none';
+  }
+
+  _igLiked = false;
+  document.getElementById('igLikeBtn').textContent = '♡';
+  document.getElementById('igFeedBg').classList.add('open');
+}
+
+function closeIgFeed(){ document.getElementById('igFeedBg').classList.remove('open'); }
+
+function toggleIgLike(){
+  _igLiked = !_igLiked;
+  const btn = document.getElementById('igLikeBtn');
+  btn.textContent = _igLiked ? '❤️' : '♡';
+  btn.style.transform = _igLiked ? 'scale(1.3)' : 'scale(1)';
+  btn.style.transition = 'transform .2s';
+  setTimeout(()=>btn.style.transform='scale(1)', 200);
+}
+
+async function exportIgFeedCard(){ if(ST.activeId) await exportCard(ST.activeId); closeIgFeed(); }
+
+// ──────────────────────────────────────────────────────────────
 // KEN BURNS EFFECT PICKER
 // ──────────────────────────────────────────────────────────────
 function setKb(el, v){
@@ -1781,6 +2026,8 @@ document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){
     closeEditor();
     closeAnim();
+    closeIgFeed();
+    closeGridPreview();
   }
 });
 
