@@ -197,6 +197,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
   <nav class="hdr-nav">
     <a class="hdr-btn" href="projects.html">📁 Proyectos</a>
     <a class="hdr-btn active" href="studio.html">🎨 Studio</a>
+    <a class="hdr-btn" href="brand-book.html">📖 Brand Book</a>
     <a class="hdr-btn" href="carousel-template.html">🖼️ Carrusel</a>
   </nav>
 </header>
@@ -267,10 +268,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
 
   <!-- Gallery actions -->
   <div id="galleryActions" style="display:none">
-    <div class="sb-title">📊 Acciones</div>
+    <div class="sb-title">📊 Acciones de campaña</div>
     <div style="display:flex;flex-direction:column;gap:5px">
       <button class="btn btn-ghost btn-sm btn-w" onclick="showGridPreview()">📱 Vista perfil IG</button>
-      <button class="btn btn-ghost btn-sm btn-w" onclick="exportAllCaptions()">📄 Exportar captions</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="exportAllCaptions()">📄 Exportar captions .txt</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="generarBrief()">🗂️ Brief de cliente</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="generarEnIngles()">🌍 Captions en inglés</button>
+      <button class="btn btn-gold btn-sm btn-w" style="margin-top:4px" onclick="downloadAll()">⬇️ Descargar todo</button>
     </div>
   </div>
   <div class="divider"></div>
@@ -405,6 +409,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
         <div class="chips" id="fmtChips">
           <div class="chip on" onclick="setFmt(this,'post')">📷 Post 1:1</div>
           <div class="chip" onclick="setFmt(this,'story')">📱 Story 9:16</div>
+        </div>
+      </div>
+      <div>
+        <span class="ctrl-lbl">Efecto Ken Burns</span>
+        <div class="chips" id="kbChips">
+          <div class="chip on" onclick="setKb(this,'kbDefault')">Zoom In</div>
+          <div class="chip" onclick="setKb(this,'kbOut')">Zoom Out</div>
+          <div class="chip" onclick="setKb(this,'kbLeft')">← Pan</div>
+          <div class="chip" onclick="setKb(this,'kbRight')">Pan →</div>
+          <div class="chip" onclick="setKb(this,'kbUp')">↑ Pan</div>
+          <div class="chip" onclick="setKb(this,'kbRotate')">↻ Rotación</div>
         </div>
       </div>
       <!-- IA por creative -->
@@ -796,6 +811,7 @@ function cardHTML(c, i){
     <button class="cc-act" onclick="animateCard(${c.id})">🎬 Animar</button>
     <button class="cc-act" onclick="exportCard(${c.id})">⬇️ PNG</button>
     <button class="cc-act" onclick="dupeCard(${c.id})" title="Duplicar con layout diferente">⧉</button>
+    <button class="cc-act" onclick="compartirCard(${c.id})" title="Compartir">📤</button>
     <button class="cc-act gold" onclick="copyCardCaption(${c.id})">📋</button>
   </div>
 </div>`;
@@ -877,6 +893,8 @@ function openEditor(id){
   }
 
   applyPreviewFormat(ST.eFmt);
+  // Restore KB chips
+  setActiveChip('kbChips', `'${c.kbfx || 'kbDefault'}'`);
   livePreview();
   document.getElementById('editorBg').classList.add('open');
 }
@@ -1546,6 +1564,206 @@ function toast(msg){
 // UTILS
 // ──────────────────────────────────────────────────────────────
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ──────────────────────────────────────────────────────────────
+// KEN BURNS EFFECT PICKER
+// ──────────────────────────────────────────────────────────────
+function setKb(el, v){
+  const c = ST.creatives.find(x => x.id === ST.activeId);
+  if(c) c.kbfx = v;
+  setActiveChip('kbChips', `'${v}'`);
+}
+
+// Restore KB chip when editor opens
+const _origOpenEditor = openEditor;
+// We patch openEditor inline: just add kb chip restore inside openEditor after applyPreviewFormat
+function openEditorExtended(id){
+  _origOpenEditor(id);
+  const c = ST.creatives.find(x => x.id === id);
+  if(c && c.kbfx) setActiveChip('kbChips', `'${c.kbfx}'`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// SHARE CREATIVE
+// ──────────────────────────────────────────────────────────────
+async function compartirCard(id){
+  const c = ST.creatives.find(x => x.id === id);
+  if(!c){ return; }
+  // Try Web Share API first (mobile + modern Chrome)
+  if(navigator.share){
+    try {
+      // Render to blob for sharing
+      const { canvas } = await renderToCanvas(c, 1080, 1080);
+      canvas.toBlob(async blob => {
+        const file = new File([blob], `arahomeluxe-${c.headline.replace(/\s+/g,'-').toLowerCase()}.png`, { type: 'image/png' });
+        try {
+          await navigator.share({ title: c.headline, text: c.caption || '', files: [file] });
+        } catch(e){
+          // Fallback: just copy caption
+          navigator.clipboard.writeText(c.caption || '').then(()=>toast('📋 Caption copiado — descarga la imagen para compartir'));
+        }
+      }, 'image/png');
+    } catch(e){ toast('📋 Copia el caption y descarga la imagen para compartir'); }
+  } else {
+    // Desktop fallback: copy caption to clipboard + download image
+    navigator.clipboard.writeText(c.caption || '').then(()=>toast('📋 Caption copiado · Usa ⬇️ PNG para descargar la imagen'));
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// CAPTIONS EN INGLÉS
+// ──────────────────────────────────────────────────────────────
+async function generarEnIngles(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+  const key = document.getElementById('apiKey').value.trim() || localStorage.getItem('cf_anthropic_key') || '';
+  if(!key){ toast('❌ Añade tu API key de Claude'); return; }
+
+  showLoader(true, 'Adaptando captions al inglés...', 20);
+  const name = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const desc = document.getElementById('bDesc').value.trim();
+
+  // Build all headlines + captions
+  const items = ST.creatives.map((c, i) => `Creative ${i+1}: "${c.headline}" — ${(c.caption||'').substring(0,120)}`).join('\n');
+
+  const prompt = `You are a luxury travel marketing expert. Translate and adapt the following Spanish Instagram captions into premium English for an international luxury audience.
+Property: ${name} — ${desc}
+Keep the luxury feel and emotional appeal. Use elevated, aspirational English.
+
+${items}
+
+Respond ONLY with a JSON array: [{"headline":"english headline","caption":"full english caption with emojis and hashtags"}]
+Generate exactly ${ST.creatives.length} objects in the same order.`;
+
+  setLoaderStep('Claude traduce y adapta...', 55);
+  const raw = await callClaude(prompt, 1800);
+  showLoader(false);
+  if(!raw) return;
+
+  try {
+    const arr = JSON.parse(raw.match(/\[[\s\S]*\]/)?.[0] || '[]');
+    if(!arr.length){ toast('❌ Error al parsear traducciones'); return; }
+    // Generate export document
+    const lines = [
+      `CAMPAIGN (EN): ${ST.campaign.name}`,
+      `Generated: ${new Date().toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'})}`,
+      '', '═'.repeat(50), ''
+    ];
+    arr.forEach((item, i) => {
+      lines.push(`── CREATIVE ${i+1} ──`);
+      lines.push(`Headline (EN): ${item.headline || ''}`);
+      lines.push('Caption (EN):');
+      lines.push(item.caption || '');
+      lines.push(''); lines.push('─'.repeat(40)); lines.push('');
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `arahomeluxe-captions-EN-${ST.campaign.name.replace(/\s+/g,'-').toLowerCase() || 'campaign'}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast(`✅ ${arr.length} captions en inglés exportados`);
+  } catch(e){ console.error(e); toast('❌ Error al procesar traducciones'); }
+}
+
+// ──────────────────────────────────────────────────────────────
+// BRIEF DE CLIENTE — genera una página HTML completa
+// ──────────────────────────────────────────────────────────────
+async function generarBrief(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+
+  const name     = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const angle    = ST.campaign.angle || '';
+  const hashtags = ST.campaign.hashtags || '';
+  const date     = new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+
+  // Build creative HTML cards (each as data-url img preview)
+  const cardRows = ST.creatives.map((c, i) => `
+    <tr>
+      <td style="padding:10px;vertical-align:top;width:28%">
+        <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:#111">
+          <img src="${c.imageDataURL}" style="width:100%;height:100%;object-fit:cover"/>
+          <div style="position:absolute;inset:0;${overlayCSS(c.layout,c.ov)}"></div>
+          <div style="position:absolute;${textPosStyle(c.layout)}padding:10px">
+            <div style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:${c.color};text-shadow:0 1px 6px rgba(0,0,0,.7)">${escHtml(c.headline)}</div>
+            ${c.subtitle ? `<div style="font-size:10px;color:rgba(255,255,255,.75);margin-top:3px">${escHtml(c.subtitle)}</div>` : ''}
+          </div>
+        </div>
+      </td>
+      <td style="padding:10px;vertical-align:top">
+        <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#c9a96e;margin-bottom:5px">${escHtml(c.headline)}</div>
+        ${c.subtitle ? `<div style="font-size:12px;color:#666;margin-bottom:8px;font-style:italic">${escHtml(c.subtitle)}</div>` : ''}
+        <div style="font-size:10px;color:#999;margin-bottom:8px">Layout: ${c.layout} · Formato: ${c.fmt||'post'} · Animación: ${c.kbfx||'kbDefault'}</div>
+        <div style="background:#f9f8f5;border-radius:6px;padding:10px;font-size:11px;line-height:1.65;color:#333;white-space:pre-wrap;border-left:3px solid #c9a96e">${escHtml(c.caption||'')}</div>
+      </td>
+    </tr>
+  `).join('<tr><td colspan="2" style="height:4px;background:#f0eeec"></td></tr>');
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"/><title>Brief · ${escHtml(name)} · ${date}</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',Helvetica,Arial,sans-serif;color:#222;background:#fff;padding:40px 48px;max-width:900px;margin:0 auto}
+  @media print{body{padding:20px 24px} .no-print{display:none}}
+</style>
+</head>
+<body>
+<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #c9a96e;padding-bottom:20px;margin-bottom:28px">
+  <div>
+    <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#c9a96e">✦ ${escHtml(name)}</div>
+    <div style="font-size:13px;color:#666;margin-top:4px">Brief de Campaña Social Media · ${date}</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:11px;color:#999">Preparado por CreativeFlow AI</div>
+    <div style="font-size:10px;color:#bbb;margin-top:2px">arahomeluxe.com</div>
+  </div>
+</div>
+
+<div style="background:#fdfbf7;border-radius:10px;padding:20px 24px;border:1px solid #e8ddc8;margin-bottom:28px">
+  <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#222;margin-bottom:8px">${escHtml(ST.campaign.name)}</div>
+  <div style="font-size:13px;color:#555;line-height:1.7">${escHtml(angle)}</div>
+  ${hashtags ? `<div style="margin-top:12px;font-size:11px;color:#c9a96e;line-height:1.8">${escHtml(hashtags)}</div>` : ''}
+</div>
+
+<div style="font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">
+  ${ST.creatives.length} Creatives · ${ST.images.length} Imágenes
+</div>
+
+<table style="width:100%;border-collapse:collapse;background:#fff;border:1px solid #eee;border-radius:10px;overflow:hidden">
+  <thead>
+    <tr style="background:#f5f3ef">
+      <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px;width:28%">Vista previa</th>
+      <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px">Titular · Subtítulo · Caption</th>
+    </tr>
+  </thead>
+  <tbody>${cardRows}</tbody>
+</table>
+
+<div style="margin-top:28px;padding:16px 20px;background:#0a0a0f;border-radius:10px;color:#9ca3af;font-size:11px;line-height:1.6">
+  <strong style="color:#c9a96e">Calendario sugerido:</strong>
+  Mar 20:00 · Jue 20:00 · Sáb 12:00 &nbsp;|&nbsp;
+  <strong style="color:#c9a96e">Plataformas:</strong> Instagram, Facebook &nbsp;|&nbsp;
+  <strong style="color:#c9a96e">Generado con:</strong> CreativeFlow AI Studio by AraHomeLuxe
+</div>
+
+<div class="no-print" style="margin-top:20px;text-align:center">
+  <button onclick="window.print()" style="padding:10px 24px;background:#c9a96e;color:#0a0a0f;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">🖨️ Imprimir / Guardar PDF</button>
+</div>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if(!w){
+    // Fallback: download as file
+    const a = document.createElement('a');
+    a.href = url; a.download = `brief-${name.replace(/\s+/g,'-').toLowerCase()}-${Date.now()}.html`;
+    a.click();
+  }
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  toast('🗂️ Brief de cliente generado · Ábrelo para imprimir o exportar PDF');
+}
 
 // Close modals on bg click
 document.getElementById('editorBg').addEventListener('click', e => {

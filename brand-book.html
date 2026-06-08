@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Brand Book — AraHomeLuxe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#09090f;color:#f0eeec;line-height:1.6}
+
+/* Nav */
+.nav{position:sticky;top:0;background:rgba(9,9,15,.94);backdrop-filter:blur(16px);border-bottom:1px solid #1a1a2e;padding:0 48px;display:flex;align-items:center;height:58px;z-index:50;gap:16px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#f0d090);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-link{padding:6px 13px;border-radius:6px;font-size:12px;font-weight:500;color:#9ca3af;text-decoration:none;transition:all .2s;cursor:pointer}
+.nav-link:hover,.nav-link.active{color:#c9a96e;background:rgba(201,169,110,.1)}
+
+/* Hero */
+.hero{position:relative;background:#000;overflow:hidden;min-height:380px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:80px 40px}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,169,110,.12) 0%,transparent 60%)}
+.hero-lines{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(201,169,110,.03) 0px,rgba(201,169,110,.03) 1px,transparent 1px,transparent 80px)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,72px);font-weight:900;letter-spacing:-1px;position:relative}
+.hero h1 em{font-style:italic;background:linear-gradient(135deg,#c9a96e,#f0d090);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:16px;color:#9ca3af;margin-top:12px;max-width:500px;position:relative}
+
+/* Sections */
+.section{padding:72px 48px;max-width:1100px;margin:0 auto}
+.section-tag{font-size:10px;font-weight:800;color:#c9a96e;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,40px);font-weight:700;margin-bottom:6px;line-height:1.2}
+.section-sub{font-size:15px;color:#9ca3af;margin-bottom:40px;max-width:560px;line-height:1.7}
+.divider-full{height:1px;background:linear-gradient(90deg,transparent,#2d2d44 30%,#2d2d44 70%,transparent);margin:0}
+
+/* Color palette */
+.colors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.color-card{border-radius:12px;overflow:hidden;border:1px solid #1e1e2e}
+.color-swatch{height:100px;display:flex;align-items:flex-end;padding:12px}
+.color-hex{font-family:monospace;font-size:11px;color:rgba(255,255,255,.7);font-weight:600}
+.color-info{padding:12px;background:#111118}
+.color-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.color-role{font-size:11px;color:#6b7280}
+
+/* Typography */
+.type-showcase{display:flex;flex-direction:column;gap:24px}
+.type-card{background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:28px}
+.type-label{font-size:10px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.type-sample{line-height:1.2}
+
+/* Voice & Tone */
+.tone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.tone-card{background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:24px}
+.tone-card h4{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.tone-card p{font-size:12px;color:#9ca3af;line-height:1.6}
+.tone-card .example{margin-top:10px;padding:10px;background:#13131f;border-radius:6px;font-style:italic;font-size:12px;color:#c9a96e;border-left:2px solid #c9a96e}
+
+/* Social media specs */
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.spec-card{background:#111118;border:1px solid #1e1e2e;border-radius:10px;padding:18px}
+.spec-card .icon{font-size:24px;margin-bottom:10px}
+.spec-card h4{font-size:13px;font-weight:700;margin-bottom:6px}
+.spec-card ul{list-style:none;padding:0}
+.spec-card ul li{font-size:11px;color:#9ca3af;padding:2px 0;display:flex;align-items:center;gap:6px}
+.spec-card ul li::before{content:'·';color:#c9a96e}
+
+/* Hashtags */
+.hash-grid{display:flex;flex-wrap:wrap;gap:8px}
+.hash-tag{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.hash-tag.primary{background:rgba(201,169,110,.15);color:#c9a96e;border:1px solid rgba(201,169,110,.3)}
+.hash-tag.secondary{background:#111118;color:#9ca3af;border:1px solid #1e1e2e}
+.hash-tag:hover{border-color:#c9a96e;color:#c9a96e}
+
+/* Do / Don't */
+.dd-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dd-card{border-radius:12px;padding:22px}
+.dd-do{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25)}
+.dd-dont{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25)}
+.dd-card h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.dd-do h4{color:#10b981}
+.dd-dont h4{color:#ef4444}
+.dd-card ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:7px}
+.dd-card li{font-size:12px;color:#9ca3af;line-height:1.5;padding-left:16px;position:relative}
+.dd-card li::before{position:absolute;left:0}
+.dd-do li::before{content:'✓';color:#10b981}
+.dd-dont li::before{content:'✕';color:#ef4444}
+
+/* Creative examples */
+.examples-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.ex-card{border-radius:12px;overflow:hidden;aspect-ratio:1;position:relative;border:1px solid #1e1e2e;background:#1a1a1a}
+.ex-card img{width:100%;height:100%;object-fit:cover}
+.ex-card .ex-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,0) 75%)}
+.ex-card .ex-txt{position:absolute;bottom:0;left:0;right:0;padding:18px}
+.ex-card .ex-h{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:700;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.ex-card .ex-s{font-size:11px;color:rgba(255,255,255,.72);margin-top:4px;font-weight:300}
+.ex-card .ex-gold .ex-h{color:#f0d090}
+.ex-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);border-radius:5px;padding:3px 8px;font-size:9px;font-weight:700;color:#c9a96e}
+
+/* Posting schedule */
+.schedule-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day-card{background:#111118;border:1px solid #1e1e2e;border-radius:10px;padding:12px;text-align:center}
+.day-name{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.day-time{font-size:12px;color:#c9a96e;font-weight:700;margin-bottom:4px}
+.day-type{font-size:10px;color:#9ca3af}
+.day-card.highlight{border-color:rgba(201,169,110,.4);background:rgba(201,169,110,.06)}
+
+/* Footer */
+.footer{background:#0c0c16;border-top:1px solid #1a1a2e;padding:32px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;background:linear-gradient(135deg,#c9a96e,#f0d090);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:999;box-shadow:0 8px 30px rgba(201,169,110,.35);transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast.on{transform:translateY(0);opacity:1}
+
+@media(max-width:768px){
+  .section{padding:48px 24px}
+  .tone-grid,.dd-grid{grid-template-columns:1fr}
+  .schedule-grid{grid-template-columns:repeat(4,1fr)}
+  .nav{padding:0 20px}
+  .footer{padding:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">✦ AraHomeLuxe</div>
+  <div style="font-size:11px;color:#6b7280">Brand Book 2026</div>
+  <div class="nav-links">
+    <a class="nav-link" href="projects.html">📁 Proyectos</a>
+    <a class="nav-link" href="studio.html">🎨 Studio</a>
+    <a class="nav-link active" href="brand-book.html">📖 Brand Book</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div style="position:relative">
+    <div style="font-size:11px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Guía de Identidad de Marca</div>
+    <h1><em>AraHome</em>Luxe</h1>
+    <p>Alquiler de villas y suites de lujo en España · Estándares de comunicación y diseño 2026</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+      <span style="padding:6px 16px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:20px;font-size:12px;font-weight:600;color:#c9a96e">✦ Lujo</span>
+      <span style="padding:6px 16px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:20px;font-size:12px;font-weight:600;color:#c9a96e">🌊 Privacidad</span>
+      <span style="padding:6px 16px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:20px;font-size:12px;font-weight:600;color:#c9a96e">🏡 Exclusividad</span>
+      <span style="padding:6px 16px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:20px;font-size:12px;font-weight:600;color:#c9a96e">⭐ Servicio premium</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- COLORES -->
+<section class="section reveal">
+  <div class="section-tag">01 · Paleta de color</div>
+  <div class="section-title">Colores de Marca</div>
+  <div class="section-sub">Nuestra paleta refleja lujo atemporal. El oro es nuestra firma visual — evoca exclusividad, calidez y distinción.</div>
+  <div class="colors-grid">
+    <div class="color-card">
+      <div class="color-swatch" style="background:#c9a96e"><span class="color-hex">#C9A96E</span></div>
+      <div class="color-info"><div class="color-name">Gold Principal</div><div class="color-role">Color de marca · CTAs · Acentos</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#f0d090"><span class="color-hex" style="color:rgba(0,0,0,.5)">#F0D090</span></div>
+      <div class="color-info"><div class="color-name">Gold Claro</div><div class="color-role">Gradientes · Highlights · Texto sobre oscuro</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#09090f"><span class="color-hex">#09090F</span></div>
+      <div class="color-info"><div class="color-name">Negro Profundo</div><div class="color-role">Fondo principal · Máxima elegancia</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#111118"><span class="color-hex">#111118</span></div>
+      <div class="color-info"><div class="color-name">Carbón</div><div class="color-role">Cards · Superficies secundarias</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#f0eeec"><span class="color-hex" style="color:#333">#F0EEEC</span></div>
+      <div class="color-info"><div class="color-name">Blanco Cálido</div><div class="color-role">Texto principal · Texto sobre imágenes</div></div>
+    </div>
+    <div class="color-card">
+      <div class="color-swatch" style="background:#6b7280"><span class="color-hex">#6B7280</span></div>
+      <div class="color-info"><div class="color-name">Gris Sofisticado</div><div class="color-role">Texto secundario · Subtítulos</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- TIPOGRAFÍA -->
+<section class="section reveal">
+  <div class="section-tag">02 · Tipografía</div>
+  <div class="section-title">Sistema Tipográfico</div>
+  <div class="section-sub">Dos familias que juntas crean contraste perfecto entre elegancia clásica y legibilidad moderna.</div>
+  <div class="type-showcase">
+    <div class="type-card">
+      <div class="type-label">Playfair Display — Titulares / Headings</div>
+      <div class="type-sample" style="font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:700;line-height:1.15;color:#f0eeec">
+        Donde el lujo<br/><em style="color:#c9a96e;font-style:italic">se convierte</em><br/>en experiencia
+      </div>
+      <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap">
+        <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:400;color:#9ca3af">Regular 400</span>
+        <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:#9ca3af">Semibold 600</span>
+        <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#9ca3af">Bold 700</span>
+        <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:900;color:#9ca3af">Black 900</span>
+        <span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;font-style:italic;color:#9ca3af">Bold Italic</span>
+      </div>
+    </div>
+    <div class="type-card">
+      <div class="type-label">Inter — Cuerpo de texto / Body</div>
+      <div class="type-sample" style="font-size:16px;line-height:1.75;color:#9ca3af;max-width:560px">
+        Más que un alquiler vacacional. <strong style="color:#f0eeec">AraHomeLuxe</strong> ofrece una experiencia cuidadosamente curada donde cada detalle ha sido pensado para que tu estancia sea perfecta. Privacidad, exclusividad y servicio de primera.
+      </div>
+      <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap">
+        <span style="font-size:14px;font-weight:300;color:#9ca3af">Light 300</span>
+        <span style="font-size:14px;font-weight:400;color:#9ca3af">Regular 400</span>
+        <span style="font-size:14px;font-weight:500;color:#9ca3af">Medium 500</span>
+        <span style="font-size:14px;font-weight:600;color:#9ca3af">Semibold 600</span>
+        <span style="font-size:14px;font-weight:700;color:#9ca3af">Bold 700</span>
+        <span style="font-size:14px;font-weight:800;color:#9ca3af">ExtraBold 800</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- VOZ Y TONO -->
+<section class="section reveal">
+  <div class="section-tag">03 · Voz y Tono</div>
+  <div class="section-title">Cómo Hablamos</div>
+  <div class="section-sub">Nuestra comunicación refleja quiénes somos: sofisticados pero cercanos, inspiradores pero honestos.</div>
+  <div class="tone-grid">
+    <div class="tone-card">
+      <h4>✨ Aspiracional</h4>
+      <p>Evocamos emociones y experiencias, no solo características físicas. Vendemos el estilo de vida, no la propiedad.</p>
+      <div class="example">"Donde el tiempo se detiene y el lujo se vuelve cotidiano."</div>
+    </div>
+    <div class="tone-card">
+      <h4>🎯 Preciso</h4>
+      <p>Directo y sin rodeos. No usamos hipérboles vacías. Si algo es de lujo, lo mostramos con hechos concretos.</p>
+      <div class="example">"2 piscinas privadas · 6 habitaciones · Servicio de chef a domicilio"</div>
+    </div>
+    <div class="tone-card">
+      <h4>🌿 Humano</h4>
+      <p>A pesar del lujo, mantenemos calidez. Nos preocupa la experiencia de cada cliente, no solo la transacción.</p>
+      <div class="example">"Estamos aquí para que tu única preocupación sea disfrutar."</div>
+    </div>
+    <div class="tone-card">
+      <h4>💎 Exclusivo</h4>
+      <p>Comunicamos escasez y exclusividad sin resultar arrogantes. El cliente se siente privilegiado, no inferior.</p>
+      <div class="example">"Solo 3 propiedades disponibles en temporada alta. ¿La tuya?"</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- DO / DON'T -->
+<section class="section reveal">
+  <div class="section-tag">04 · Comunicación</div>
+  <div class="section-title">Qué Hacer y Qué Evitar</div>
+  <div class="section-sub">Guía práctica para mantener la coherencia de marca en todas las comunicaciones.</div>
+  <div class="dd-grid">
+    <div class="dd-card dd-do">
+      <h4>✓ Hacer</h4>
+      <ul>
+        <li>Usar Playfair Display para titulares en imágenes</li>
+        <li>Fotografías de alta calidad, bien iluminadas y estilizadas</li>
+        <li>Captions con emoción y llamada a la acción clara</li>
+        <li>Hashtags relevantes en español e inglés (10-12 por post)</li>
+        <li>Responder comentarios con elegancia y personalidad</li>
+        <li>Publicar en los horarios de mayor engagement (20:00-22:00)</li>
+        <li>Mostrar detalles del lujo: piscinas, materiales, vistas</li>
+        <li>Usar filtros cálidos que refuercen la sensación de exclusividad</li>
+      </ul>
+    </div>
+    <div class="dd-card dd-dont">
+      <h4>✕ Evitar</h4>
+      <ul>
+        <li>Imágenes oscuras, mal encuadradas o de baja resolución</li>
+        <li>Textos largos en imágenes que dificulten la lectura</li>
+        <li>Demasiados hashtags genéricos sin relevancia</li>
+        <li>Copiar y pegar el mismo caption en todas las publicaciones</li>
+        <li>Usar emojis de forma excesiva o inapropiada</li>
+        <li>Publicar sin una estrategia de contenido definida</li>
+        <li>Ignorar comentarios o mensajes directos</li>
+        <li>Mezclar estilos visuales inconsistentes en el perfil</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- HASHTAG STRATEGY -->
+<section class="section reveal">
+  <div class="section-tag">05 · Estrategia de Hashtags</div>
+  <div class="section-title">Hashtags de Marca</div>
+  <div class="section-sub">Sistema de hashtags por categoría para maximizar el alcance orgánico en Instagram.</div>
+
+  <div style="margin-bottom:24px">
+    <div style="font-size:12px;font-weight:700;color:#c9a96e;margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px">Marca propia</div>
+    <div class="hash-grid">
+      <div class="hash-tag primary" onclick="copyTag(this)">#AraHomeLuxe</div>
+      <div class="hash-tag primary" onclick="copyTag(this)">#VillaLosSauces</div>
+      <div class="hash-tag primary" onclick="copyTag(this)">#VillaGenova</div>
+      <div class="hash-tag primary" onclick="copyTag(this)">#SuiteBadames</div>
+      <div class="hash-tag primary" onclick="copyTag(this)">#AraHomeLuxeEspaña</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:24px">
+    <div style="font-size:12px;font-weight:700;color:#c9a96e;margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px">Lujo & Lifestyle</div>
+    <div class="hash-grid">
+      <div class="hash-tag secondary" onclick="copyTag(this)">#AlquilerLujo</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#VacacionesLujo</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#LuxuryRental</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#LuxuryVilla</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#LuxuryTravel</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#LuxuryLifestyle</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#ExclusiveVilla</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#PrivatePool</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:24px">
+    <div style="font-size:12px;font-weight:700;color:#c9a96e;margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px">Destino & Ubicación</div>
+    <div class="hash-grid">
+      <div class="hash-tag secondary" onclick="copyTag(this)">#Mallorca</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#MallorcaVillas</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#Palma</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#España</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#SpainTravel</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#IslasBaleares</div>
+      <div class="hash-tag secondary" onclick="copyTag(this)">#MediterraneanLife</div>
+    </div>
+  </div>
+
+  <button style="padding:10px 22px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:8px;color:#c9a96e;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s" onclick="copyAllTags()">
+    📋 Copiar todos los hashtags
+  </button>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- FORMATOS INSTAGRAM -->
+<section class="section reveal">
+  <div class="section-tag">06 · Especificaciones Técnicas</div>
+  <div class="section-title">Formatos de Instagram</div>
+  <div class="section-sub">Dimensiones y especificaciones para cada tipo de contenido. Siempre exporta en la máxima calidad posible.</div>
+  <div class="specs-grid">
+    <div class="spec-card">
+      <div class="icon">📷</div>
+      <h4>Post Cuadrado</h4>
+      <ul>
+        <li>1080 × 1080 px</li>
+        <li>Ratio 1:1</li>
+        <li>PNG o JPG ≥ 90%</li>
+        <li>Máx 10 imágenes (carrusel)</li>
+        <li>Caption: 2.200 chars</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <div class="icon">📱</div>
+      <h4>Story / Reel Cover</h4>
+      <ul>
+        <li>1080 × 1920 px</li>
+        <li>Ratio 9:16</li>
+        <li>PNG o JPG ≥ 90%</li>
+        <li>Zona segura: 150px top/bot</li>
+        <li>Duración Reel: 15-90s</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <div class="icon">📊</div>
+      <h4>Post Paisaje</h4>
+      <ul>
+        <li>1080 × 566 px</li>
+        <li>Ratio 1.91:1</li>
+        <li>PNG o JPG ≥ 90%</li>
+        <li>Ideal para vistas aéreas</li>
+        <li>Aparece más grande en feed</li>
+      </ul>
+    </div>
+    <div class="spec-card">
+      <div class="icon">🎬</div>
+      <h4>Vídeo</h4>
+      <ul>
+        <li>1080 × 1080 o 1920px</li>
+        <li>MP4 H.264</li>
+        <li>Máx 60fps</li>
+        <li>Duración: 3-60s</li>
+        <li>Tamaño máx: 4GB</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- CALENDARIO DE PUBLICACIÓN -->
+<section class="section reveal">
+  <div class="section-tag">07 · Estrategia de Publicación</div>
+  <div class="section-title">Calendario Semanal Recomendado</div>
+  <div class="section-sub">Los mejores días y horas para publicar en el sector de alquiler de lujo vacacional según datos de engagement de Instagram 2026.</div>
+  <div class="schedule-grid">
+    <div class="day-card">
+      <div class="day-name">Lun</div>
+      <div class="day-time" style="color:#6b7280">—</div>
+      <div class="day-type" style="color:#4b5563">Descanso</div>
+    </div>
+    <div class="day-card highlight">
+      <div class="day-name">Mar</div>
+      <div class="day-time">20:00</div>
+      <div class="day-type">📷 Post carrusel</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">Mié</div>
+      <div class="day-time">19:30</div>
+      <div class="day-type">📱 Story</div>
+    </div>
+    <div class="day-card highlight">
+      <div class="day-name">Jue</div>
+      <div class="day-time">20:00</div>
+      <div class="day-type">🎬 Vídeo / Reel</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">Vie</div>
+      <div class="day-time">18:00</div>
+      <div class="day-type">📷 Post único</div>
+    </div>
+    <div class="day-card highlight">
+      <div class="day-name">Sáb</div>
+      <div class="day-time">12:00</div>
+      <div class="day-type">📱 Story + post</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">Dom</div>
+      <div class="day-time">21:00</div>
+      <div class="day-type">📷 Post aspiracional</div>
+    </div>
+  </div>
+  <div style="margin-top:16px;padding:14px;background:#111118;border:1px solid #1e1e2e;border-radius:10px;font-size:12px;color:#9ca3af;line-height:1.7">
+    <strong style="color:#c9a96e">💡 Consejo:</strong> Las publicaciones de martes y jueves a las 20:00h tienen un 34% más de engagement en el sector de lujo vacacional. Los sábados al mediodía alcanzan a audiencias que planifican sus próximas vacaciones durante el fin de semana.
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- EJEMPLOS CREATIVOS -->
+<section class="section reveal">
+  <div class="section-tag">08 · Ejemplos Creativos</div>
+  <div class="section-title">Estilo Visual de Referencia</div>
+  <div class="section-sub">Así se ve el estilo visual de AraHomeLuxe. Imagen de alta calidad, gradiente inferior, titular serif y subtítulo ligero.</div>
+  <div class="examples-row">
+    <div class="ex-card">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3a5c,#0a2040);display:flex;align-items:center;justify-content:center;font-size:52px">🌊</div>
+      <div class="ex-ov"></div>
+      <div class="ex-txt">
+        <div class="ex-h">Tu verano sin igual</div>
+        <div class="ex-s">Piscina privada · Jardín exclusivo</div>
+      </div>
+      <div class="ex-badge">Inferior</div>
+    </div>
+    <div class="ex-card">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#2d1a0a,#5a3a1a);display:flex;align-items:center;justify-content:center;font-size:52px">🏡</div>
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.55)"></div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:82%;padding:14px">
+        <div class="ex-h" style="font-size:20px;color:#f0d090">Donde el tiempo<br/>se detiene</div>
+        <div class="ex-s" style="margin-top:8px">Lujo mediterráneo</div>
+      </div>
+      <div class="ex-badge">Centrado · Oro</div>
+    </div>
+    <div class="ex-card">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2d1a,#0a3a1a);display:flex;align-items:center;justify-content:center;font-size:52px">🌿</div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.7) 0%,rgba(0,0,0,.2) 40%,rgba(0,0,0,0) 65%)"></div>
+      <div style="position:absolute;top:0;left:0;right:0;padding:16px">
+        <div class="ex-h" style="font-size:18px">El descanso<br/>que mereces</div>
+        <div class="ex-s">Exclusividad total</div>
+      </div>
+      <div class="ex-badge">Superior</div>
+    </div>
+    <div class="ex-card">
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a1a2d,#2a0a1a);display:flex;align-items:center;justify-content:center;font-size:52px">✨</div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.6) 28%,rgba(0,0,0,0) 45%)"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:14px">
+        <div class="ex-h" style="font-size:22px">Lujo que<br/>se respira</div>
+        <div class="ex-s" style="font-size:10px">AraHomeLuxe · Mallorca</div>
+      </div>
+      <div class="ex-badge">Barra · B&W</div>
+    </div>
+  </div>
+  <div style="margin-top:20px;text-align:center">
+    <a href="studio.html" style="padding:13px 32px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;border-radius:10px;font-size:14px;font-weight:800;text-decoration:none;display:inline-block;transition:all .25s;box-shadow:0 6px 24px rgba(201,169,110,.3)">
+      ✨ Crear mis creatives con IA →
+    </a>
+  </div>
+</section>
+
+<div class="divider-full"></div>
+
+<!-- PROPIEDADES -->
+<section class="section reveal">
+  <div class="section-tag">09 · Portfolio de Propiedades</div>
+  <div class="section-title">Nuestras Propiedades</div>
+  <div class="section-sub">Cada propiedad tiene su propia personalidad y estrategia de comunicación, siempre dentro de la identidad de AraHomeLuxe.</div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-size:36px;flex-shrink:0">🌊</div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f0d090;margin-bottom:3px">Villa Los Sauces</div>
+        <div style="font-size:12px;color:#9ca3af;margin-bottom:8px">Villa de lujo · Mallorca · 6 habitaciones · 2 piscinas</div>
+        <div style="font-size:11px;color:#6b7280">Tono: Exclusivo & Familiar · Público: Familias de alto nivel</div>
+      </div>
+      <a href="studio.html" onclick="localStorage.setItem('cf_quickload','villa-los-sauces')" style="padding:9px 18px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:8px;font-size:12px;font-weight:700;color:#c9a96e;text-decoration:none;white-space:nowrap">Crear contenido →</a>
+    </div>
+    <div style="background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-size:36px;flex-shrink:0">🏔️</div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f0d090;margin-bottom:3px">Villa Génova</div>
+        <div style="font-size:12px;color:#9ca3af;margin-bottom:8px">Villa de diseño · Palma · Vistas al mar · Piscina infinity</div>
+        <div style="font-size:11px;color:#6b7280">Tono: Lifestyle & Aspiracional · Público: Parejas y grupos premium</div>
+      </div>
+      <a href="studio.html" style="padding:9px 18px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:8px;font-size:12px;font-weight:700;color:#c9a96e;text-decoration:none;white-space:nowrap">Crear contenido →</a>
+    </div>
+    <div style="background:#111118;border:1px solid #1e1e2e;border-radius:12px;padding:22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-size:36px;flex-shrink:0">🌿</div>
+      <div style="flex:1;min-width:200px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f0d090;margin-bottom:3px">Suite Badamés</div>
+        <div style="font-size:12px;color:#9ca3af;margin-bottom:8px">Suite boutique · Centro histórico · Jacuzzi · Butler service</div>
+        <div style="font-size:11px;color:#6b7280">Tono: Cultural & Sofisticado · Público: Viajeros de negocios & cultura</div>
+      </div>
+      <a href="studio.html" style="padding:9px 18px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.3);border-radius:8px;font-size:12px;font-weight:700;color:#c9a96e;text-decoration:none;white-space:nowrap">Crear contenido →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>
+    <div class="footer-logo">✦ AraHomeLuxe</div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px">Brand Book 2026 · Generado con CreativeFlow</div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="projects.html" style="padding:8px 16px;border:1px solid #2d2d44;border-radius:7px;font-size:12px;font-weight:600;color:#9ca3af;text-decoration:none;transition:all .2s">📁 Proyectos</a>
+    <a href="studio.html" style="padding:8px 16px;border:1px solid #2d2d44;border-radius:7px;font-size:12px;font-weight:600;color:#9ca3af;text-decoration:none;transition:all .2s">🎨 AI Studio</a>
+    <button onclick="window.print()" style="padding:8px 16px;border:1px solid #2d2d44;border-radius:7px;font-size:12px;font-weight:600;color:#9ca3af;background:transparent;cursor:pointer;transition:all .2s">🖨️ Imprimir</button>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Hashtag copy
+function copyTag(el){
+  navigator.clipboard.writeText(el.textContent).then(()=>showToast('📋 ' + el.textContent + ' copiado'));
+}
+
+const ALL_TAGS = '#AraHomeLuxe #VillaLosSauces #AlquilerLujo #VacacionesLujo #LuxuryRental #LuxuryVilla #LuxuryTravel #Mallorca #MallorcaVillas #España #IslasBaleares #MediterraneanLife';
+function copyAllTags(){
+  navigator.clipboard.writeText(ALL_TAGS).then(()=>showToast('📋 Todos los hashtags copiados'));
+}
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove('on'), 3000);
+}
+
+// Quick load property from URL
+const ql = localStorage.getItem('cf_quickload');
+if(ql){ localStorage.removeItem('cf_quickload'); /* would auto-load property in studio */ }
+</script>
+</body>
+</html>
