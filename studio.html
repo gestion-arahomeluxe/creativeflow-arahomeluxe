@@ -305,6 +305,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
       </div>
       <div class="gallery-btns">
         <button class="btn btn-ghost" onclick="backToUpload()">+ Añadir imágenes</button>
+        <button class="btn btn-ghost" onclick="saveCampaign()">💾 Guardar</button>
         <button class="btn btn-outline" onclick="runGenerate()">🔄 Regenerar</button>
         <button class="btn btn-gold" onclick="downloadAll()">⬇️ Descargar todo</button>
       </div>
@@ -385,9 +386,37 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
           <div class="chip" onclick="setFmt(this,'story')">📱 Story 9:16</div>
         </div>
       </div>
+      <!-- IA por creative -->
+      <div style="background:#13131f;border:1px solid #c9a96e33;border-radius:8px;padding:10px">
+        <div style="font-size:10px;font-weight:700;color:#c9a96e;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">⚡ IA por creative</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn btn-outline btn-w btn-sm" onclick="regenHeadline()" id="regenHBtn">🎲 Nuevo titular con IA</button>
+          <button class="btn btn-outline btn-w btn-sm" onclick="regenCaption()" id="regenCBtn">✍️ Nuevo caption con IA</button>
+        </div>
+      </div>
+
       <div>
         <span class="ctrl-lbl">Caption Instagram</span>
         <textarea class="ctrl-ta" id="eCap" rows="4" placeholder="Caption para Instagram..."></textarea>
+      </div>
+
+      <!-- Ajustes de imagen -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span class="ctrl-lbl" style="margin-bottom:0">Ajustes de imagen</span>
+          <button onclick="resetImgAdj()" style="font-size:10px;color:#6b7280;background:none;border:none;cursor:pointer">Resetear</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="range-wrap"><span style="font-size:10px;color:#6b7280;min-width:68px">Brillo</span>
+            <input type="range" id="rBright" min="50" max="150" value="100" oninput="applyImgFilter()"/>
+            <span class="range-val" id="vBright">100</span></div>
+          <div class="range-wrap"><span style="font-size:10px;color:#6b7280;min-width:68px">Contraste</span>
+            <input type="range" id="rContrast" min="50" max="200" value="100" oninput="applyImgFilter()"/>
+            <span class="range-val" id="vContrast">100</span></div>
+          <div class="range-wrap"><span style="font-size:10px;color:#6b7280;min-width:68px">Saturación</span>
+            <input type="range" id="rSat" min="0" max="200" value="100" oninput="applyImgFilter()"/>
+            <span class="range-val" id="vSat">100</span></div>
+        </div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:7px;padding-top:4px;border-top:1px solid #1a1a2e;margin-top:2px">
@@ -700,6 +729,7 @@ function cardHTML(c, i){
     <button class="cc-act" onclick="openEditor(${c.id})">✏️ Editar</button>
     <button class="cc-act" onclick="animateCard(${c.id})">🎬 Animar</button>
     <button class="cc-act" onclick="exportCard(${c.id})">⬇️ PNG</button>
+    <button class="cc-act" onclick="dupeCard(${c.id})" title="Duplicar con layout diferente">⧉</button>
     <button class="cc-act gold" onclick="copyCardCaption(${c.id})">📋</button>
   </div>
 </div>`;
@@ -756,6 +786,18 @@ function openEditor(id){
   document.querySelectorAll('.sw').forEach(s => {
     s.classList.toggle('on', s.getAttribute('onclick').includes(`'${c.color}'`));
   });
+
+  // Restore image adjustments
+  const f = c.imgFilter;
+  document.getElementById('rBright').value   = f?.brightness || 100;
+  document.getElementById('rContrast').value = f?.contrast   || 100;
+  document.getElementById('rSat').value      = f?.saturation || 100;
+  document.getElementById('vBright').textContent   = f?.brightness || 100;
+  document.getElementById('vContrast').textContent = f?.contrast   || 100;
+  document.getElementById('vSat').textContent      = f?.saturation || 100;
+  document.getElementById('pfImg').style.filter = f
+    ? `brightness(${f.brightness}%) contrast(${f.contrast}%) saturate(${f.saturation}%)`
+    : 'none';
 
   applyPreviewFormat(ST.eFmt);
   livePreview();
@@ -909,7 +951,7 @@ async function renderToCanvas(c, w=1080, h=1080){
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
 
-  // Draw background image
+  // Draw background image (with CSS filter support via canvas filter)
   const img = new Image();
   img.src = c.imageDataURL;
   await new Promise(r => { img.onload = r; img.onerror = r; });
@@ -917,7 +959,13 @@ async function renderToCanvas(c, w=1080, h=1080){
   const iw = img.naturalWidth, ih = img.naturalHeight;
   const scale = Math.max(w/iw, h/ih);
   const sw = iw * scale, sh = ih * scale;
+  // Apply image adjustments if any
+  if(c.imgFilter){
+    const f = c.imgFilter;
+    ctx.filter = `brightness(${f.brightness||100}%) contrast(${f.contrast||100}%) saturate(${f.saturation||100}%)`;
+  }
   ctx.drawImage(img, (w-sw)/2, (h-sh)/2, sw, sh);
+  ctx.filter = 'none'; // reset
 
   // Draw overlay
   const alpha = {none:[0,0], soft:[0.55,0.08], med:[0.82,0.28], dark:[0.95,0.50]}[c.ov || 'med'];
@@ -1058,6 +1106,101 @@ function copyAllHashtags(){
 }
 
 // ──────────────────────────────────────────────────────────────
+// AI REGEN PER CREATIVE
+// ──────────────────────────────────────────────────────────────
+async function regenHeadline(){
+  const c = ST.creatives.find(x => x.id === ST.activeId);
+  if(!c){ toast('Abre un creative primero'); return; }
+  const btn = document.getElementById('regenHBtn');
+  btn.textContent = '⏳ Generando...'; btn.disabled = true;
+
+  const name   = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const desc   = document.getElementById('bDesc').value.trim();
+  const tone   = document.getElementById('bTone').value;
+
+  const prompt = `Eres un experto en marketing de lujo. Genera 5 titulares creativos e impactantes para una foto de la propiedad de alquiler de lujo "${name}" (${desc}).
+Tono: ${tone}. Titulares en español, máx 6 palabras cada uno, sin punto final, poéticos y aspiracionales.
+Responde SOLO con un JSON: {"headlines": ["titular1","titular2","titular3","titular4","titular5"]}`;
+
+  const raw = await callClaude(prompt, 300);
+  btn.textContent = '🎲 Nuevo titular con IA'; btn.disabled = false;
+  if(!raw) return;
+
+  try {
+    const d = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] || raw);
+    const headlines = d.headlines || [];
+    if(headlines.length){
+      // Rotate through headlines each time
+      const used = c._headlineIdx || 0;
+      const next = headlines[used % headlines.length];
+      c._headlineIdx = (used + 1) % headlines.length;
+      c._headlinePool = headlines;
+      document.getElementById('eHead').value = next;
+      c.headline = next;
+      livePreview();
+      toast(`✅ Nuevo titular: "${next}"`);
+    }
+  } catch(e){ toast('❌ Error al parsear respuesta'); }
+}
+
+async function regenCaption(){
+  const c = ST.creatives.find(x => x.id === ST.activeId);
+  if(!c){ toast('Abre un creative primero'); return; }
+  const btn = document.getElementById('regenCBtn');
+  btn.textContent = '⏳ Generando...'; btn.disabled = true;
+
+  const name   = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const desc   = document.getElementById('bDesc').value.trim();
+  const feats  = document.getElementById('bFeats').value.trim();
+  const tone   = document.getElementById('bTone').value;
+  const hl     = document.getElementById('eHead').value;
+
+  const prompt = `Escribe un caption profesional para Instagram de la propiedad de lujo "${name}".
+Headline del creative: "${hl}".
+Características: ${feats}. Descripción: ${desc}. Tono: ${tone}.
+El caption debe tener: 1 línea de apertura con emoji impactante, 3-4 líneas de descripción aspiracional con emojis, 1 CTA claro.
+Responde SOLO el texto del caption, sin comillas, sin JSON.`;
+
+  const raw = await callClaude(prompt, 350);
+  btn.textContent = '✍️ Nuevo caption con IA'; btn.disabled = false;
+  if(!raw) return;
+
+  const fullCaption = raw.trim() + '\n\n' + ST.campaign.hashtags;
+  document.getElementById('eCap').value = fullCaption;
+  c.caption = fullCaption;
+  toast('✅ Caption regenerado con IA');
+}
+
+// ──────────────────────────────────────────────────────────────
+// IMAGE ADJUSTMENTS
+// ──────────────────────────────────────────────────────────────
+function applyImgFilter(){
+  const br = document.getElementById('rBright').value;
+  const co = document.getElementById('rContrast').value;
+  const sa = document.getElementById('rSat').value;
+  document.getElementById('vBright').textContent = br;
+  document.getElementById('vContrast').textContent = co;
+  document.getElementById('vSat').textContent = sa;
+  const filter = `brightness(${br}%) contrast(${co}%) saturate(${sa}%)`;
+  document.getElementById('pfImg').style.filter = filter;
+  // Save to creative
+  const c = ST.creatives.find(x=>x.id===ST.activeId);
+  if(c){ c.imgFilter = { brightness: parseInt(br), contrast: parseInt(co), saturation: parseInt(sa) }; }
+}
+
+function resetImgAdj(){
+  document.getElementById('rBright').value = 100;
+  document.getElementById('rContrast').value = 100;
+  document.getElementById('rSat').value = 100;
+  document.getElementById('vBright').textContent = 100;
+  document.getElementById('vContrast').textContent = 100;
+  document.getElementById('vSat').textContent = 100;
+  document.getElementById('pfImg').style.filter = 'none';
+  const c = ST.creatives.find(x=>x.id===ST.activeId);
+  if(c) c.imgFilter = null;
+}
+
+// ──────────────────────────────────────────────────────────────
 // CAPTION
 // ──────────────────────────────────────────────────────────────
 function copyEditorCaption(){
@@ -1067,6 +1210,43 @@ function copyEditorCaption(){
 function copyCardCaption(id){
   const c = ST.creatives.find(x=>x.id===id);
   if(c){ navigator.clipboard.writeText(c.caption||'').then(()=>toast('📋 Caption copiado')); }
+}
+
+// Duplicar creative con layout rotado
+function dupeCard(id){
+  const src = ST.creatives.find(x=>x.id===id);
+  if(!src) return;
+  const layouts = ['bottom','center','top','bar','minimal'];
+  const nextLayout = layouts[(layouts.indexOf(src.layout)+1) % layouts.length];
+  const kbfx = KB_FX[Math.floor(Math.random()*KB_FX.length)];
+  const newC = { ...src, id: Date.now()+Math.random(), layout: nextLayout, kbfx,
+    color: src.color === '#ffffff' ? '#f0d090' : '#ffffff',
+    ov: src.ov === 'med' ? 'dark' : 'med'
+  };
+  ST.creatives.push(newC);
+  const grid = document.getElementById('galGrid');
+  const div = document.createElement('div');
+  div.innerHTML = cardHTML(newC, ST.creatives.length-1);
+  grid.appendChild(div.firstElementChild);
+  toast(`⧉ Variación creada con layout "${nextLayout}"`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// CAMPAIGN PERSISTENCE
+// ──────────────────────────────────────────────────────────────
+function saveCampaign(){
+  // Can't serialize dataURLs into session display — save metadata only
+  const saved = {
+    campaign: ST.campaign,
+    creativesMeta: ST.creatives.map(c => ({
+      id: c.id, headline: c.subtitle, subtitle: c.subtitle,
+      caption: c.caption, layout: c.layout, color: c.color,
+      ov: c.ov, fs: c.fs, fmt: c.fmt, kbfx: c.kbfx
+    })),
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem('cf_lastCampaign', JSON.stringify(saved));
+  toast(`💾 Campaña "${ST.campaign.name}" guardada`);
 }
 
 // ──────────────────────────────────────────────────────────────
