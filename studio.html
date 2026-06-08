@@ -421,10 +421,25 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
         <textarea class="ctrl-ta" id="eCap" rows="4" placeholder="Caption para Instagram..."></textarea>
       </div>
 
+      <!-- Filtros fotográficos -->
+      <div>
+        <span class="ctrl-lbl">Filtro fotográfico</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap" id="filterStrip">
+          <button class="filter-btn on" onclick="applyPresetFilter(this,'original')" style="background:none;border:1px solid #c9a96e;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#c9a96e;cursor:pointer">Original</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'luxury')" style="background:linear-gradient(135deg,#8b6914,#d4a832);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">✨ Luxury</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'warm')" style="background:linear-gradient(135deg,#b34700,#e87c3e);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">🌅 Warm</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'cool')" style="background:linear-gradient(135deg,#1a4a7a,#4a8bbf);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">❄️ Cool</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'vintage')" style="background:linear-gradient(135deg,#6b4c2a,#b08050);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">📷 Vintage</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'dramatic')" style="background:linear-gradient(135deg,#1a1a1a,#444);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">🎭 Drama</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'bw')" style="background:linear-gradient(135deg,#333,#888);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">◑ B&W</button>
+          <button class="filter-btn" onclick="applyPresetFilter(this,'cinematic')" style="background:linear-gradient(135deg,#2a1a0a,#5a3a1a);border:none;border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#fff;cursor:pointer">🎬 Cine</button>
+        </div>
+      </div>
+
       <!-- Ajustes de imagen -->
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <span class="ctrl-lbl" style="margin-bottom:0">Ajustes de imagen</span>
+          <span class="ctrl-lbl" style="margin-bottom:0">Ajustes finos</span>
           <button onclick="resetImgAdj()" style="font-size:10px;color:#6b7280;background:none;border:none;cursor:pointer">Resetear</button>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
@@ -437,6 +452,9 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
           <div class="range-wrap"><span style="font-size:10px;color:#6b7280;min-width:68px">Saturación</span>
             <input type="range" id="rSat" min="0" max="200" value="100" oninput="applyImgFilter()"/>
             <span class="range-val" id="vSat">100</span></div>
+          <div class="range-wrap"><span style="font-size:10px;color:#6b7280;min-width:68px">Viñeta</span>
+            <input type="range" id="rVignette" min="0" max="80" value="0" oninput="applyVignette()"/>
+            <span class="range-val" id="vVignette">0</span></div>
         </div>
       </div>
 
@@ -835,17 +853,28 @@ function openEditor(id){
     s.classList.toggle('on', s.getAttribute('onclick').includes(`'${c.color}'`));
   });
 
-  // Restore image adjustments
+  // Restore image adjustments + filter presets
   const f = c.imgFilter;
   document.getElementById('rBright').value   = f?.brightness || 100;
   document.getElementById('rContrast').value = f?.contrast   || 100;
   document.getElementById('rSat').value      = f?.saturation || 100;
+  document.getElementById('rVignette').value = Math.round((c.vignette||0)*100);
   document.getElementById('vBright').textContent   = f?.brightness || 100;
   document.getElementById('vContrast').textContent = f?.contrast   || 100;
   document.getElementById('vSat').textContent      = f?.saturation || 100;
-  document.getElementById('pfImg').style.filter = f
-    ? `brightness(${f.brightness}%) contrast(${f.contrast}%) saturate(${f.saturation}%)`
+  document.getElementById('vVignette').textContent = Math.round((c.vignette||0)*100);
+  if(f) _applyFilterToPreview(f); else document.getElementById('pfImg').style.filter = 'none';
+  // Restore vignette box shadow
+  const vig = Math.round((c.vignette||0)*100);
+  document.getElementById('pf').style.boxShadow = vig > 0
+    ? `inset 0 0 ${vig*3}px ${vig*1.5}px rgba(0,0,0,0.${String(vig).padStart(2,'0')})`
     : 'none';
+  // Restore filter buttons
+  document.querySelectorAll('.filter-btn').forEach(b => b.style.outline = 'none');
+  if(f?.preset){
+    const presetBtn = [...document.querySelectorAll('.filter-btn')].find(b => b.getAttribute('onclick')?.includes(`'${f.preset}'`));
+    if(presetBtn) presetBtn.style.outline = '2px solid #c9a96e';
+  }
 
   applyPreviewFormat(ST.eFmt);
   livePreview();
@@ -1007,13 +1036,29 @@ async function renderToCanvas(c, w=1080, h=1080){
   const iw = img.naturalWidth, ih = img.naturalHeight;
   const scale = Math.max(w/iw, h/ih);
   const sw = iw * scale, sh = ih * scale;
-  // Apply image adjustments if any
+  // Apply image adjustments (full filter chain)
   if(c.imgFilter){
     const f = c.imgFilter;
-    ctx.filter = `brightness(${f.brightness||100}%) contrast(${f.contrast||100}%) saturate(${f.saturation||100}%)`;
+    const parts = [
+      `brightness(${f.brightness||100}%)`,
+      `contrast(${f.contrast||100}%)`,
+      `saturate(${f.saturation||100}%)`
+    ];
+    if(f.sepia)     parts.push(`sepia(${f.sepia}%)`);
+    if(f.hueRotate) parts.push(`hue-rotate(${f.hueRotate}deg)`);
+    ctx.filter = parts.join(' ');
   }
   ctx.drawImage(img, (w-sw)/2, (h-sh)/2, sw, sh);
   ctx.filter = 'none'; // reset
+
+  // Draw vignette (radial gradient from edges)
+  if(c.vignette && c.vignette > 0){
+    const vig = ctx.createRadialGradient(w*0.5, h*0.5, Math.min(w,h)*0.3, w*0.5, h*0.5, Math.min(w,h)*0.75);
+    vig.addColorStop(0, 'rgba(0,0,0,0)');
+    vig.addColorStop(1, `rgba(0,0,0,${Math.min(c.vignette, 0.8)})`);
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, w, h);
+  }
 
   // Draw overlay
   const alpha = {none:[0,0], soft:[0.55,0.08], med:[0.82,0.28], dark:[0.95,0.50]}[c.ov || 'med'];
@@ -1220,32 +1265,100 @@ Responde SOLO el texto del caption, sin comillas, sin JSON.`;
 }
 
 // ──────────────────────────────────────────────────────────────
-// IMAGE ADJUSTMENTS
+// IMAGE ADJUSTMENTS + FILTERS + VIGNETTE
 // ──────────────────────────────────────────────────────────────
-function applyImgFilter(){
-  const br = document.getElementById('rBright').value;
-  const co = document.getElementById('rContrast').value;
-  const sa = document.getElementById('rSat').value;
-  document.getElementById('vBright').textContent = br;
-  document.getElementById('vContrast').textContent = co;
-  document.getElementById('vSat').textContent = sa;
-  const filter = `brightness(${br}%) contrast(${co}%) saturate(${sa}%)`;
-  document.getElementById('pfImg').style.filter = filter;
-  // Save to creative
+const FILTER_PRESETS = {
+  original:  { brightness:100, contrast:100, saturation:100, sepia:0, hueRotate:0 },
+  luxury:    { brightness:108, contrast:105, saturation:120, sepia:15, hueRotate:0 },
+  warm:      { brightness:108, contrast:100, saturation:130, sepia:20, hueRotate:0 },
+  cool:      { brightness:100, contrast:110, saturation:80,  sepia:0,  hueRotate:10 },
+  vintage:   { brightness:105, contrast:90,  saturation:70,  sepia:30, hueRotate:0 },
+  dramatic:  { brightness:90,  contrast:130, saturation:75,  sepia:0,  hueRotate:0 },
+  bw:        { brightness:100, contrast:110, saturation:0,   sepia:0,  hueRotate:0 },
+  cinematic: { brightness:95,  contrast:115, saturation:90,  sepia:10, hueRotate:0 }
+};
+
+function applyPresetFilter(btn, preset){
+  // Update button states
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.style.outline = 'none';
+    b.classList.remove('on');
+  });
+  btn.style.outline = '2px solid #c9a96e';
+  btn.classList.add('on');
+
+  const p = FILTER_PRESETS[preset] || FILTER_PRESETS.original;
+  document.getElementById('rBright').value   = p.brightness;
+  document.getElementById('rContrast').value = p.contrast;
+  document.getElementById('rSat').value      = p.saturation;
+  document.getElementById('vBright').textContent   = p.brightness;
+  document.getElementById('vContrast').textContent = p.contrast;
+  document.getElementById('vSat').textContent      = p.saturation;
+
   const c = ST.creatives.find(x=>x.id===ST.activeId);
-  if(c){ c.imgFilter = { brightness: parseInt(br), contrast: parseInt(co), saturation: parseInt(sa) }; }
+  if(c){
+    c.imgFilter = {
+      brightness: p.brightness, contrast: p.contrast,
+      saturation: p.saturation, sepia: p.sepia || 0,
+      hueRotate: p.hueRotate || 0,
+      preset: preset
+    };
+    _applyFilterToPreview(c.imgFilter);
+  }
+}
+
+function applyImgFilter(){
+  const br = parseInt(document.getElementById('rBright').value);
+  const co = parseInt(document.getElementById('rContrast').value);
+  const sa = parseInt(document.getElementById('rSat').value);
+  document.getElementById('vBright').textContent   = br;
+  document.getElementById('vContrast').textContent = co;
+  document.getElementById('vSat').textContent      = sa;
+  const c = ST.creatives.find(x=>x.id===ST.activeId);
+  if(c){
+    c.imgFilter = { ...( c.imgFilter || {}), brightness: br, contrast: co, saturation: sa };
+    _applyFilterToPreview(c.imgFilter);
+  }
+}
+
+function applyVignette(){
+  const v = parseInt(document.getElementById('rVignette').value);
+  document.getElementById('vVignette').textContent = v;
+  const c = ST.creatives.find(x=>x.id===ST.activeId);
+  if(c){ c.vignette = v / 100; }
+  // Show vignette as pseudo-element via box-shadow inset on pf wrapper
+  document.getElementById('pf').style.boxShadow =
+    v > 0 ? `inset 0 0 ${v * 3}px ${v * 1.5}px rgba(0,0,0,0.${String(v).padStart(2,'0')})` : 'none';
+}
+
+function _applyFilterToPreview(f){
+  if(!f) return;
+  const parts = [
+    `brightness(${f.brightness||100}%)`,
+    `contrast(${f.contrast||100}%)`,
+    `saturate(${f.saturation||100}%)`
+  ];
+  if(f.sepia)     parts.push(`sepia(${f.sepia}%)`);
+  if(f.hueRotate) parts.push(`hue-rotate(${f.hueRotate}deg)`);
+  document.getElementById('pfImg').style.filter = parts.join(' ');
 }
 
 function resetImgAdj(){
-  document.getElementById('rBright').value = 100;
+  document.getElementById('rBright').value   = 100;
   document.getElementById('rContrast').value = 100;
-  document.getElementById('rSat').value = 100;
-  document.getElementById('vBright').textContent = 100;
+  document.getElementById('rSat').value      = 100;
+  document.getElementById('rVignette').value = 0;
+  document.getElementById('vBright').textContent   = 100;
   document.getElementById('vContrast').textContent = 100;
-  document.getElementById('vSat').textContent = 100;
+  document.getElementById('vSat').textContent      = 100;
+  document.getElementById('vVignette').textContent = 0;
   document.getElementById('pfImg').style.filter = 'none';
+  document.getElementById('pf').style.boxShadow = 'none';
+  // Reset filter buttons
+  document.querySelectorAll('.filter-btn').forEach(b => b.style.outline = 'none');
+  document.querySelector('.filter-btn.on')?.style && (document.querySelectorAll('.filter-btn')[0].style.outline = '2px solid #c9a96e');
   const c = ST.creatives.find(x=>x.id===ST.activeId);
-  if(c) c.imgFilter = null;
+  if(c){ c.imgFilter = null; c.vignette = 0; }
 }
 
 // ──────────────────────────────────────────────────────────────
