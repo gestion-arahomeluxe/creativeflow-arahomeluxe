@@ -376,11 +376,21 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
         <div class="gallery-sub" id="galSub"></div>
       </div>
       <div class="gallery-btns">
-        <button class="btn btn-ghost" onclick="backToUpload()">+ Añadir imágenes</button>
+        <button class="btn btn-ghost" onclick="backToUpload()">+ Añadir</button>
         <button class="btn btn-ghost" onclick="saveCampaign()">💾 Guardar</button>
         <button class="btn btn-outline" onclick="runGenerate()">🔄 Regenerar</button>
         <button class="btn btn-gold" onclick="downloadAll()">⬇️ Descargar todo</button>
       </div>
+    </div>
+    <!-- Filter bar -->
+    <div id="galFilterBar" style="display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+      <span style="font-size:10px;color:#6b7280;font-weight:700">Filtrar:</span>
+      <button class="chip on" id="fAll"    onclick="filterGallery('all')"    style="padding:4px 11px;font-size:10px">Todos</button>
+      <button class="chip"    id="fPost"   onclick="filterGallery('post')"   style="padding:4px 11px;font-size:10px">📷 Posts</button>
+      <button class="chip"    id="fStory"  onclick="filterGallery('story')"  style="padding:4px 11px;font-size:10px">📱 Stories</button>
+      <button class="chip"    id="fBottom" onclick="filterGallery('bottom')" style="padding:4px 11px;font-size:10px">Inferior</button>
+      <button class="chip"    id="fCenter" onclick="filterGallery('center')" style="padding:4px 11px;font-size:10px">Centrado</button>
+      <span id="galCount" style="font-size:10px;color:#6b7280;margin-left:auto"></span>
     </div>
     <div class="gallery-grid" id="galGrid"></div>
   </div>
@@ -525,9 +535,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
 
       <div style="display:flex;flex-direction:column;gap:7px;padding-top:4px;border-top:1px solid #1a1a2e;margin-top:2px">
         <button class="btn btn-gold btn-w" onclick="exportCurrent()">⬇️ Descargar 1080×1080 PNG</button>
-        <button class="btn btn-outline btn-w" onclick="animateCurrent()">🎬 Previsualizar animado</button>
-        <button class="btn btn-ghost btn-w btn-sm" onclick="copyEditorCaption()">📋 Copiar caption</button>
-        <button class="btn btn-ghost btn-w btn-sm" onclick="closeEditor()">Cerrar</button>
+        <button class="btn btn-outline btn-w" onclick="animateCurrent()">🎬 Previsualizar Story</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-w btn-sm" onclick="copyEditorCaption()">📋 Copiar caption</button>
+          <button class="btn btn-ghost btn-w btn-sm" onclick="surpriseMe()" title="Combinación aleatoria de filtro, layout y efecto">🎲 Surprise me</button>
+        </div>
+        <button class="btn btn-ghost btn-w btn-sm" style="font-size:10px;color:#9ca3af" onclick="applyFilterToAll()">⚡ Aplicar filtro a todos los creatives</button>
+        <button class="btn btn-ghost btn-w btn-sm" onclick="closeEditor()">Cerrar editor</button>
       </div>
     </div>
   </div>
@@ -967,6 +981,14 @@ function renderGallery(){
   showGalleryActions();
   const grid = document.getElementById('galGrid');
   grid.innerHTML = ST.creatives.map((c, i) => cardHTML(c, i)).join('');
+  // Reset gallery filter
+  _galFilter = 'all';
+  ['all','post','story','bottom','center'].forEach(k => {
+    const el = document.getElementById('f' + k.charAt(0).toUpperCase() + k.slice(1));
+    if(el) el.classList.toggle('on', k === 'all');
+  });
+  const countEl = document.getElementById('galCount');
+  if(countEl) countEl.textContent = `${ST.creatives.length} creatives`;
 }
 
 function cardHTML(c, i){
@@ -2035,6 +2057,107 @@ async function generarBrief(){
   }
   setTimeout(()=>URL.revokeObjectURL(url), 5000);
   toast('🗂️ Brief de cliente generado · Ábrelo para imprimir o exportar PDF');
+}
+
+// ──────────────────────────────────────────────────────────────
+// SURPRISE ME — randomize all creative settings
+// ──────────────────────────────────────────────────────────────
+function surpriseMe(){
+  const layouts  = ['bottom','center','top','bar','minimal'];
+  const colors   = ['#ffffff','#f0d090','#a8d4ff','#f8e4d0','#c8f7c5'];
+  const ovs      = ['soft','med','dark'];
+  const filterKeys = Object.keys(FILTER_PRESETS);
+
+  // Random layout
+  const rLayout = layouts[Math.floor(Math.random()*layouts.length)];
+  ST.eLayout = rLayout;
+  setActiveChip('layoutChips', `'${rLayout}'`);
+
+  // Random color
+  const rColor = colors[Math.floor(Math.random()*colors.length)];
+  ST.eColor = rColor;
+  document.querySelectorAll('.sw').forEach(s => {
+    s.classList.toggle('on', s.getAttribute('onclick')?.includes(`'${rColor}'`));
+  });
+
+  // Random overlay
+  const rOv = ovs[Math.floor(Math.random()*ovs.length)];
+  ST.eOv = rOv;
+  setActiveChip('ovChips', `'${rOv}'`);
+
+  // Random font size 18–36
+  const rFs = 18 + Math.floor(Math.random()*19);
+  document.getElementById('fsRange').value = rFs;
+  document.getElementById('fsVal').textContent = rFs + 'px';
+
+  // Random filter
+  const rFilter = filterKeys[Math.floor(Math.random()*filterKeys.length)];
+  const filterBtn = [...document.querySelectorAll('.filter-btn')]
+    .find(b => b.getAttribute('onclick')?.includes(`'${rFilter}'`));
+  if(filterBtn) applyPresetFilter(filterBtn, rFilter);
+
+  // Random vignette 0–50
+  const rVig = Math.floor(Math.random()*50);
+  document.getElementById('rVignette').value = rVig;
+  applyVignette();
+
+  // Random KB effect
+  const rKb = KB_FX[Math.floor(Math.random()*KB_FX.length)];
+  const c = ST.creatives.find(x => x.id === ST.activeId);
+  if(c){ c.kbfx = rKb; }
+  setActiveChip('kbChips', `'${rKb}'`);
+
+  livePreview();
+  toast(`🎲 ¡Sorpresa! ${rLayout} · ${rFilter} · ${rOv} overlay`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// APPLY FILTER TO ALL CREATIVES
+// ──────────────────────────────────────────────────────────────
+function applyFilterToAll(){
+  const c = ST.creatives.find(x => x.id === ST.activeId);
+  if(!c){ toast('Abre un creative primero'); return; }
+  const filter  = c.imgFilter;
+  const vignette = c.vignette;
+  let count = 0;
+  ST.creatives.forEach(cr => {
+    if(cr.id !== c.id){
+      if(filter)  cr.imgFilter = { ...filter };
+      if(vignette !== undefined) cr.vignette = vignette;
+      count++;
+    }
+  });
+  toast(`⚡ Filtro "${filter?.preset||'custom'}" aplicado a ${count} creatives más`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// GALLERY FILTER BAR
+// ──────────────────────────────────────────────────────────────
+let _galFilter = 'all';
+function filterGallery(mode){
+  _galFilter = mode;
+  // Update chip states
+  ['all','post','story','bottom','center'].forEach(k => {
+    const el = document.getElementById('f' + k.charAt(0).toUpperCase() + k.slice(1));
+    if(el) el.classList.toggle('on', k === mode);
+  });
+  const grid = document.getElementById('galGrid');
+  let visible = 0;
+  grid.querySelectorAll('.cc').forEach(card => {
+    const id = parseInt(card.id.replace('cc',''));
+    const c = ST.creatives.find(x => x.id === id);
+    if(!c){ card.style.display='none'; return; }
+    let show = true;
+    if(mode === 'post')   show = (c.fmt||'post') === 'post';
+    if(mode === 'story')  show = c.fmt === 'story';
+    if(mode === 'bottom') show = c.layout === 'bottom';
+    if(mode === 'center') show = c.layout === 'center';
+    card.style.display = show ? '' : 'none';
+    if(show) visible++;
+  });
+  const total = ST.creatives.length;
+  const countEl = document.getElementById('galCount');
+  if(countEl) countEl.textContent = mode === 'all' ? `${total} creatives` : `${visible} de ${total}`;
 }
 
 // ──────────────────────────────────────────────────────────────
