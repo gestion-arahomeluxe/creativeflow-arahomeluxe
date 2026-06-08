@@ -369,6 +369,19 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
     <div class="stage-hero">
       <h1>Crea contenido de <span>impacto</span><br>con Inteligencia Artificial</h1>
       <p>Sube tus fotos · La IA genera titulares, diseños y overlays<br>profesionales listos para publicar en Instagram</p>
+      <!-- Feature badges -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px">
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">⚡ Titulares IA</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">🎬 Ken Burns</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">📱 Mockup IG</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">🎞️ 8 Filtros</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">📅 Calendario 4 semanas</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">🗂️ Brief cliente</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">🎬 Script Reel 30s</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">⭐ Posts de reseñas</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">⬇️ PNG 1080×1080</span>
+        <span style="padding:4px 10px;background:rgba(201,169,110,.12);border:1px solid rgba(201,169,110,.25);border-radius:14px;font-size:10px;font-weight:600;color:#c9a96e">🌍 Captions EN</span>
+      </div>
     </div>
 
     <div class="drop-zone" id="dropZone">
@@ -1447,20 +1460,22 @@ async function exportCurrent(){ if(ST.activeId) await exportCard(ST.activeId); }
 
 async function downloadAll(){
   if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
-  toast(`⏳ Preparando ${ST.creatives.length} archivos...`);
-  const name = ST.campaign.name.replace(/\s+/g,'-').toLowerCase() || 'campaign';
-  for(let i=0; i<ST.creatives.length; i++){
+  const total = ST.creatives.length;
+  const name  = ST.campaign.name.replace(/\s+/g,'-').toLowerCase() || 'campaign';
+  showLoader(true, `Descargando ${total} imágenes en alta resolución`, 5);
+  for(let i=0; i<total; i++){
+    setLoaderStep(`Renderizando ${i+1} de ${total} · ${ST.creatives[i].headline?.substring(0,22)||''}...`, Math.round(((i+1)/total)*95));
     const c = ST.creatives[i];
-    const isStory = c.fmt === 'story';
-    const W = isStory ? 608 : 1080;
+    const W = c.fmt === 'story' ? 608 : 1080;
     const { dataURL } = await renderToCanvas(c, W, 1080);
     const a = document.createElement('a');
     a.href = dataURL;
     a.download = `arahomeluxe-${name}-${String(i+1).padStart(2,'0')}.png`;
     a.click();
-    await new Promise(r => setTimeout(r, 450));
+    await new Promise(r => setTimeout(r, 420));
   }
-  toast(`✅ ${ST.creatives.length} imágenes descargadas`);
+  showLoader(false);
+  toast(`✅ ${total} imágenes descargadas en 1080px`);
 }
 
 // ──────────────────────────────────────────────────────────────
