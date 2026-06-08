@@ -254,6 +254,27 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
   </div>
   <div class="divider"></div>
 
+  <!-- Quick Property Templates -->
+  <div>
+    <div class="sb-title">🏠 Accesos rápidos</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;text-align:left" onclick="loadProperty('villa-los-sauces')">🌊 Villa Los Sauces</button>
+      <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;text-align:left" onclick="loadProperty('villa-genova')">🏔️ Villa Génova</button>
+      <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;text-align:left" onclick="loadProperty('suite-badames')">🌿 Suite Badamés</button>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- Gallery actions -->
+  <div id="galleryActions" style="display:none">
+    <div class="sb-title">📊 Acciones</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <button class="btn btn-ghost btn-sm btn-w" onclick="showGridPreview()">📱 Vista perfil IG</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="exportAllCaptions()">📄 Exportar captions</button>
+    </div>
+  </div>
+  <div class="divider"></div>
+
   <!-- API Key -->
   <div>
     <div class="sb-title">🔑 API Key · Claude</div>
@@ -445,6 +466,32 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
     <button class="btn btn-ghost" onclick="closeAnim()">✕ Cerrar</button>
   </div>
   <div style="font-size:11px;color:#6b7280;text-align:center">Vista previa de animación · Efecto Ken Burns</div>
+</div>
+
+<!-- ══════════ IG GRID PREVIEW ══════════ -->
+<div class="modal-bg" id="gridPreviewBg" style="z-index:65">
+  <div style="background:#111118;border-radius:16px;padding:24px;max-width:440px;width:92%;max-height:90vh;overflow-y:auto;border:1px solid #2d2d44">
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:4px;color:#f0d090">📱 Vista previa de perfil</div>
+    <div style="font-size:11px;color:#6b7280;margin-bottom:16px">Así se verán tus posts en el perfil de Instagram</div>
+    <!-- Profile header -->
+    <div style="display:flex;align-items:center;gap:14px;padding:14px;background:#000;border-radius:10px;margin-bottom:10px">
+      <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#bc1888);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:22px;flex-shrink:0">A</div>
+      <div>
+        <div style="font-weight:700;color:#fff;font-size:14px">arahomeluxe</div>
+        <div style="font-size:11px;color:#8e8e8e;margin-top:2px">Alquiler de lujo · España</div>
+        <div style="display:flex;gap:14px;margin-top:5px">
+          <span style="font-size:11px;color:#fff"><strong id="gpPostCount">12</strong> <span style="color:#8e8e8e">publicaciones</span></span>
+          <span style="font-size:11px;color:#fff"><strong>2.4K</strong> <span style="color:#8e8e8e">seguidores</span></span>
+        </div>
+      </div>
+    </div>
+    <!-- Grid 3x3 -->
+    <div id="gridPreviewGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-radius:4px;overflow:hidden;background:#000"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-gold btn-w" onclick="downloadAll()">⬇️ Descargar todos</button>
+      <button class="btn btn-ghost" onclick="closeGridPreview()" style="flex-shrink:0">✕</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ LOADER ══════════ -->
@@ -705,6 +752,7 @@ function renderGallery(){
   document.getElementById('galTitle').textContent = ST.campaign.name || 'Campaña';
   document.getElementById('galSub').textContent =
     `${ST.creatives.length} creatives · ${ST.images.length} imágenes · ${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}`;
+  showGalleryActions();
   const grid = document.getElementById('galGrid');
   grid.innerHTML = ST.creatives.map((c, i) => cardHTML(c, i)).join('');
 }
@@ -1212,6 +1260,115 @@ function copyCardCaption(id){
   if(c){ navigator.clipboard.writeText(c.caption||'').then(()=>toast('📋 Caption copiado')); }
 }
 
+// ──────────────────────────────────────────────────────────────
+// QUICK PROPERTY TEMPLATES
+// ──────────────────────────────────────────────────────────────
+const PROPERTIES = {
+  'villa-los-sauces': {
+    name: 'Villa Los Sauces',
+    desc: 'Villa de lujo con 2 piscinas privadas y jardín de 2000m² en Mallorca',
+    audience: 'Familias y parejas de alto poder adquisitivo que buscan privacidad y exclusividad',
+    tone: 'luxury',
+    feats: 'Piscina privada, Jardín mediterráneo, 6 habitaciones, Bar exterior, BBQ, Cala privada'
+  },
+  'villa-genova': {
+    name: 'Villa Génova',
+    desc: 'Villa de diseño contemporáneo con vistas al mar en Palma de Mallorca',
+    audience: 'Parejas y grupos de lujo que buscan diseño y vistas espectaculares',
+    tone: 'lifestyle',
+    feats: 'Vistas al mar, Piscina infinity, Cine exterior, Cocina gourmet, Terraza panorámica'
+  },
+  'suite-badames': {
+    name: 'Suite Badamés',
+    desc: 'Suite boutique de lujo en el corazón del centro histórico de Palma',
+    audience: 'Viajeros sofisticados que buscan autenticidad y cultura en ambiente de lujo',
+    tone: 'professional',
+    feats: 'Centro histórico, Terraza privada, Jacuzzi, Desayuno premium, Butler service'
+  }
+};
+
+function loadProperty(key){
+  const p = PROPERTIES[key];
+  if(!p) return;
+  document.getElementById('bName').value = p.name;
+  document.getElementById('bDesc').value = p.desc;
+  document.getElementById('bAudience').value = p.audience;
+  document.getElementById('bTone').value = p.tone;
+  document.getElementById('bFeats').value = p.feats;
+  toast(`🏠 Plantilla cargada: ${p.name}`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// INSTAGRAM GRID PREVIEW
+// ──────────────────────────────────────────────────────────────
+function showGridPreview(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+  const grid = document.getElementById('gridPreviewGrid');
+  const items = ST.creatives.slice(0, 9);
+  const blanks = Math.max(0, 9 - items.length);
+  document.getElementById('gpPostCount').textContent = 12 + items.length;
+
+  grid.innerHTML = items.map(c => `
+    <div style="aspect-ratio:1;overflow:hidden;position:relative;cursor:pointer" onclick="closeGridPreview();openEditor(${c.id})" title="${escHtml(c.headline)}">
+      <img src="${c.imageDataURL}" style="width:100%;height:100%;object-fit:cover;transition:transform .3s" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'"/>
+      <div style="position:absolute;inset:0;${overlayCSS(c.layout, c.ov)}"></div>
+      <div style="position:absolute;${textPosStyle(c.layout)}padding:6px">
+        <div style="font-family:'Playfair Display',serif;font-size:9px;color:${c.color};text-shadow:0 1px 6px rgba(0,0,0,.6);line-height:1.2;font-weight:700">${escHtml(c.headline.substring(0,28))}</div>
+      </div>
+    </div>
+  `).join('') + Array(blanks).fill(`<div style="aspect-ratio:1;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:20px;color:#333">+</div>`).join('');
+
+  document.getElementById('gridPreviewBg').classList.add('open');
+}
+
+function closeGridPreview(){ document.getElementById('gridPreviewBg').classList.remove('open'); }
+
+// ──────────────────────────────────────────────────────────────
+// EXPORT ALL CAPTIONS AS TEXT
+// ──────────────────────────────────────────────────────────────
+function exportAllCaptions(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+  const lines = [
+    `CAMPAÑA: ${ST.campaign.name}`,
+    `${ST.campaign.angle}`,
+    `Generado: ${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}`,
+    '',
+    '═'.repeat(50),
+    ''
+  ];
+  ST.creatives.forEach((c, i) => {
+    lines.push(`── CREATIVE ${i+1} ──`);
+    lines.push(`Titular: ${c.headline}`);
+    if(c.subtitle) lines.push(`Subtítulo: ${c.subtitle}`);
+    lines.push(`Layout: ${c.layout} · Formato: ${c.fmt || 'post'}`);
+    lines.push('');
+    lines.push('CAPTION COMPLETO:');
+    lines.push(c.caption || '(sin caption)');
+    lines.push('');
+    lines.push('─'.repeat(40));
+    lines.push('');
+  });
+  lines.push('HASHTAGS:');
+  lines.push(ST.campaign.hashtags || '');
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `arahomeluxe-captions-${ST.campaign.name.replace(/\s+/g,'-').toLowerCase() || 'campaign'}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📄 Captions exportados como .txt');
+}
+
+// ──────────────────────────────────────────────────────────────
+// SHOW GALLERY SIDEBAR ACTIONS
+// ──────────────────────────────────────────────────────────────
+function showGalleryActions(){ document.getElementById('galleryActions').style.display = 'block'; }
+
+// ──────────────────────────────────────────────────────────────
+// Duplicar creative con layout rotado
+// ──────────────────────────────────────────────────────────────
 // Duplicar creative con layout rotado
 function dupeCard(id){
   const src = ST.creatives.find(x=>x.id===id);
@@ -1283,6 +1440,9 @@ document.getElementById('editorBg').addEventListener('click', e => {
 });
 document.getElementById('animModal').addEventListener('click', e => {
   if(e.target === document.getElementById('animModal')) closeAnim();
+});
+document.getElementById('gridPreviewBg').addEventListener('click', e => {
+  if(e.target === document.getElementById('gridPreviewBg')) closeGridPreview();
 });
 
 // Keyboard shortcuts
