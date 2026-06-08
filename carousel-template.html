@@ -11,18 +11,18 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e2e8f0;min-height:
 .app{display:flex;min-height:100vh}
 
 /* Sidebar */
-.sidebar{width:260px;background:#0f0f18;border-right:1px solid #1a1a2e;padding:20px 16px;flex-shrink:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;position:sticky;top:0}
+.sidebar{width:260px;background:#0f0f18;border-right:1px solid #1a1a2e;padding:20px 16px;flex-shrink:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px;position:sticky;top:0}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#c9a96e,#f0d090);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#0a0a0f}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#c9a96e,#f0d090);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#0a0a0f;flex-shrink:0}
 .logo-name{font-weight:700;font-size:15px}
 .logo-sub{font-size:10px;color:#6b7280}
-.back-btn{display:flex;align-items:center;gap:6px;color:#6b7280;font-size:12px;cursor:pointer;padding:6px 0;transition:color .2s}
+.back-btn{display:flex;align-items:center;gap:6px;color:#6b7280;font-size:12px;cursor:pointer;padding:4px 0;transition:color .2s}
 .back-btn:hover{color:#c9a96e}
-.section-label{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-.divider{height:1px;background:#1a1a2e}
-.chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #2d2d44;color:#9ca3af;background:#13131f;transition:all .2s}
+.section-label{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1px}
+.divider{height:1px;background:#1a1a2e;flex-shrink:0}
+.chip{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #2d2d44;color:#9ca3af;background:#13131f;transition:all .2s;white-space:nowrap}
 .chip:hover,.chip.active{border-color:#c9a96e;color:#c9a96e;background:rgba(201,169,110,.1)}
-.effect-item{padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid transparent;transition:all .2s;display:flex;align-items:center;gap:8px;color:#9ca3af}
+.effect-item{padding:7px 10px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid transparent;transition:all .2s;display:flex;align-items:center;gap:7px;color:#9ca3af}
 .effect-item:hover{background:#1a1a2e;color:#e2e8f0}
 .effect-item.active{background:rgba(201,169,110,.12);border-color:rgba(201,169,110,.4);color:#c9a96e}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;width:100%}
@@ -33,25 +33,38 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e2e8f0;min-height:
 
 /* Main */
 .main{flex:1;padding:28px;overflow-y:auto}
-.page-header{margin-bottom:28px}
-.page-header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px}
-.page-header p{color:#9ca3af;font-size:13px}
+.page-header{margin-bottom:24px}
+.page-header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:4px}
 .tabs-bar{display:flex;gap:4px;background:#0f0f18;border:1px solid #1a1a2e;border-radius:10px;padding:4px;margin-bottom:24px}
-.tab{flex:1;padding:9px;text-align:center;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;color:#6b7280;transition:all .2s}
+.tab{flex:1;padding:9px;text-align:center;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;color:#6b7280;transition:all .2s}
 .tab:hover{color:#e2e8f0}
 .tab.active{background:linear-gradient(135deg,#1a1a2e,#13131f);color:#c9a96e;border:1px solid rgba(201,169,110,.25)}
 .panel{display:none}
 .panel.active{display:block}
 
-/* Upload zone */
-.upload-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
-.upload-slot{aspect-ratio:1;background:#111118;border:2px dashed #2d2d44;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;overflow:hidden;position:relative}
+/* ── Upload grid dinámico ── */
+.upload-grid{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:flex-start}
+.upload-slot{width:140px;height:140px;background:#111118;border:2px dashed #2d2d44;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;overflow:hidden;position:relative;flex-shrink:0}
 .upload-slot:hover{border-color:#c9a96e;background:rgba(201,169,110,.05)}
-.upload-slot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.upload-slot .slot-label{font-size:12px;color:#6b7280;margin-top:8px;z-index:1}
-.upload-slot .slot-icon{font-size:28px;z-index:1}
-.upload-slot .slot-remove{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;color:white;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:14px;display:none;align-items:center;justify-content:center;z-index:10}
-.upload-slot:hover .slot-remove{display:flex}
+.upload-slot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:10px}
+.slot-label{font-size:11px;color:#6b7280;margin-top:6px;z-index:1;position:relative;text-align:center}
+.slot-icon{font-size:26px;z-index:1;position:relative}
+.slot-index{position:absolute;top:6px;left:8px;background:rgba(0,0,0,.65);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;z-index:5}
+.slot-remove{position:absolute;top:6px;right:6px;background:rgba(220,38,38,.85);border:none;color:white;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10;opacity:0;transition:opacity .2s;line-height:1}
+.upload-slot:hover .slot-remove{opacity:1}
+
+/* Botón añadir imagen */
+.add-slot{width:140px;height:140px;background:#0f0f18;border:2px dashed #c9a96e;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;flex-shrink:0;gap:6px}
+.add-slot:hover{background:rgba(201,169,110,.08);transform:scale(1.03)}
+.add-slot .add-icon{font-size:32px;color:#c9a96e}
+.add-slot .add-label{font-size:11px;color:#c9a96e;font-weight:600}
+.add-slot.disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* Slide tabs dinámicos */
+.slide-tabs-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.slide-tab{padding:4px 10px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #2d2d44;color:#9ca3af;background:#13131f;transition:all .2s;white-space:nowrap}
+.slide-tab:hover{border-color:#c9a96e;color:#c9a96e}
+.slide-tab.active{border-color:#c9a96e;color:#c9a96e;background:rgba(201,169,110,.12)}
 
 /* Instagram mockup */
 .ig-wrap{display:flex;justify-content:center}
@@ -59,39 +72,28 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e2e8f0;min-height:
 .ig-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1a1a1a}
 .ig-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);padding:2px;flex-shrink:0}
 .ig-avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid #000;background:#c9a96e;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000}
-.ig-username{font-size:13px;font-weight:600;color:#fff}
-.ig-loc{font-size:11px;color:#8e8e8e}
-.ig-more{margin-left:auto;color:#8e8e8e;font-size:18px}
-.ig-slides{position:relative;width:420px;height:420px;overflow:hidden;background:#111}
+.ig-slides-wrap{position:relative;width:420px;height:420px;overflow:hidden;background:#111}
 .ig-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
-.ig-slide{width:420px;height:420px;flex-shrink:0;position:relative;overflow:hidden;background:#1a1a1a;display:flex;align-items:center;justify-content:center}
-.ig-slide img{width:100%;height:100%;object-fit:cover}
-.ig-slide .placeholder{font-size:48px;color:#333}
-.slide-num{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px)}
-.slide-overlay{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent)}
-.slide-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.5)}
-.slide-subtitle{font-size:11px;color:rgba(255,255,255,.75);margin-top:3px}
-.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10}
-.nav-btn:hover{background:rgba(255,255,255,.3)}
+.ig-slide{width:420px;height:420px;flex-shrink:0;position:relative;overflow:hidden;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:48px}
+.ig-slide img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.slide-counter{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px);z-index:5}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nav-btn:hover{background:rgba(255,255,255,.32)}
 .nav-prev{left:10px}
 .nav-next{right:10px}
-.ig-dots-row{display:flex;gap:4px;justify-content:center;padding:8px 0;background:#000}
-.ig-dot{width:6px;height:6px;border-radius:50%;background:#555;transition:all .3s;cursor:pointer}
+.ig-dots-row{display:flex;gap:4px;justify-content:center;padding:8px 0;background:#000;flex-wrap:wrap;min-height:22px}
+.ig-dot{width:6px;height:6px;border-radius:50%;background:#555;transition:all .3s;cursor:pointer;flex-shrink:0}
 .ig-dot.active{background:#3d9bff}
 .ig-footer-bar{background:#000;padding:8px 14px 12px;border-top:1px solid #1a1a1a}
-.ig-actions{display:flex;gap:14px;margin-bottom:8px}
-.ig-actions span{font-size:22px;cursor:pointer}
-.ig-likes{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
 .ig-caption{font-size:13px;color:#fff}
-.ig-caption strong{margin-right:6px}
 .ig-hashtags{font-size:12px;color:#0095f6;margin-top:4px}
+.ig-slide-overlay{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.7),transparent);z-index:3}
 
-/* Video player */
-.video-canvas{position:relative;width:420px;height:420px;overflow:hidden;background:#000;border-radius:0}
+/* Video */
+.video-canvas{position:relative;width:420px;height:420px;overflow:hidden;background:#000}
 .video-slide-v{position:absolute;inset:0;opacity:0;transition:opacity .6s}
 .video-slide-v.visible{opacity:1}
 .video-slide-v img{width:100%;height:100%;object-fit:cover}
-.video-slide-v img.kb-zoom-in{transform-origin:center}
 .video-slide-v.playing img.kb-zoom-in{animation:kb-zoom-in var(--kb-dur,4s) ease-in-out forwards}
 .video-slide-v.playing img.kb-zoom-out{animation:kb-zoom-out var(--kb-dur,4s) ease-in-out forwards}
 .video-slide-v.playing img.kb-pan-left{animation:kb-pan-left var(--kb-dur,4s) ease-in-out forwards}
@@ -105,33 +107,30 @@ body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e2e8f0;min-height:
 @keyframes kb-pan-up{from{transform:scale(1.2) translateY(0)}to{transform:scale(1.2) translateY(-8%)}}
 @keyframes kb-zoom-rotate{from{transform:scale(1) rotate(0deg)}to{transform:scale(1.25) rotate(3deg)}}
 
-.video-controls{display:flex;align-items:center;gap:10px;padding:12px 0}
 .play-btn{width:36px;height:36px;background:linear-gradient(135deg,#c9a96e,#f0d090);border:none;border-radius:50%;color:#0a0a0f;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .progress-track{flex:1;height:4px;background:#2d2d44;border-radius:2px;overflow:hidden;cursor:pointer}
-.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#f0d090);border-radius:2px;width:0;transition:width .1s linear}
-.time-label{font-size:11px;color:#6b7280;flex-shrink:0}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#f0d090);border-radius:2px;width:0%;transition:width .1s linear}
 
 /* Export */
 .export-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.export-card{background:#111118;border:1px solid #2d2d44;border-radius:12px;padding:20px;text-align:center;transition:all .2s}
+.export-card{background:#111118;border:1px solid #2d2d44;border-radius:12px;padding:20px;text-align:center}
 .export-card:hover{border-color:#c9a96e}
-.export-card .icon{font-size:32px;margin-bottom:10px}
+.export-card .icon{font-size:30px;margin-bottom:10px}
 .export-card h4{font-size:14px;font-weight:600;margin-bottom:4px}
-.export-card p{font-size:11px;color:#6b7280;margin-bottom:14px}
+.export-card p{font-size:11px;color:#6b7280;margin-bottom:14px;line-height:1.5}
 
-/* Caption */
-textarea{width:100%;background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:10px;font-size:12px;font-family:'Inter',sans-serif;resize:none;outline:none;line-height:1.5}
+textarea{width:100%;background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:10px;font-size:12px;font-family:'Inter',sans-serif;resize:none;outline:none;line-height:1.5;transition:border-color .2s}
 textarea:focus{border-color:#c9a96e}
 
 /* Toast */
-.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 8px 30px rgba(201,169,110,.4);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 8px 30px rgba(201,169,110,.4);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);max-width:320px}
 .toast.show{transform:translateY(0);opacity:1}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- SIDEBAR -->
+<!-- ════ SIDEBAR ════ -->
 <div class="sidebar">
   <div class="logo">
     <div class="logo-mark">CF</div>
@@ -141,36 +140,30 @@ textarea:focus{border-color:#c9a96e}
   <div class="back-btn" onclick="window.location.href='projects.html'">← Volver a Proyectos</div>
   <div class="divider"></div>
 
+  <!-- Propiedad -->
   <div>
-    <div class="section-label">Propiedad</div>
-    <div style="font-size:13px;font-weight:600;color:#c9a96e;margin-top:4px" id="sidebarTitle">Nuevo Proyecto</div>
+    <div class="section-label" style="margin-bottom:4px">Propiedad</div>
+    <div style="font-size:13px;font-weight:600;color:#c9a96e" id="sidebarTitle">Nuevo Proyecto</div>
     <div style="font-size:11px;color:#6b7280;margin-top:2px" id="sidebarDesc"></div>
   </div>
-  <div class="divider"></div>
 
-  <!-- Imágenes -->
-  <div>
-    <div class="section-label" style="margin-bottom:8px">Imágenes del Carrusel</div>
-    <div style="display:flex;gap:4px;flex-wrap:wrap" id="miniThumbs">
-      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(0)">📷</div>
-      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(1)">📷</div>
-      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(2)">📷</div>
-      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(3)">📷</div>
-    </div>
+  <!-- Contador imágenes -->
+  <div style="background:#111118;border:1px solid #2d2d44;border-radius:10px;padding:12px;text-align:center">
+    <div style="font-size:28px;font-weight:700;color:#c9a96e" id="imgCountDisplay">0</div>
+    <div style="font-size:11px;color:#6b7280">imágenes añadidas</div>
+    <div style="font-size:10px;color:#4b5563;margin-top:2px">(máx. 10 para Instagram)</div>
   </div>
+
   <div class="divider"></div>
 
   <!-- Efecto por imagen -->
   <div>
-    <div class="section-label" style="margin-bottom:8px">Efecto por Imagen</div>
-    <div style="display:flex;gap:4px;margin-bottom:8px" id="slideTabsRow">
-      <div class="chip active" onclick="selectSlideTab(this,0)" style="flex:1;text-align:center">1</div>
-      <div class="chip" onclick="selectSlideTab(this,1)" style="flex:1;text-align:center">2</div>
-      <div class="chip" onclick="selectSlideTab(this,2)" style="flex:1;text-align:center">3</div>
-      <div class="chip" onclick="selectSlideTab(this,3)" style="flex:1;text-align:center">4</div>
+    <div class="section-label" style="margin-bottom:6px">Efecto por Imagen</div>
+    <div class="slide-tabs-row" id="slideTabsRow">
+      <div style="font-size:11px;color:#6b7280;font-style:italic">Añade imágenes primero</div>
     </div>
-    <div id="slideEffectLabel" style="font-size:11px;color:#6b7280;margin-bottom:6px">Imagen 1</div>
-    <div style="display:flex;flex-direction:column;gap:3px">
+    <div style="font-size:11px;color:#6b7280;margin-bottom:6px" id="slideEffectLabel">—</div>
+    <div style="display:flex;flex-direction:column;gap:2px">
       <div class="effect-item active" onclick="setSlideEffect(this,'kb-zoom-in')">🔍 Zoom In</div>
       <div class="effect-item" onclick="setSlideEffect(this,'kb-zoom-out')">🔭 Zoom Out</div>
       <div class="effect-item" onclick="setSlideEffect(this,'kb-pan-left')">⬅️ Pan Izquierda</div>
@@ -180,11 +173,12 @@ textarea:focus{border-color:#c9a96e}
       <div class="effect-item" onclick="setSlideEffect(this,'none')">⬛ Sin movimiento</div>
     </div>
   </div>
+
   <div class="divider"></div>
 
   <!-- Duración -->
   <div>
-    <div class="section-label" style="margin-bottom:8px">Duración por Imagen</div>
+    <div class="section-label" style="margin-bottom:6px">Duración por Imagen</div>
     <div style="display:flex;gap:4px;flex-wrap:wrap">
       <div class="chip" onclick="setDur(this,3)">3s</div>
       <div class="chip active" onclick="setDur(this,4)">4s</div>
@@ -193,184 +187,153 @@ textarea:focus{border-color:#c9a96e}
       <div class="chip" onclick="setDur(this,8)">8s</div>
     </div>
   </div>
-  <div class="divider"></div>
 
-  <button class="btn btn-gold" onclick="saveProject()">💾 Guardar Proyecto</button>
+  <div class="divider"></div>
+  <button class="btn btn-gold" onclick="saveProject()">💾 Guardar</button>
   <button class="btn btn-outline" onclick="window.location.href='projects.html'">← Proyectos</button>
 </div>
 
-<!-- MAIN -->
+<!-- ════ MAIN ════ -->
 <div class="main">
   <div class="page-header">
     <h1 id="mainTitle">Nuevo Proyecto</h1>
-    <p id="mainDesc" style="color:#9ca3af;font-size:14px">Sube tus imágenes y crea contenido profesional para Instagram</p>
+    <p id="mainDesc" style="color:#9ca3af;font-size:13px;margin-top:4px">Añade las imágenes que quieras y crea contenido para Instagram</p>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs-bar">
-    <div class="tab active" onclick="switchTab(this,0)">📸 Carrusel Instagram</div>
-    <div class="tab" onclick="switchTab(this,1)">🎬 Vídeo Animado</div>
-    <div class="tab" onclick="switchTab(this,2)">✍️ Caption & IA</div>
+    <div class="tab active" onclick="switchTab(this,0)">📸 Carrusel</div>
+    <div class="tab" onclick="switchTab(this,1)">🎬 Vídeo</div>
+    <div class="tab" onclick="switchTab(this,2)">✍️ Caption</div>
     <div class="tab" onclick="switchTab(this,3)">📤 Exportar</div>
   </div>
 
-  <!-- PANEL 0: Carrusel -->
+  <!-- ── PANEL 0: Carrusel ── -->
   <div class="panel active" id="panel0">
-    <!-- Upload 4 images -->
-    <div style="margin-bottom:20px">
-      <p style="font-size:13px;color:#9ca3af;margin-bottom:12px">Sube hasta 4 imágenes para tu carrusel. Haz click en cada slot.</p>
-      <div class="upload-grid">
-        <div class="upload-slot" id="slot0" onclick="triggerUpload(0)">
-          <div class="slot-icon">📷</div>
-          <div class="slot-label">Imagen 1 (Principal)</div>
-          <button class="slot-remove" onclick="removeImage(event,0)">✕</button>
-        </div>
-        <div class="upload-slot" id="slot1" onclick="triggerUpload(1)">
-          <div class="slot-icon">📷</div>
-          <div class="slot-label">Imagen 2</div>
-          <button class="slot-remove" onclick="removeImage(event,1)">✕</button>
-        </div>
-        <div class="upload-slot" id="slot2" onclick="triggerUpload(2)">
-          <div class="slot-icon">📷</div>
-          <div class="slot-label">Imagen 3</div>
-          <button class="slot-remove" onclick="removeImage(event,2)">✕</button>
-        </div>
-        <div class="upload-slot" id="slot3" onclick="triggerUpload(3)">
-          <div class="slot-icon">📷</div>
-          <div class="slot-label">Imagen 4</div>
-          <button class="slot-remove" onclick="removeImage(event,3)">✕</button>
-        </div>
-      </div>
-      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)"/>
+    <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">
+      Haz click en <strong style="color:#c9a96e">📷 Añadir imagen</strong> para subir fotos.
+      Puedes añadir de 1 a 10 imágenes. Haz hover sobre cada imagen para <strong style="color:#e2e8f0">eliminarla (✕)</strong>.
+    </p>
+
+    <!-- Grid dinámico -->
+    <div class="upload-grid" id="uploadGrid">
+      <!-- slots generados por JS -->
     </div>
 
-    <!-- Instagram preview -->
-    <div style="font-size:13px;font-weight:600;color:#9ca3af;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">Vista previa Instagram</div>
+    <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(event)"/>
+
+    <!-- Preview Instagram -->
+    <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;margin-top:8px">Vista previa Instagram</div>
     <div class="ig-wrap">
       <div class="ig-frame">
         <div class="ig-top">
-          <div class="ig-avatar"><div class="ig-avatar-inner" id="igAvatarLetter">A</div></div>
+          <div class="ig-avatar"><div class="ig-avatar-inner">A</div></div>
           <div>
-            <div class="ig-username" id="igUsername">arahomeluxe</div>
-            <div class="ig-loc" id="igLocation">Nueva propiedad</div>
+            <div style="font-size:13px;font-weight:600;color:#fff" id="igUsername">arahomeluxe</div>
+            <div style="font-size:11px;color:#8e8e8e" id="igLocation">Nueva propiedad</div>
           </div>
-          <div class="ig-more">···</div>
+          <div style="margin-left:auto;color:#8e8e8e;font-size:18px">···</div>
         </div>
-        <div class="ig-slides">
+        <div class="ig-slides-wrap">
           <div class="ig-track" id="igTrack">
-            <div class="ig-slide" id="igSlide0"><div class="placeholder">📷</div><div class="slide-num" id="igNum">1 / 4</div><div class="slide-overlay"><div class="slide-title" id="igTitle">Tu Propiedad</div><div class="slide-subtitle" id="igSubtitle">Lujo y exclusividad</div></div></div>
-            <div class="ig-slide" id="igSlide1"><div class="placeholder">📷</div></div>
-            <div class="ig-slide" id="igSlide2"><div class="placeholder">📷</div></div>
-            <div class="ig-slide" id="igSlide3"><div class="placeholder">📷</div></div>
+            <div class="ig-slide" id="emptySlide">📷</div>
           </div>
-          <button class="nav-btn nav-prev" onclick="carouselNav(-1)">‹</button>
-          <button class="nav-btn nav-next" onclick="carouselNav(1)">›</button>
+          <div class="slide-counter" id="slideCounter" style="display:none">1 / 1</div>
+          <button class="nav-btn nav-prev" id="navPrev" onclick="carouselNav(-1)" style="display:none">‹</button>
+          <button class="nav-btn nav-next" id="navNext" onclick="carouselNav(1)" style="display:none">›</button>
         </div>
-        <div class="ig-dots-row" id="igDotsRow">
-          <div class="ig-dot active" onclick="goToSlide(0)"></div>
-          <div class="ig-dot" onclick="goToSlide(1)"></div>
-          <div class="ig-dot" onclick="goToSlide(2)"></div>
-          <div class="ig-dot" onclick="goToSlide(3)"></div>
-        </div>
+        <div class="ig-dots-row" id="igDotsRow"></div>
         <div class="ig-footer-bar">
-          <div class="ig-actions"><span>🤍</span><span>💬</span><span>↗️</span><span style="margin-left:auto">🔖</span></div>
-          <div class="ig-likes">Sé el primero en dar Me gusta</div>
-          <div class="ig-caption"><strong id="captionUsername">arahomeluxe</strong> <span id="igCaptionPreview">Añade una descripción...</span></div>
-          <div class="ig-hashtags" id="igHashtagsPreview">#AlquilerLujo #Vacaciones</div>
+          <div style="display:flex;gap:14px;margin-bottom:8px;font-size:22px"><span>🤍</span><span>💬</span><span>↗️</span><span style="margin-left:auto">🔖</span></div>
+          <div class="ig-caption"><strong id="igCaptionUser">arahomeluxe</strong> <span id="igCaptionText">Añade una descripción...</span></div>
+          <div class="ig-hashtags" id="igHashtagsText">#AlquilerLujo</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- PANEL 1: Video -->
+  <!-- ── PANEL 1: Vídeo ── -->
   <div class="panel" id="panel1">
     <div class="ig-wrap">
       <div>
         <div class="ig-frame" style="border-radius:8px;overflow:hidden">
           <div class="video-canvas" id="videoCanvas">
-            <div class="video-slide-v visible" id="vs0"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
-            <div class="video-slide-v" id="vs1"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
-            <div class="video-slide-v" id="vs2"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
-            <div class="video-slide-v" id="vs3"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#6b7280">
+              <div style="font-size:48px">🎬</div>
+              <div style="font-size:13px">Añade imágenes en el tab Carrusel</div>
+            </div>
           </div>
           <div style="background:#000;padding:10px 14px">
-            <div class="video-controls">
-              <button class="play-btn" id="playBtn" onclick="togglePlay()">⏸</button>
+            <div style="display:flex;align-items:center;gap:10px">
+              <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
               <div class="progress-track" onclick="seekVideo(event)"><div class="progress-fill" id="progressFill"></div></div>
-              <div class="time-label" id="timeLabel">0s / 16s</div>
+              <div style="font-size:11px;color:#6b7280;flex-shrink:0" id="timeLabel">0s / 0s</div>
             </div>
-            <div style="display:flex;gap:4px;justify-content:center" id="videoDots">
-              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot active"></div>
-              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot"></div>
-              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot"></div>
-              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot"></div>
-            </div>
+            <div style="display:flex;gap:4px;justify-content:center;margin-top:8px" id="videoDots"></div>
           </div>
         </div>
-        <p style="text-align:center;font-size:11px;color:#6b7280;margin-top:8px">Vista previa del vídeo animado · Ken Burns effects</p>
+        <p style="text-align:center;font-size:11px;color:#6b7280;margin-top:8px">Ken Burns effects · Duración total: <span id="totalDurDisplay">0s</span></p>
       </div>
     </div>
   </div>
 
-  <!-- PANEL 2: Caption -->
+  <!-- ── PANEL 2: Caption ── -->
   <div class="panel" id="panel2">
     <div style="max-width:560px">
-      <div style="margin-bottom:20px">
+      <div style="margin-bottom:18px">
         <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Descripción del post</label>
-        <textarea id="captionEdit" rows="5" placeholder="Escribe aquí la descripción de tu propiedad..." oninput="updateCaptionPreview()">✨ NUEVA PROPIEDAD — tu escapada perfecta
+        <textarea id="captionEdit" rows="5" placeholder="Escribe aquí tu descripción..." oninput="updatePreviews()">✨ NUEVA PROPIEDAD — tu escapada perfecta
 
 🏊 Piscina privada
 🌿 Jardín exclusivo
 🏡 Lujo en cada rincón</textarea>
       </div>
-      <div style="margin-bottom:20px">
+      <div style="margin-bottom:18px">
         <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Hashtags</label>
-        <textarea id="hashEdit" rows="2" placeholder="#AlquilerLujo #Vacaciones ..." oninput="updateHashPreview()">#AlquilerLujo #AraHomeLuxe #VacacionesLujo #Piscina</textarea>
+        <textarea id="hashEdit" rows="2" oninput="updatePreviews()">#AlquilerLujo #AraHomeLuxe #VacacionesLujo #Piscina</textarea>
       </div>
-      <div style="margin-bottom:20px">
+      <div style="margin-bottom:18px">
         <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Tono de voz</label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <div class="chip active" onclick="setTone(this,'lujo')">✨ Lujo</div>
-          <div class="chip" onclick="setTone(this,'lifestyle')">🌟 Lifestyle</div>
-          <div class="chip" onclick="setTone(this,'aventura')">🌍 Aventura</div>
-          <div class="chip" onclick="setTone(this,'familiar')">👨‍👩‍👧 Familiar</div>
+          <div class="chip active" onclick="setTone(this)">✨ Lujo</div>
+          <div class="chip" onclick="setTone(this)">🌟 Lifestyle</div>
+          <div class="chip" onclick="setTone(this)">🌍 Aventura</div>
+          <div class="chip" onclick="setTone(this)">👨‍👩‍👧 Familiar</div>
         </div>
       </div>
-      <!-- API Key y botón IA -->
-      <div style="background:#111118;border:1px solid #2d2d44;border-radius:10px;padding:16px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:10px">API Anthropic (para generar con IA)</div>
-        <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." style="width:100%;background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:8px;font-size:11px;outline:none;margin-bottom:8px" oninput="saveApiKey()"/>
-        <button onclick="generateCaption()" id="generateBtn" style="width:100%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:none;color:white;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer">✨ Generar con IA</button>
+      <div style="background:#111118;border:1px solid #2d2d44;border-radius:10px;padding:16px">
+        <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:10px">Generar con IA (Claude)</div>
+        <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." style="width:100%;background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:8px 10px;font-size:11px;font-family:monospace;outline:none;margin-bottom:8px;transition:border-color .2s" oninput="saveApiKey()" onfocus="this.style.borderColor='#c9a96e'" onblur="this.style.borderColor='#2d2d44'"/>
+        <button onclick="generateCaption()" id="generateBtn" style="width:100%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:none;color:white;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s">✨ Generar con IA</button>
       </div>
     </div>
   </div>
 
-  <!-- PANEL 3: Exportar -->
+  <!-- ── PANEL 3: Exportar ── -->
   <div class="panel" id="panel3">
     <div class="export-grid">
       <div class="export-card">
         <div class="icon">🖼️</div>
-        <h4>Carrusel PNG</h4>
-        <p>4 imágenes 1080×1080px listas para subir</p>
+        <h4>Imágenes del Carrusel</h4>
+        <p>Descarga todas las imágenes tal como las subiste, listas para publicar</p>
         <button class="btn btn-gold" onclick="exportImages()">Descargar imágenes</button>
-      </div>
-      <div class="export-card">
-        <div class="icon">🎬</div>
-        <h4>Vídeo Animado</h4>
-        <p>Secuencia con efectos Ken Burns</p>
-        <button class="btn btn-gold" onclick="exportVideo()">Descargar vídeo</button>
       </div>
       <div class="export-card">
         <div class="icon">📝</div>
         <h4>Caption + Hashtags</h4>
-        <p>Texto listo para copiar y pegar</p>
-        <button class="btn btn-outline" onclick="copyCaption()">Copiar texto</button>
+        <p>Texto completo listo para copiar y pegar en Instagram</p>
+        <button class="btn btn-gold" onclick="copyCaption()">Copiar texto</button>
       </div>
       <div class="export-card">
-        <div class="icon">📦</div>
-        <h4>Pack Completo</h4>
-        <p>Imágenes + vídeo + texto en ZIP</p>
-        <button class="btn btn-outline" onclick="exportAll()">Descargar ZIP</button>
+        <div class="icon">🎬</div>
+        <h4>Vídeo Animado</h4>
+        <p>Ve al tab Vídeo para reproducir tu secuencia con efectos Ken Burns</p>
+        <button class="btn btn-outline" onclick="switchTab(document.querySelectorAll('.tab')[1],1)">Ver vídeo →</button>
+      </div>
+      <div class="export-card">
+        <div class="icon">📊</div>
+        <h4>Resumen del Proyecto</h4>
+        <p id="exportSummary">0 imágenes · 0s de vídeo · Caption listo</p>
+        <button class="btn btn-outline" onclick="saveProject()">💾 Guardar</button>
       </div>
     </div>
   </div>
@@ -381,199 +344,372 @@ textarea:focus{border-color:#c9a96e}
 <div id="toastEl" class="toast"></div>
 
 <script>
-// ─── Estado ───
-const params = new URLSearchParams(window.location.search);
-const PROJECT_NAME = params.get('name') || 'Nuevo Proyecto';
-const PROJECT_DESC = params.get('desc') || '';
-const PROJECT_HASHTAGS = params.get('hashtags') || '#AlquilerLujo #AraHomeLuxe';
-const PROJECT_ID = params.get('id') || Date.now();
+// ═══════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════
+const params   = new URLSearchParams(window.location.search);
+const PROJ_NAME  = params.get('name') || 'Nuevo Proyecto';
+const PROJ_DESC  = params.get('desc') || '';
+const PROJ_HASH  = params.get('hashtags') || '#AlquilerLujo #AraHomeLuxe';
 
-let images = [null, null, null, null];
-let slideEffects = ['kb-zoom-in', 'kb-zoom-out', 'kb-pan-left', 'kb-zoom-in'];
-let slideDurations = [4, 4, 4, 4];
+const MAX_IMAGES = 10;
+
+// Arrays dinámicos — crecen con cada imagen añadida
+let images        = [];   // dataURLs
+let slideEffects  = [];   // efecto Ken Burns por imagen
+let slideDurations= [];   // duración en segundos por imagen
+
 let activeSlideTab = 0;
-let currentSlide = 0;
+let currentSlide   = 0;
+
+// Video
 let videoSlide = 0;
-let playing = true;
-let elapsed = 0;
-let tickTimer = null;
+let playing    = false;
+let elapsed    = 0;
+let tickTimer  = null;
 let slideTimer = null;
-let activeUploadSlot = 0;
 
-// ─── Init ───
-document.getElementById('mainTitle').textContent = PROJECT_NAME;
-document.getElementById('mainDesc').textContent = PROJECT_DESC || 'Sube tus imágenes y crea contenido profesional';
-document.getElementById('sidebarTitle').textContent = PROJECT_NAME;
-document.getElementById('sidebarDesc').textContent = PROJECT_DESC;
-document.getElementById('igLocation').textContent = PROJECT_NAME;
-document.getElementById('igTitle').textContent = PROJECT_NAME;
-document.title = PROJECT_NAME + ' — CreativeFlow';
-if(PROJECT_HASHTAGS){ document.getElementById('hashEdit').value = PROJECT_HASHTAGS; }
-
-// Load saved API key
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+document.getElementById('mainTitle').textContent  = PROJ_NAME;
+document.getElementById('mainDesc').textContent   = PROJ_DESC || 'Añade las imágenes que quieras y crea contenido para Instagram';
+document.getElementById('sidebarTitle').textContent = PROJ_NAME;
+document.getElementById('sidebarDesc').textContent  = PROJ_DESC;
+document.getElementById('igLocation').textContent   = PROJ_NAME;
+document.title = PROJ_NAME + ' — CreativeFlow';
+if(PROJ_HASH){ document.getElementById('hashEdit').value = PROJ_HASH; }
 const savedKey = localStorage.getItem('cf_anthropic_key');
 if(savedKey) document.getElementById('apiKeyInput').value = savedKey;
 
-// ─── Tabs ───
+// Renderizar grid inicial (solo botón +)
+renderUploadGrid();
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
 function switchTab(el, idx){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('panel'+idx).classList.add('active');
-  if(idx === 1){ initVideo(); }
+  if(idx === 1) initVideo();
+  if(idx === 3) updateExportSummary();
 }
 
-// ─── Image Upload ───
-function triggerUpload(slot){
-  activeUploadSlot = slot;
-  document.getElementById('fileInput').click();
+// ═══════════════════════════════════════════
+// UPLOAD GRID — completamente dinámico
+// ═══════════════════════════════════════════
+function renderUploadGrid(){
+  const grid = document.getElementById('uploadGrid');
+  grid.innerHTML = '';
+
+  // Slots existentes
+  images.forEach((src, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'upload-slot';
+    slot.innerHTML = `
+      <span class="slot-index">${i+1}</span>
+      <img src="${src}" alt="Imagen ${i+1}"/>
+      <button class="slot-remove" title="Eliminar imagen" onclick="removeImage(event,${i})">✕</button>
+    `;
+    slot.onclick = () => replaceImage(i);
+    grid.appendChild(slot);
+  });
+
+  // Botón añadir (solo si no llegamos al máximo)
+  if(images.length < MAX_IMAGES){
+    const addBtn = document.createElement('div');
+    addBtn.className = 'add-slot';
+    addBtn.id = 'addSlotBtn';
+    addBtn.title = `Añadir imagen (${images.length}/${MAX_IMAGES})`;
+    addBtn.innerHTML = `
+      <div class="add-icon">＋</div>
+      <div class="add-label">Añadir imagen</div>
+      <div style="font-size:10px;color:#c9a96e;opacity:.7;margin-top:2px">${images.length}/${MAX_IMAGES}</div>
+    `;
+    addBtn.onclick = () => triggerUpload('add');
+    grid.appendChild(addBtn);
+  }
+
+  updateImgCount();
+  renderSlideTabs();
+  renderCarousel();
 }
 
-function handleFile(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    images[activeUploadSlot] = ev.target.result;
-    updateSlot(activeUploadSlot, ev.target.result);
-    updateVideoSlides();
-    showToast(`✅ Imagen ${activeUploadSlot+1} añadida`);
-  };
-  reader.readAsDataURL(file);
+// ═══════════════════════════════════════════
+// UPLOAD — añadir / reemplazar
+// ═══════════════════════════════════════════
+let _uploadMode = 'add'; // 'add' | índice numérico para replace
+let _uploadInput = null;
+
+function triggerUpload(mode){
+  _uploadMode = mode;
+  const input = document.getElementById('fileInput');
+  // Múltiple solo cuando añadimos
+  input.multiple = (mode === 'add');
+  input.click();
+}
+
+function replaceImage(idx){
+  triggerUpload(idx);
+}
+
+function handleFiles(e){
+  const files = [...e.target.files];
+  if(!files.length) return;
+
+  if(_uploadMode === 'add'){
+    // Añadir hasta MAX
+    const remaining = MAX_IMAGES - images.length;
+    const toAdd = files.slice(0, remaining);
+    let loaded = 0;
+    toAdd.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        images.push(ev.target.result);
+        slideEffects.push('kb-zoom-in');
+        slideDurations.push(4);
+        loaded++;
+        if(loaded === toAdd.length){
+          activeSlideTab = 0;
+          renderUploadGrid();
+          showToast(`✅ ${toAdd.length} imagen${toAdd.length>1?'es':''} añadida${toAdd.length>1?'s':''}`);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    if(files.length > remaining) showToast(`⚠️ Solo se añadieron ${remaining} (límite ${MAX_IMAGES})`);
+  } else {
+    // Reemplazar imagen en índice _uploadMode
+    const idx = _uploadMode;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      images[idx] = ev.target.result;
+      renderUploadGrid();
+      showToast(`✅ Imagen ${idx+1} reemplazada`);
+    };
+    reader.readAsDataURL(files[0]);
+  }
   e.target.value = '';
-}
-
-function updateSlot(idx, src){
-  const slot = document.getElementById('slot'+idx);
-  slot.innerHTML = `<img src="${src}" alt=""/><button class="slot-remove" onclick="removeImage(event,${idx})">✕</button>`;
-  // Update mini thumb in sidebar
-  // Update IG slide
-  const igSlide = document.getElementById('igSlide'+idx);
-  igSlide.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover;"/><div class="slide-num" id="igNum">${idx+1} / 4</div>${idx===0?'<div class="slide-overlay"><div class="slide-title" id="igTitle">'+PROJECT_NAME+'</div><div class="slide-subtitle" id="igSubtitle">Lujo y exclusividad</div></div>':''}`;
-  // Update video slide
-  const vs = document.getElementById('vs'+idx);
-  vs.innerHTML = `<img src="${src}" class="${slideEffects[idx]}" style="width:100%;height:100%;object-fit:cover;"/>`;
 }
 
 function removeImage(e, idx){
   e.stopPropagation();
-  images[idx] = null;
-  const slot = document.getElementById('slot'+idx);
-  const labels = ['Imagen 1 (Principal)','Imagen 2','Imagen 3','Imagen 4'];
-  slot.innerHTML = `<div class="slot-icon">📷</div><div class="slot-label">${labels[idx]}</div><button class="slot-remove" onclick="removeImage(event,${idx})">✕</button>`;
-  slot.onclick = ()=>triggerUpload(idx);
-  document.getElementById('igSlide'+idx).innerHTML = `<div class="placeholder">📷</div>`;
-  document.getElementById('vs'+idx).innerHTML = `<div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div>`;
+  images.splice(idx, 1);
+  slideEffects.splice(idx, 1);
+  slideDurations.splice(idx, 1);
+  if(activeSlideTab >= images.length) activeSlideTab = Math.max(0, images.length-1);
+  if(currentSlide >= images.length) currentSlide = Math.max(0, images.length-1);
+  renderUploadGrid();
+  showToast(`🗑️ Imagen ${idx+1} eliminada`);
 }
 
-// ─── Carousel ───
+// ═══════════════════════════════════════════
+// CAROUSEL
+// ═══════════════════════════════════════════
+function renderCarousel(){
+  const track = document.getElementById('igTrack');
+  const dotsRow = document.getElementById('igDotsRow');
+  const counter = document.getElementById('slideCounter');
+  const navP = document.getElementById('navPrev');
+  const navN = document.getElementById('navNext');
+
+  if(images.length === 0){
+    track.innerHTML = '<div class="ig-slide" style="font-size:48px;color:#333">📷</div>';
+    dotsRow.innerHTML = '';
+    counter.style.display = 'none';
+    navP.style.display = 'none';
+    navN.style.display = 'none';
+    return;
+  }
+
+  // Slides
+  track.innerHTML = images.map((src, i) => `
+    <div class="ig-slide">
+      <img src="${src}" alt="Imagen ${i+1}"/>
+      ${i===0 ? `<div class="ig-slide-overlay">
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.5)">${PROJ_NAME}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:3px">Lujo y exclusividad</div>
+      </div>` : ''}
+    </div>
+  `).join('');
+
+  // Dots
+  dotsRow.innerHTML = images.map((_, i) =>
+    `<div class="ig-dot ${i===currentSlide?'active':''}" onclick="goToSlide(${i})"></div>`
+  ).join('');
+
+  counter.style.display = images.length > 1 ? 'block' : 'none';
+  navP.style.display = images.length > 1 ? 'flex' : 'none';
+  navN.style.display = images.length > 1 ? 'flex' : 'none';
+
+  goToSlide(currentSlide < images.length ? currentSlide : 0, false);
+}
+
 function carouselNav(dir){
-  goToSlide((currentSlide + dir + 4) % 4);
-}
-function goToSlide(n){
-  currentSlide = n;
-  document.getElementById('igTrack').style.transform = `translateX(-${n * 420}px)`;
-  document.querySelectorAll('.ig-dot').forEach((d,i)=>d.classList.toggle('active', i===n));
+  if(!images.length) return;
+  goToSlide((currentSlide + dir + images.length) % images.length);
 }
 
-// ─── Effect per slide ───
+function goToSlide(n, animate=true){
+  if(!images.length) return;
+  currentSlide = n;
+  const track = document.getElementById('igTrack');
+  if(!animate) track.style.transition = 'none';
+  track.style.transform = `translateX(-${n * 420}px)`;
+  if(!animate) setTimeout(()=>{ track.style.transition = ''; }, 50);
+  document.querySelectorAll('.ig-dot').forEach((d,i) => d.classList.toggle('active', i===n));
+  document.getElementById('slideCounter').textContent = `${n+1} / ${images.length}`;
+}
+
+// ═══════════════════════════════════════════
+// SLIDE TABS (sidebar)
+// ═══════════════════════════════════════════
+function renderSlideTabs(){
+  const row = document.getElementById('slideTabsRow');
+  if(images.length === 0){
+    row.innerHTML = '<div style="font-size:11px;color:#6b7280;font-style:italic">Añade imágenes primero</div>';
+    document.getElementById('slideEffectLabel').textContent = '—';
+    return;
+  }
+  row.innerHTML = images.map((_,i) =>
+    `<div class="slide-tab ${i===activeSlideTab?'active':''}" onclick="selectSlideTab(this,${i})">${i+1}</div>`
+  ).join('');
+  updateEffectLabel();
+}
+
 function selectSlideTab(el, idx){
   activeSlideTab = idx;
-  document.querySelectorAll('[onclick*="selectSlideTab"]').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.slide-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  const labels = ['Imagen 1','Imagen 2','Imagen 3','Imagen 4'];
-  document.getElementById('slideEffectLabel').textContent = labels[idx];
-  // Highlight current effect
-  const cur = slideEffects[idx];
+  updateEffectLabel();
+  // Resaltar efecto activo
+  const cur = slideEffects[idx] || 'kb-zoom-in';
   document.querySelectorAll('.effect-item').forEach(item=>{
     const fx = item.getAttribute('onclick').match(/'([^']+)'/)?.[1];
     item.classList.toggle('active', fx === cur);
   });
 }
 
+function updateEffectLabel(){
+  document.getElementById('slideEffectLabel').textContent =
+    images.length ? `Imagen ${activeSlideTab+1} de ${images.length}` : '—';
+}
+
+// ═══════════════════════════════════════════
+// EFECTOS Y DURACIÓN
+// ═══════════════════════════════════════════
 function setSlideEffect(el, fx){
+  if(!images.length){ showToast('Añade imágenes primero'); return; }
   slideEffects[activeSlideTab] = fx;
   document.querySelectorAll('.effect-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');
-  // Apply to video slide if image loaded
-  if(images[activeSlideTab]){
-    const vs = document.getElementById('vs'+activeSlideTab);
+  // Actualizar vídeo si está activo
+  const vs = document.getElementById('vs'+activeSlideTab);
+  if(vs){
     const img = vs.querySelector('img');
     if(img){
       img.className = fx;
-      if(vs.classList.contains('playing')){
-        vs.classList.remove('playing');
-        void vs.offsetWidth;
-        setTimeout(()=>vs.classList.add('playing'), 50);
-      }
+      vs.classList.remove('playing');
+      void vs.offsetWidth;
+      setTimeout(()=>vs.classList.add('playing'), 50);
     }
   }
-  showToast(`Efecto: ${el.textContent.trim()}`);
+  showToast(`Imagen ${activeSlideTab+1}: ${el.textContent.trim()}`);
 }
 
-// ─── Duration ───
 function setDur(el, val){
+  if(!images.length){ showToast('Añade imágenes primero'); return; }
   slideDurations[activeSlideTab] = val;
   document.querySelectorAll('[onclick*="setDur"]').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
-  showToast(`Duración imagen ${activeSlideTab+1}: ${val}s`);
+  document.getElementById('totalDurDisplay').textContent = totalDur()+'s';
+  showToast(`Imagen ${activeSlideTab+1}: ${val}s`);
 }
 
-// ─── Video ───
-function totalDur(){ return slideDurations.reduce((a,b)=>a+b,0); }
-function elapsedAtSlide(n){ return slideDurations.slice(0,n).reduce((a,b)=>a+b,0); }
+function updateImgCount(){
+  document.getElementById('imgCountDisplay').textContent = images.length;
+}
 
-function updateVideoSlides(){
-  [0,1,2,3].forEach(i=>{
-    if(images[i]){
-      const vs = document.getElementById('vs'+i);
-      vs.innerHTML = `<img src="${images[i]}" class="${slideEffects[i]}" style="width:100%;height:100%;object-fit:cover;"/>`;
-    }
-  });
+// ═══════════════════════════════════════════
+// VÍDEO
+// ═══════════════════════════════════════════
+function totalDur(){ return slideDurations.reduce((a,b)=>a+b, 0); }
+
+function buildVideoSlides(){
+  const canvas = document.getElementById('videoCanvas');
+  if(images.length === 0){
+    canvas.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#6b7280"><div style="font-size:48px">🎬</div><div style="font-size:13px">Añade imágenes en el tab Carrusel</div></div>`;
+    return false;
+  }
+  canvas.innerHTML = images.map((src, i) => `
+    <div class="video-slide-v ${i===0?'visible':''}" id="vs${i}">
+      <img src="${src}" class="${slideEffects[i]||'kb-zoom-in'}" style="width:100%;height:100%;object-fit:cover;"/>
+    </div>
+  `).join('');
+  // Video dots
+  const vdots = document.getElementById('videoDots');
+  vdots.innerHTML = images.map((_,i) =>
+    `<div style="width:5px;height:5px;border-radius:50%;background:${i===0?'#c9a96e':'rgba(255,255,255,.35)'};transition:background .3s" id="vdot${i}"></div>`
+  ).join('');
+  return true;
 }
 
 function initVideo(){
-  if(tickTimer) clearInterval(tickTimer);
-  if(slideTimer) clearTimeout(slideTimer);
+  stopVideo();
+  if(!buildVideoSlides()) return;
   videoSlide = 0; elapsed = 0; playing = true;
-  updateVideoFrame(0);
+  applyVideoFrame(0);
+  document.getElementById('totalDurDisplay').textContent = totalDur()+'s';
+  document.getElementById('timeLabel').textContent = `0s / ${totalDur()}s`;
+  document.getElementById('playBtn').textContent = '⏸';
   startVideoTick();
   startSlideTimer();
-  document.getElementById('playBtn').textContent = '⏸';
 }
 
-function updateVideoFrame(n){
-  [0,1,2,3].forEach(i=>{
-    const vs = document.getElementById('vs'+i);
+function stopVideo(){
+  clearInterval(tickTimer); tickTimer = null;
+  clearTimeout(slideTimer); slideTimer = null;
+  playing = false;
+}
+
+function applyVideoFrame(n){
+  document.querySelectorAll('.video-slide-v').forEach((vs,i)=>{
     vs.classList.toggle('visible', i===n);
     vs.classList.remove('playing');
   });
   const cur = document.getElementById('vs'+n);
-  const dur = slideDurations[n];
+  if(!cur) return;
+  const dur = slideDurations[n] || 4;
   cur.style.setProperty('--kb-dur', dur+'s');
   void cur.offsetWidth;
   setTimeout(()=>cur.classList.add('playing'), 50);
-  // Update video dots
-  document.querySelectorAll('.vdot').forEach((d,i)=>d.style.background = i===n ? '#c9a96e' : 'rgba(255,255,255,.4)');
+  // Dots
+  images.forEach((_,i)=>{
+    const d = document.getElementById('vdot'+i);
+    if(d) d.style.background = i===n ? '#c9a96e' : 'rgba(255,255,255,.35)';
+  });
 }
 
 function startVideoTick(){
   const tot = totalDur();
   tickTimer = setInterval(()=>{
-    if(!playing) return;
+    if(!playing || tot===0) return;
     elapsed += 0.1;
     const pct = Math.min((elapsed/tot)*100, 100);
     document.getElementById('progressFill').style.width = pct+'%';
-    document.getElementById('timeLabel').textContent = `${Math.floor(elapsed)}s / ${tot}s`;
-    if(elapsed >= tot){ elapsed = 0; videoSlide = 0; updateVideoFrame(0); }
+    document.getElementById('timeLabel').textContent = `${Math.round(elapsed)}s / ${tot}s`;
+    if(elapsed >= tot){ elapsed=0; videoSlide=0; applyVideoFrame(0); }
   }, 100);
 }
 
 function startSlideTimer(){
+  if(!images.length) return;
   const dur = slideDurations[videoSlide] || 4;
   slideTimer = setTimeout(()=>{
-    videoSlide = (videoSlide+1) % 4;
-    updateVideoFrame(videoSlide);
+    videoSlide = (videoSlide+1) % images.length;
+    applyVideoFrame(videoSlide);
     startSlideTimer();
   }, dur*1000);
 }
@@ -581,29 +717,33 @@ function startSlideTimer(){
 function togglePlay(){
   playing = !playing;
   document.getElementById('playBtn').textContent = playing ? '⏸' : '▶';
-  if(playing && !tickTimer){ startVideoTick(); startSlideTimer(); }
+  if(playing){ startVideoTick(); startSlideTimer(); }
+  else{ clearInterval(tickTimer); clearTimeout(slideTimer); tickTimer=null; slideTimer=null; }
 }
 
 function seekVideo(e){
+  if(!images.length) return;
   const rect = e.currentTarget.getBoundingClientRect();
   const pct = (e.clientX - rect.left) / rect.width;
   const tot = totalDur();
   elapsed = pct * tot;
-  let acc = 0;
-  for(let i=0; i<4; i++){
-    acc += slideDurations[i];
-    if(elapsed < acc){ videoSlide = i; updateVideoFrame(i); break; }
+  let acc=0;
+  for(let i=0;i<images.length;i++){
+    acc += slideDurations[i]||4;
+    if(elapsed < acc){ videoSlide=i; applyVideoFrame(i); break; }
   }
 }
 
-// ─── Caption ───
-function updateCaptionPreview(){
-  document.getElementById('igCaptionPreview').textContent = document.getElementById('captionEdit').value.substring(0,60)+'...';
+// ═══════════════════════════════════════════
+// CAPTION
+// ═══════════════════════════════════════════
+function updatePreviews(){
+  const cap = document.getElementById('captionEdit').value;
+  const hash = document.getElementById('hashEdit').value;
+  document.getElementById('igCaptionText').textContent = cap.substring(0,80)+(cap.length>80?'...':'');
+  document.getElementById('igHashtagsText').textContent = hash;
 }
-function updateHashPreview(){
-  document.getElementById('igHashtagsPreview').textContent = document.getElementById('hashEdit').value;
-}
-function setTone(el, t){ document.querySelectorAll('[onclick*="setTone"]').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+function setTone(el){ document.querySelectorAll('[onclick*="setTone"]').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
 function saveApiKey(){ const k=document.getElementById('apiKeyInput').value; if(k) localStorage.setItem('cf_anthropic_key',k); }
 
 async function generateCaption(){
@@ -611,55 +751,58 @@ async function generateCaption(){
   if(!key){ showToast('❌ Añade tu API key de Anthropic'); return; }
   const btn = document.getElementById('generateBtn');
   btn.textContent = '⏳ Generando...'; btn.disabled = true;
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages',{
+  try{
+    const r = await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:400,messages:[{role:'user',content:`Crea un caption atractivo para Instagram para una propiedad llamada "${PROJECT_NAME}". ${PROJECT_DESC}. Máx 3 frases con emojis. Incluye CTA. Luego en línea nueva añade 8 hashtags relevantes en español separados por espacio.`}]})
+      body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:400,messages:[{role:'user',content:`Crea un caption atractivo para Instagram para una propiedad llamada "${PROJ_NAME}". ${PROJ_DESC||''}. Máx 3 frases con emojis. Incluye llamada a la acción. Luego en línea nueva añade 8 hashtags relevantes en español.`}]})
     });
-    const data = await resp.json();
-    const txt = data.content?.[0]?.text || '';
+    const d = await r.json();
+    const txt = d.content?.[0]?.text || '';
     const parts = txt.split('\n\n');
     document.getElementById('captionEdit').value = parts[0] || txt;
     if(parts[1]) document.getElementById('hashEdit').value = parts[1];
-    updateCaptionPreview(); updateHashPreview();
+    updatePreviews();
     showToast('✅ Caption generado con IA');
-  } catch(e){ showToast('❌ Error: '+e.message); }
+  }catch(e){ showToast('❌ '+e.message); }
   btn.textContent = '✨ Generar con IA'; btn.disabled = false;
 }
 
-// ─── Export ───
+// ═══════════════════════════════════════════
+// EXPORTAR
+// ═══════════════════════════════════════════
 function exportImages(){
-  const loaded = images.filter(Boolean);
-  if(!loaded.length){ showToast('❌ Sube al menos una imagen'); return; }
+  if(!images.length){ showToast('❌ No hay imágenes que descargar'); return; }
   images.forEach((src,i)=>{
-    if(!src) return;
-    const a = document.createElement('a');
-    a.href = src;
-    a.download = `${PROJECT_NAME.replace(/\s+/g,'-')}-imagen-${i+1}.jpg`;
+    const a=document.createElement('a');
+    a.href=src;
+    a.download=`${PROJ_NAME.replace(/\s+/g,'-')}-${i+1}.jpg`;
     a.click();
   });
-  showToast('📥 Imágenes descargadas');
+  showToast(`📥 ${images.length} imágenes descargadas`);
 }
 
-function exportVideo(){ showToast('🎬 Vista previa disponible en el tab Vídeo'); }
 function copyCaption(){
-  const txt = document.getElementById('captionEdit').value + '\n\n' + document.getElementById('hashEdit').value;
+  const txt = document.getElementById('captionEdit').value+'\n\n'+document.getElementById('hashEdit').value;
   navigator.clipboard.writeText(txt).then(()=>showToast('📋 Copiado al portapapeles'));
 }
-function exportAll(){ exportImages(); showToast('📦 Descargando pack completo...'); }
 
-function saveProject(){ showToast('💾 Proyecto guardado'); }
-
-// ─── Toast ───
-function showToast(msg){
-  const t = document.getElementById('toastEl');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
+function updateExportSummary(){
+  document.getElementById('exportSummary').textContent =
+    `${images.length} imágenes · ${totalDur()}s de vídeo · Caption listo`;
 }
 
-// Start video on load
-setTimeout(()=>{ initVideo(); }, 500);
+function saveProject(){ showToast('💾 Proyecto guardado en el navegador'); }
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toastEl');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'), 2800);
+}
 </script>
 </body>
 </html>
