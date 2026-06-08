@@ -307,6 +307,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
       <button class="btn btn-ghost btn-sm btn-w" onclick="exportAllCaptions()">📄 Exportar captions .txt</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="generarBrief()">🗂️ Brief de cliente</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="generarEnIngles()">🌍 Captions en inglés</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="exportParaScheduler()">📆 Exportar para planificador</button>
       <button class="btn btn-gold btn-sm btn-w" style="margin-top:4px" onclick="downloadAll()">⬇️ Descargar todo (PNG)</button>
     </div>
     <div style="margin-top:10px">
@@ -335,8 +336,27 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
     <div style="font-size:10px;color:#6b7280;line-height:1.55">Tu clave se guarda solo en este navegador. Nunca sale de tu ordenador.</div>
   </div>
 
+  <div class="divider"></div>
+
+  <!-- Testimonial generator -->
+  <div>
+    <div class="sb-title">⭐ Post de Reseña</div>
+    <div style="font-size:10px;color:#6b7280;margin-bottom:7px;line-height:1.5">Pega la reseña de un huésped y genera un post de prueba social</div>
+    <div class="sb-field">
+      <label>Reseña del huésped</label>
+      <textarea class="sb-input" id="reviewText" rows="3" placeholder="ej: Fue la mejor experiencia de nuestra vida. La villa, el servicio, todo perfecto..."></textarea>
+    </div>
+    <div class="sb-field">
+      <label>Nombre del huésped (opcional)</label>
+      <input class="sb-input" id="reviewAuthor" placeholder="ej: María y Carlos, Madrid"/>
+    </div>
+    <button class="btn btn-ghost btn-sm btn-w" onclick="generarTestimonial()" style="margin-top:2px">⭐ Crear post de reseña</button>
+  </div>
+  <div class="divider"></div>
+
   <div style="margin-top:auto;padding-top:8px">
-    <a href="projects.html" class="btn btn-ghost btn-sm btn-w">← Volver a Proyectos</a>
+    <a href="brand-book.html" class="btn btn-ghost btn-sm btn-w" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:5px">📖 Brand Book</a>
+    <a href="projects.html" class="btn btn-ghost btn-sm btn-w" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px">← Proyectos</a>
   </div>
 </aside>
 
@@ -2057,6 +2077,157 @@ async function generarBrief(){
   }
   setTimeout(()=>URL.revokeObjectURL(url), 5000);
   toast('🗂️ Brief de cliente generado · Ábrelo para imprimir o exportar PDF');
+}
+
+// ──────────────────────────────────────────────────────────────
+// TESTIMONIAL POST GENERATOR
+// ──────────────────────────────────────────────────────────────
+async function generarTestimonial(){
+  const review = document.getElementById('reviewText').value.trim();
+  const author = document.getElementById('reviewAuthor').value.trim();
+  if(!review){ toast('❌ Escribe la reseña del huésped'); return; }
+
+  const name   = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const feats  = document.getElementById('bFeats').value.trim();
+
+  // Need at least one image
+  if(!ST.images.length){ toast('❌ Sube al menos una imagen para el post de reseña'); return; }
+
+  showLoader(true, 'Creando post de reseña con IA...', 25);
+
+  const prompt = `Eres un experto en marketing de lujo. Formatea y mejora esta reseña de huésped para crear un post de prueba social en Instagram.
+
+Propiedad: "${name}". Características: ${feats}.
+Reseña original: "${review}"
+Autor: "${author || 'Un huésped'}"
+
+Responde ÚNICAMENTE con un JSON válido:
+{
+  "headline": "Cita poderosa extraída de la reseña (máx 7 palabras, con comillas tipográficas «»)",
+  "subtitle": "— ${author ? author.trim() : 'Huésped verificado'} · 5 estrellas ★★★★★",
+  "caption": "Caption completo para Instagram que presenta la reseña con contexto emocional, 4-5 líneas con emojis, CTA y hashtags"
+}`;
+
+  setLoaderStep('Claude formatea el testimonio...', 60);
+  const raw = await callClaude(prompt, 600);
+  showLoader(false);
+  if(!raw){ toast('❌ Error al procesar la reseña'); return; }
+
+  let data;
+  try {
+    const match = raw.match(/\{[\s\S]*\}/);
+    data = JSON.parse(match ? match[0] : raw);
+  } catch(e){ toast('❌ Error al parsear respuesta'); return; }
+
+  // Use the first image (or a random one)
+  const img = ST.images[Math.floor(Math.random()*ST.images.length)];
+  const newCreative = {
+    id: Date.now() + Math.random(),
+    imageId: img.id,
+    imageDataURL: img.dataURL,
+    headline: data.headline || `«${review.substring(0,40)}»`,
+    subtitle: data.subtitle || `— ${author || 'Huésped verificado'}`,
+    caption: (data.caption || '') + '\n\n' + (ST.campaign.hashtags || '#AraHomeLuxe #Testimonial #LuxuryVilla'),
+    layout: 'center', kbfx: 'kbDefault', color: '#f0d090',
+    ov: 'dark', fs: 22, fmt: 'post'
+  };
+
+  ST.creatives.push(newCreative);
+
+  // Show gallery if not already visible
+  if(!document.getElementById('stageGallery').classList.contains('on')){
+    document.getElementById('stageUpload').style.display = 'none';
+    document.getElementById('stageGallery').classList.add('on');
+    document.getElementById('galTitle').textContent = ST.campaign.name || 'Contenido';
+    showGalleryActions();
+  }
+  // Append card to gallery
+  const grid = document.getElementById('galGrid');
+  const div = document.createElement('div');
+  div.innerHTML = cardHTML(newCreative, ST.creatives.length - 1);
+  grid.appendChild(div.firstElementChild);
+  // Scroll to new card
+  grid.lastElementChild?.scrollIntoView({ behavior:'smooth', block:'center' });
+
+  document.getElementById('reviewText').value = '';
+  document.getElementById('reviewAuthor').value = '';
+  toast(`⭐ Post de reseña creado: "${data.headline}"`);
+}
+
+// ──────────────────────────────────────────────────────────────
+// EXPORT FOR SOCIAL MEDIA SCHEDULERS (Buffer / Hootsuite / Later)
+// ──────────────────────────────────────────────────────────────
+function exportParaScheduler(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+
+  const name = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const now  = new Date();
+
+  // Schedule: Tue/Thu/Sat starting from next week
+  const SCHEDULE_DAYS = [2, 4, 6]; // Tue=2, Thu=4, Sat=6
+  const SCHEDULE_HOURS = { 2:'20:00', 4:'20:00', 6:'12:00' };
+  let schedDate = new Date(now);
+  // Move to next Tuesday
+  while(schedDate.getDay() !== 2) schedDate.setDate(schedDate.getDate()+1);
+  schedDate.setDate(schedDate.getDate()+7); // next week
+
+  const entries = [];
+  let dayIdx = 0;
+  ST.creatives.forEach((c, i) => {
+    // find next scheduled day
+    let d = new Date(schedDate);
+    let sDay = SCHEDULE_DAYS[dayIdx % SCHEDULE_DAYS.length];
+    // advance to the right day
+    while(d.getDay() !== sDay) d.setDate(d.getDate()+1);
+    if(i > 0 && d <= new Date(entries[i-1].date.split('/').reverse().join('-')+'T00:00:00')){
+      d.setDate(d.getDate()+7);
+    }
+    const dateStr = d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+    const hour = SCHEDULE_HOURS[sDay];
+    entries.push({
+      num: i+1,
+      date: dateStr,
+      hour,
+      format: c.fmt === 'story' ? 'Story 9:16' : 'Post 1:1',
+      headline: c.headline,
+      caption: c.caption || '',
+      filename: `arahomeluxe-creative-${String(i+1).padStart(2,'0')}.png`
+    });
+    dayIdx++;
+    if(dayIdx % 3 === 0) schedDate.setDate(schedDate.getDate()+7);
+  });
+
+  const SEPARATOR = '─'.repeat(60);
+  const lines = [
+    `PLANIFICADOR DE CONTENIDO · ${name}`,
+    `Campaña: ${ST.campaign.name || '—'}`,
+    `Exportado: ${now.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})} ${now.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}`,
+    `Compatible con: Buffer · Hootsuite · Later · Metricool`,
+    '', SEPARATOR, '',
+    ...entries.flatMap(e => [
+      `📅 ${e.date} a las ${e.hour}  |  ${e.format}`,
+      `🖼️  Archivo: ${e.filename}`,
+      `📝 Titular: ${e.headline}`,
+      '',
+      `CAPTION:`,
+      e.caption,
+      '', SEPARATOR, ''
+    ]),
+    `HASHTAGS GLOBALES:`,
+    ST.campaign.hashtags || '#AraHomeLuxe #LuxuryRental #AlquilerLujo',
+    '',
+    `TOTAL: ${entries.length} publicaciones | ${Math.ceil(entries.length/3)} semanas`,
+    `Creado con CreativeFlow AI Studio · arahomeluxe.com`
+  ];
+
+  const blob = new Blob([lines.join('\n')], { type:'text/plain;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `planificador-${name.replace(/\s+/g,'-').toLowerCase()}-${now.toISOString().split('T')[0]}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(`📆 Planificador exportado · ${entries.length} posts programados`);
 }
 
 // ──────────────────────────────────────────────────────────────
