@@ -226,15 +226,22 @@ function createProject(){
     return;
   }
 
+  const id = Date.now();
+  // URL apunta a carousel-template.html con params (funciona en GitHub Pages)
+  const encodedName = encodeURIComponent(name);
+  const encodedDesc = encodeURIComponent(desc);
+  const encodedHash = encodeURIComponent(hashtags || '#AlquilerLujo #AraHomeLuxe');
+  const projectUrl = `carousel-template.html?id=${id}&name=${encodedName}&desc=${encodedDesc}&hashtags=${encodedHash}`;
+
   const newProject = {
-    id: Date.now(),
+    id,
     name,
     desc,
     images: 0,
     contents: 0,
     date: new Date().toISOString().split('T')[0],
     template,
-    url: `project-${Date.now()}.html`,
+    url: projectUrl,
     hashtags
   };
 
@@ -243,7 +250,10 @@ function createProject(){
 
   closeNewProjectModal();
   renderProjects();
-  showToast(`✅ Proyecto "${name}" creado exitosamente`);
+  showToast(`✅ Proyecto "${name}" creado — abriendo...`);
+
+  // Abrir el nuevo proyecto automáticamente
+  setTimeout(() => { window.location.href = projectUrl; }, 800);
 
   // Limpiar form
   document.getElementById('projectName').value = '';

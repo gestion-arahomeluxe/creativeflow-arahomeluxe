@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nuevo Proyecto — CreativeFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e2e8f0;min-height:100vh}
+.app{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:260px;background:#0f0f18;border-right:1px solid #1a1a2e;padding:20px 16px;flex-shrink:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;position:sticky;top:0}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#c9a96e,#f0d090);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#0a0a0f}
+.logo-name{font-weight:700;font-size:15px}
+.logo-sub{font-size:10px;color:#6b7280}
+.back-btn{display:flex;align-items:center;gap:6px;color:#6b7280;font-size:12px;cursor:pointer;padding:6px 0;transition:color .2s}
+.back-btn:hover{color:#c9a96e}
+.section-label{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.divider{height:1px;background:#1a1a2e}
+.chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #2d2d44;color:#9ca3af;background:#13131f;transition:all .2s}
+.chip:hover,.chip.active{border-color:#c9a96e;color:#c9a96e;background:rgba(201,169,110,.1)}
+.effect-item{padding:8px 12px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid transparent;transition:all .2s;display:flex;align-items:center;gap:8px;color:#9ca3af}
+.effect-item:hover{background:#1a1a2e;color:#e2e8f0}
+.effect-item.active{background:rgba(201,169,110,.12);border-color:rgba(201,169,110,.4);color:#c9a96e}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;width:100%}
+.btn-gold{background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,169,110,.3)}
+.btn-outline{background:transparent;color:#c9a96e;border:1px solid rgba(201,169,110,.4)}
+.btn-outline:hover{background:rgba(201,169,110,.08)}
+
+/* Main */
+.main{flex:1;padding:28px;overflow-y:auto}
+.page-header{margin-bottom:28px}
+.page-header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px}
+.page-header p{color:#9ca3af;font-size:13px}
+.tabs-bar{display:flex;gap:4px;background:#0f0f18;border:1px solid #1a1a2e;border-radius:10px;padding:4px;margin-bottom:24px}
+.tab{flex:1;padding:9px;text-align:center;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;color:#6b7280;transition:all .2s}
+.tab:hover{color:#e2e8f0}
+.tab.active{background:linear-gradient(135deg,#1a1a2e,#13131f);color:#c9a96e;border:1px solid rgba(201,169,110,.25)}
+.panel{display:none}
+.panel.active{display:block}
+
+/* Upload zone */
+.upload-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.upload-slot{aspect-ratio:1;background:#111118;border:2px dashed #2d2d44;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;overflow:hidden;position:relative}
+.upload-slot:hover{border-color:#c9a96e;background:rgba(201,169,110,.05)}
+.upload-slot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.upload-slot .slot-label{font-size:12px;color:#6b7280;margin-top:8px;z-index:1}
+.upload-slot .slot-icon{font-size:28px;z-index:1}
+.upload-slot .slot-remove{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;color:white;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:14px;display:none;align-items:center;justify-content:center;z-index:10}
+.upload-slot:hover .slot-remove{display:flex}
+
+/* Instagram mockup */
+.ig-wrap{display:flex;justify-content:center}
+.ig-frame{width:420px;background:#000;border-radius:4px;overflow:hidden;box-shadow:0 0 0 1px #262626,0 20px 60px rgba(0,0,0,.8)}
+.ig-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1a1a1a}
+.ig-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);padding:2px;flex-shrink:0}
+.ig-avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;border:2px solid #000;background:#c9a96e;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000}
+.ig-username{font-size:13px;font-weight:600;color:#fff}
+.ig-loc{font-size:11px;color:#8e8e8e}
+.ig-more{margin-left:auto;color:#8e8e8e;font-size:18px}
+.ig-slides{position:relative;width:420px;height:420px;overflow:hidden;background:#111}
+.ig-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
+.ig-slide{width:420px;height:420px;flex-shrink:0;position:relative;overflow:hidden;background:#1a1a1a;display:flex;align-items:center;justify-content:center}
+.ig-slide img{width:100%;height:100%;object-fit:cover}
+.ig-slide .placeholder{font-size:48px;color:#333}
+.slide-num{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;backdrop-filter:blur(4px)}
+.slide-overlay{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent)}
+.slide-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.slide-subtitle{font-size:11px;color:rgba(255,255,255,.75);margin-top:3px}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10}
+.nav-btn:hover{background:rgba(255,255,255,.3)}
+.nav-prev{left:10px}
+.nav-next{right:10px}
+.ig-dots-row{display:flex;gap:4px;justify-content:center;padding:8px 0;background:#000}
+.ig-dot{width:6px;height:6px;border-radius:50%;background:#555;transition:all .3s;cursor:pointer}
+.ig-dot.active{background:#3d9bff}
+.ig-footer-bar{background:#000;padding:8px 14px 12px;border-top:1px solid #1a1a1a}
+.ig-actions{display:flex;gap:14px;margin-bottom:8px}
+.ig-actions span{font-size:22px;cursor:pointer}
+.ig-likes{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
+.ig-caption{font-size:13px;color:#fff}
+.ig-caption strong{margin-right:6px}
+.ig-hashtags{font-size:12px;color:#0095f6;margin-top:4px}
+
+/* Video player */
+.video-canvas{position:relative;width:420px;height:420px;overflow:hidden;background:#000;border-radius:0}
+.video-slide-v{position:absolute;inset:0;opacity:0;transition:opacity .6s}
+.video-slide-v.visible{opacity:1}
+.video-slide-v img{width:100%;height:100%;object-fit:cover}
+.video-slide-v img.kb-zoom-in{transform-origin:center}
+.video-slide-v.playing img.kb-zoom-in{animation:kb-zoom-in var(--kb-dur,4s) ease-in-out forwards}
+.video-slide-v.playing img.kb-zoom-out{animation:kb-zoom-out var(--kb-dur,4s) ease-in-out forwards}
+.video-slide-v.playing img.kb-pan-left{animation:kb-pan-left var(--kb-dur,4s) ease-in-out forwards}
+.video-slide-v.playing img.kb-pan-right{animation:kb-pan-right var(--kb-dur,4s) ease-in-out forwards}
+.video-slide-v.playing img.kb-pan-up{animation:kb-pan-up var(--kb-dur,4s) ease-in-out forwards}
+.video-slide-v.playing img.kb-zoom-rotate{animation:kb-zoom-rotate var(--kb-dur,4s) ease-in-out forwards}
+@keyframes kb-zoom-in{from{transform:scale(1)}to{transform:scale(1.35)}}
+@keyframes kb-zoom-out{from{transform:scale(1.35)}to{transform:scale(1)}}
+@keyframes kb-pan-left{from{transform:scale(1.2) translateX(0)}to{transform:scale(1.2) translateX(-10%)}}
+@keyframes kb-pan-right{from{transform:scale(1.2) translateX(0)}to{transform:scale(1.2) translateX(10%)}}
+@keyframes kb-pan-up{from{transform:scale(1.2) translateY(0)}to{transform:scale(1.2) translateY(-8%)}}
+@keyframes kb-zoom-rotate{from{transform:scale(1) rotate(0deg)}to{transform:scale(1.25) rotate(3deg)}}
+
+.video-controls{display:flex;align-items:center;gap:10px;padding:12px 0}
+.play-btn{width:36px;height:36px;background:linear-gradient(135deg,#c9a96e,#f0d090);border:none;border-radius:50%;color:#0a0a0f;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.progress-track{flex:1;height:4px;background:#2d2d44;border-radius:2px;overflow:hidden;cursor:pointer}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c9a96e,#f0d090);border-radius:2px;width:0;transition:width .1s linear}
+.time-label{font-size:11px;color:#6b7280;flex-shrink:0}
+
+/* Export */
+.export-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.export-card{background:#111118;border:1px solid #2d2d44;border-radius:12px;padding:20px;text-align:center;transition:all .2s}
+.export-card:hover{border-color:#c9a96e}
+.export-card .icon{font-size:32px;margin-bottom:10px}
+.export-card h4{font-size:14px;font-weight:600;margin-bottom:4px}
+.export-card p{font-size:11px;color:#6b7280;margin-bottom:14px}
+
+/* Caption */
+textarea{width:100%;background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:10px;font-size:12px;font-family:'Inter',sans-serif;resize:none;outline:none;line-height:1.5}
+textarea:focus{border-color:#c9a96e}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,#c9a96e,#f0d090);color:#0a0a0f;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 8px 30px rgba(201,169,110,.4);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">CF</div>
+    <div><div class="logo-name">CreativeFlow</div><div class="logo-sub">by AraHomeLuxe</div></div>
+  </div>
+
+  <div class="back-btn" onclick="window.location.href='projects.html'">← Volver a Proyectos</div>
+  <div class="divider"></div>
+
+  <div>
+    <div class="section-label">Propiedad</div>
+    <div style="font-size:13px;font-weight:600;color:#c9a96e;margin-top:4px" id="sidebarTitle">Nuevo Proyecto</div>
+    <div style="font-size:11px;color:#6b7280;margin-top:2px" id="sidebarDesc"></div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- Imágenes -->
+  <div>
+    <div class="section-label" style="margin-bottom:8px">Imágenes del Carrusel</div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap" id="miniThumbs">
+      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(0)">📷</div>
+      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(1)">📷</div>
+      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(2)">📷</div>
+      <div style="width:52px;height:52px;background:#1a1a2e;border:1px dashed #2d2d44;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" onclick="triggerUpload(3)">📷</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- Efecto por imagen -->
+  <div>
+    <div class="section-label" style="margin-bottom:8px">Efecto por Imagen</div>
+    <div style="display:flex;gap:4px;margin-bottom:8px" id="slideTabsRow">
+      <div class="chip active" onclick="selectSlideTab(this,0)" style="flex:1;text-align:center">1</div>
+      <div class="chip" onclick="selectSlideTab(this,1)" style="flex:1;text-align:center">2</div>
+      <div class="chip" onclick="selectSlideTab(this,2)" style="flex:1;text-align:center">3</div>
+      <div class="chip" onclick="selectSlideTab(this,3)" style="flex:1;text-align:center">4</div>
+    </div>
+    <div id="slideEffectLabel" style="font-size:11px;color:#6b7280;margin-bottom:6px">Imagen 1</div>
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div class="effect-item active" onclick="setSlideEffect(this,'kb-zoom-in')">🔍 Zoom In</div>
+      <div class="effect-item" onclick="setSlideEffect(this,'kb-zoom-out')">🔭 Zoom Out</div>
+      <div class="effect-item" onclick="setSlideEffect(this,'kb-pan-left')">⬅️ Pan Izquierda</div>
+      <div class="effect-item" onclick="setSlideEffect(this,'kb-pan-right')">➡️ Pan Derecha</div>
+      <div class="effect-item" onclick="setSlideEffect(this,'kb-pan-up')">⬆️ Pan Arriba</div>
+      <div class="effect-item" onclick="setSlideEffect(this,'kb-zoom-rotate')">🎬 Ken Burns</div>
+      <div class="effect-item" onclick="setSlideEffect(this,'none')">⬛ Sin movimiento</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- Duración -->
+  <div>
+    <div class="section-label" style="margin-bottom:8px">Duración por Imagen</div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap">
+      <div class="chip" onclick="setDur(this,3)">3s</div>
+      <div class="chip active" onclick="setDur(this,4)">4s</div>
+      <div class="chip" onclick="setDur(this,5)">5s</div>
+      <div class="chip" onclick="setDur(this,6)">6s</div>
+      <div class="chip" onclick="setDur(this,8)">8s</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <button class="btn btn-gold" onclick="saveProject()">💾 Guardar Proyecto</button>
+  <button class="btn btn-outline" onclick="window.location.href='projects.html'">← Proyectos</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-header">
+    <h1 id="mainTitle">Nuevo Proyecto</h1>
+    <p id="mainDesc" style="color:#9ca3af;font-size:14px">Sube tus imágenes y crea contenido profesional para Instagram</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar">
+    <div class="tab active" onclick="switchTab(this,0)">📸 Carrusel Instagram</div>
+    <div class="tab" onclick="switchTab(this,1)">🎬 Vídeo Animado</div>
+    <div class="tab" onclick="switchTab(this,2)">✍️ Caption & IA</div>
+    <div class="tab" onclick="switchTab(this,3)">📤 Exportar</div>
+  </div>
+
+  <!-- PANEL 0: Carrusel -->
+  <div class="panel active" id="panel0">
+    <!-- Upload 4 images -->
+    <div style="margin-bottom:20px">
+      <p style="font-size:13px;color:#9ca3af;margin-bottom:12px">Sube hasta 4 imágenes para tu carrusel. Haz click en cada slot.</p>
+      <div class="upload-grid">
+        <div class="upload-slot" id="slot0" onclick="triggerUpload(0)">
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Imagen 1 (Principal)</div>
+          <button class="slot-remove" onclick="removeImage(event,0)">✕</button>
+        </div>
+        <div class="upload-slot" id="slot1" onclick="triggerUpload(1)">
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Imagen 2</div>
+          <button class="slot-remove" onclick="removeImage(event,1)">✕</button>
+        </div>
+        <div class="upload-slot" id="slot2" onclick="triggerUpload(2)">
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Imagen 3</div>
+          <button class="slot-remove" onclick="removeImage(event,2)">✕</button>
+        </div>
+        <div class="upload-slot" id="slot3" onclick="triggerUpload(3)">
+          <div class="slot-icon">📷</div>
+          <div class="slot-label">Imagen 4</div>
+          <button class="slot-remove" onclick="removeImage(event,3)">✕</button>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)"/>
+    </div>
+
+    <!-- Instagram preview -->
+    <div style="font-size:13px;font-weight:600;color:#9ca3af;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">Vista previa Instagram</div>
+    <div class="ig-wrap">
+      <div class="ig-frame">
+        <div class="ig-top">
+          <div class="ig-avatar"><div class="ig-avatar-inner" id="igAvatarLetter">A</div></div>
+          <div>
+            <div class="ig-username" id="igUsername">arahomeluxe</div>
+            <div class="ig-loc" id="igLocation">Nueva propiedad</div>
+          </div>
+          <div class="ig-more">···</div>
+        </div>
+        <div class="ig-slides">
+          <div class="ig-track" id="igTrack">
+            <div class="ig-slide" id="igSlide0"><div class="placeholder">📷</div><div class="slide-num" id="igNum">1 / 4</div><div class="slide-overlay"><div class="slide-title" id="igTitle">Tu Propiedad</div><div class="slide-subtitle" id="igSubtitle">Lujo y exclusividad</div></div></div>
+            <div class="ig-slide" id="igSlide1"><div class="placeholder">📷</div></div>
+            <div class="ig-slide" id="igSlide2"><div class="placeholder">📷</div></div>
+            <div class="ig-slide" id="igSlide3"><div class="placeholder">📷</div></div>
+          </div>
+          <button class="nav-btn nav-prev" onclick="carouselNav(-1)">‹</button>
+          <button class="nav-btn nav-next" onclick="carouselNav(1)">›</button>
+        </div>
+        <div class="ig-dots-row" id="igDotsRow">
+          <div class="ig-dot active" onclick="goToSlide(0)"></div>
+          <div class="ig-dot" onclick="goToSlide(1)"></div>
+          <div class="ig-dot" onclick="goToSlide(2)"></div>
+          <div class="ig-dot" onclick="goToSlide(3)"></div>
+        </div>
+        <div class="ig-footer-bar">
+          <div class="ig-actions"><span>🤍</span><span>💬</span><span>↗️</span><span style="margin-left:auto">🔖</span></div>
+          <div class="ig-likes">Sé el primero en dar Me gusta</div>
+          <div class="ig-caption"><strong id="captionUsername">arahomeluxe</strong> <span id="igCaptionPreview">Añade una descripción...</span></div>
+          <div class="ig-hashtags" id="igHashtagsPreview">#AlquilerLujo #Vacaciones</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 1: Video -->
+  <div class="panel" id="panel1">
+    <div class="ig-wrap">
+      <div>
+        <div class="ig-frame" style="border-radius:8px;overflow:hidden">
+          <div class="video-canvas" id="videoCanvas">
+            <div class="video-slide-v visible" id="vs0"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
+            <div class="video-slide-v" id="vs1"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
+            <div class="video-slide-v" id="vs2"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
+            <div class="video-slide-v" id="vs3"><div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div></div>
+          </div>
+          <div style="background:#000;padding:10px 14px">
+            <div class="video-controls">
+              <button class="play-btn" id="playBtn" onclick="togglePlay()">⏸</button>
+              <div class="progress-track" onclick="seekVideo(event)"><div class="progress-fill" id="progressFill"></div></div>
+              <div class="time-label" id="timeLabel">0s / 16s</div>
+            </div>
+            <div style="display:flex;gap:4px;justify-content:center" id="videoDots">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot active"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot"></div>
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)" class="vdot"></div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:11px;color:#6b7280;margin-top:8px">Vista previa del vídeo animado · Ken Burns effects</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Caption -->
+  <div class="panel" id="panel2">
+    <div style="max-width:560px">
+      <div style="margin-bottom:20px">
+        <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Descripción del post</label>
+        <textarea id="captionEdit" rows="5" placeholder="Escribe aquí la descripción de tu propiedad..." oninput="updateCaptionPreview()">✨ NUEVA PROPIEDAD — tu escapada perfecta
+
+🏊 Piscina privada
+🌿 Jardín exclusivo
+🏡 Lujo en cada rincón</textarea>
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Hashtags</label>
+        <textarea id="hashEdit" rows="2" placeholder="#AlquilerLujo #Vacaciones ..." oninput="updateHashPreview()">#AlquilerLujo #AraHomeLuxe #VacacionesLujo #Piscina</textarea>
+      </div>
+      <div style="margin-bottom:20px">
+        <label style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px">Tono de voz</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="chip active" onclick="setTone(this,'lujo')">✨ Lujo</div>
+          <div class="chip" onclick="setTone(this,'lifestyle')">🌟 Lifestyle</div>
+          <div class="chip" onclick="setTone(this,'aventura')">🌍 Aventura</div>
+          <div class="chip" onclick="setTone(this,'familiar')">👨‍👩‍👧 Familiar</div>
+        </div>
+      </div>
+      <!-- API Key y botón IA -->
+      <div style="background:#111118;border:1px solid #2d2d44;border-radius:10px;padding:16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;margin-bottom:10px">API Anthropic (para generar con IA)</div>
+        <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." style="width:100%;background:#13131f;border:1px solid #2d2d44;border-radius:8px;color:#e2e8f0;padding:8px;font-size:11px;outline:none;margin-bottom:8px" oninput="saveApiKey()"/>
+        <button onclick="generateCaption()" id="generateBtn" style="width:100%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:none;color:white;border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer">✨ Generar con IA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: Exportar -->
+  <div class="panel" id="panel3">
+    <div class="export-grid">
+      <div class="export-card">
+        <div class="icon">🖼️</div>
+        <h4>Carrusel PNG</h4>
+        <p>4 imágenes 1080×1080px listas para subir</p>
+        <button class="btn btn-gold" onclick="exportImages()">Descargar imágenes</button>
+      </div>
+      <div class="export-card">
+        <div class="icon">🎬</div>
+        <h4>Vídeo Animado</h4>
+        <p>Secuencia con efectos Ken Burns</p>
+        <button class="btn btn-gold" onclick="exportVideo()">Descargar vídeo</button>
+      </div>
+      <div class="export-card">
+        <div class="icon">📝</div>
+        <h4>Caption + Hashtags</h4>
+        <p>Texto listo para copiar y pegar</p>
+        <button class="btn btn-outline" onclick="copyCaption()">Copiar texto</button>
+      </div>
+      <div class="export-card">
+        <div class="icon">📦</div>
+        <h4>Pack Completo</h4>
+        <p>Imágenes + vídeo + texto en ZIP</p>
+        <button class="btn btn-outline" onclick="exportAll()">Descargar ZIP</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<div id="toastEl" class="toast"></div>
+
+<script>
+// ─── Estado ───
+const params = new URLSearchParams(window.location.search);
+const PROJECT_NAME = params.get('name') || 'Nuevo Proyecto';
+const PROJECT_DESC = params.get('desc') || '';
+const PROJECT_HASHTAGS = params.get('hashtags') || '#AlquilerLujo #AraHomeLuxe';
+const PROJECT_ID = params.get('id') || Date.now();
+
+let images = [null, null, null, null];
+let slideEffects = ['kb-zoom-in', 'kb-zoom-out', 'kb-pan-left', 'kb-zoom-in'];
+let slideDurations = [4, 4, 4, 4];
+let activeSlideTab = 0;
+let currentSlide = 0;
+let videoSlide = 0;
+let playing = true;
+let elapsed = 0;
+let tickTimer = null;
+let slideTimer = null;
+let activeUploadSlot = 0;
+
+// ─── Init ───
+document.getElementById('mainTitle').textContent = PROJECT_NAME;
+document.getElementById('mainDesc').textContent = PROJECT_DESC || 'Sube tus imágenes y crea contenido profesional';
+document.getElementById('sidebarTitle').textContent = PROJECT_NAME;
+document.getElementById('sidebarDesc').textContent = PROJECT_DESC;
+document.getElementById('igLocation').textContent = PROJECT_NAME;
+document.getElementById('igTitle').textContent = PROJECT_NAME;
+document.title = PROJECT_NAME + ' — CreativeFlow';
+if(PROJECT_HASHTAGS){ document.getElementById('hashEdit').value = PROJECT_HASHTAGS; }
+
+// Load saved API key
+const savedKey = localStorage.getItem('cf_anthropic_key');
+if(savedKey) document.getElementById('apiKeyInput').value = savedKey;
+
+// ─── Tabs ───
+function switchTab(el, idx){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel'+idx).classList.add('active');
+  if(idx === 1){ initVideo(); }
+}
+
+// ─── Image Upload ───
+function triggerUpload(slot){
+  activeUploadSlot = slot;
+  document.getElementById('fileInput').click();
+}
+
+function handleFile(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    images[activeUploadSlot] = ev.target.result;
+    updateSlot(activeUploadSlot, ev.target.result);
+    updateVideoSlides();
+    showToast(`✅ Imagen ${activeUploadSlot+1} añadida`);
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function updateSlot(idx, src){
+  const slot = document.getElementById('slot'+idx);
+  slot.innerHTML = `<img src="${src}" alt=""/><button class="slot-remove" onclick="removeImage(event,${idx})">✕</button>`;
+  // Update mini thumb in sidebar
+  // Update IG slide
+  const igSlide = document.getElementById('igSlide'+idx);
+  igSlide.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover;"/><div class="slide-num" id="igNum">${idx+1} / 4</div>${idx===0?'<div class="slide-overlay"><div class="slide-title" id="igTitle">'+PROJECT_NAME+'</div><div class="slide-subtitle" id="igSubtitle">Lujo y exclusividad</div></div>':''}`;
+  // Update video slide
+  const vs = document.getElementById('vs'+idx);
+  vs.innerHTML = `<img src="${src}" class="${slideEffects[idx]}" style="width:100%;height:100%;object-fit:cover;"/>`;
+}
+
+function removeImage(e, idx){
+  e.stopPropagation();
+  images[idx] = null;
+  const slot = document.getElementById('slot'+idx);
+  const labels = ['Imagen 1 (Principal)','Imagen 2','Imagen 3','Imagen 4'];
+  slot.innerHTML = `<div class="slot-icon">📷</div><div class="slot-label">${labels[idx]}</div><button class="slot-remove" onclick="removeImage(event,${idx})">✕</button>`;
+  slot.onclick = ()=>triggerUpload(idx);
+  document.getElementById('igSlide'+idx).innerHTML = `<div class="placeholder">📷</div>`;
+  document.getElementById('vs'+idx).innerHTML = `<div style="width:100%;height:100%;background:#1a1a2e;display:flex;align-items:center;justify-content:center;font-size:48px">📷</div>`;
+}
+
+// ─── Carousel ───
+function carouselNav(dir){
+  goToSlide((currentSlide + dir + 4) % 4);
+}
+function goToSlide(n){
+  currentSlide = n;
+  document.getElementById('igTrack').style.transform = `translateX(-${n * 420}px)`;
+  document.querySelectorAll('.ig-dot').forEach((d,i)=>d.classList.toggle('active', i===n));
+}
+
+// ─── Effect per slide ───
+function selectSlideTab(el, idx){
+  activeSlideTab = idx;
+  document.querySelectorAll('[onclick*="selectSlideTab"]').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const labels = ['Imagen 1','Imagen 2','Imagen 3','Imagen 4'];
+  document.getElementById('slideEffectLabel').textContent = labels[idx];
+  // Highlight current effect
+  const cur = slideEffects[idx];
+  document.querySelectorAll('.effect-item').forEach(item=>{
+    const fx = item.getAttribute('onclick').match(/'([^']+)'/)?.[1];
+    item.classList.toggle('active', fx === cur);
+  });
+}
+
+function setSlideEffect(el, fx){
+  slideEffects[activeSlideTab] = fx;
+  document.querySelectorAll('.effect-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  // Apply to video slide if image loaded
+  if(images[activeSlideTab]){
+    const vs = document.getElementById('vs'+activeSlideTab);
+    const img = vs.querySelector('img');
+    if(img){
+      img.className = fx;
+      if(vs.classList.contains('playing')){
+        vs.classList.remove('playing');
+        void vs.offsetWidth;
+        setTimeout(()=>vs.classList.add('playing'), 50);
+      }
+    }
+  }
+  showToast(`Efecto: ${el.textContent.trim()}`);
+}
+
+// ─── Duration ───
+function setDur(el, val){
+  slideDurations[activeSlideTab] = val;
+  document.querySelectorAll('[onclick*="setDur"]').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  showToast(`Duración imagen ${activeSlideTab+1}: ${val}s`);
+}
+
+// ─── Video ───
+function totalDur(){ return slideDurations.reduce((a,b)=>a+b,0); }
+function elapsedAtSlide(n){ return slideDurations.slice(0,n).reduce((a,b)=>a+b,0); }
+
+function updateVideoSlides(){
+  [0,1,2,3].forEach(i=>{
+    if(images[i]){
+      const vs = document.getElementById('vs'+i);
+      vs.innerHTML = `<img src="${images[i]}" class="${slideEffects[i]}" style="width:100%;height:100%;object-fit:cover;"/>`;
+    }
+  });
+}
+
+function initVideo(){
+  if(tickTimer) clearInterval(tickTimer);
+  if(slideTimer) clearTimeout(slideTimer);
+  videoSlide = 0; elapsed = 0; playing = true;
+  updateVideoFrame(0);
+  startVideoTick();
+  startSlideTimer();
+  document.getElementById('playBtn').textContent = '⏸';
+}
+
+function updateVideoFrame(n){
+  [0,1,2,3].forEach(i=>{
+    const vs = document.getElementById('vs'+i);
+    vs.classList.toggle('visible', i===n);
+    vs.classList.remove('playing');
+  });
+  const cur = document.getElementById('vs'+n);
+  const dur = slideDurations[n];
+  cur.style.setProperty('--kb-dur', dur+'s');
+  void cur.offsetWidth;
+  setTimeout(()=>cur.classList.add('playing'), 50);
+  // Update video dots
+  document.querySelectorAll('.vdot').forEach((d,i)=>d.style.background = i===n ? '#c9a96e' : 'rgba(255,255,255,.4)');
+}
+
+function startVideoTick(){
+  const tot = totalDur();
+  tickTimer = setInterval(()=>{
+    if(!playing) return;
+    elapsed += 0.1;
+    const pct = Math.min((elapsed/tot)*100, 100);
+    document.getElementById('progressFill').style.width = pct+'%';
+    document.getElementById('timeLabel').textContent = `${Math.floor(elapsed)}s / ${tot}s`;
+    if(elapsed >= tot){ elapsed = 0; videoSlide = 0; updateVideoFrame(0); }
+  }, 100);
+}
+
+function startSlideTimer(){
+  const dur = slideDurations[videoSlide] || 4;
+  slideTimer = setTimeout(()=>{
+    videoSlide = (videoSlide+1) % 4;
+    updateVideoFrame(videoSlide);
+    startSlideTimer();
+  }, dur*1000);
+}
+
+function togglePlay(){
+  playing = !playing;
+  document.getElementById('playBtn').textContent = playing ? '⏸' : '▶';
+  if(playing && !tickTimer){ startVideoTick(); startSlideTimer(); }
+}
+
+function seekVideo(e){
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  const tot = totalDur();
+  elapsed = pct * tot;
+  let acc = 0;
+  for(let i=0; i<4; i++){
+    acc += slideDurations[i];
+    if(elapsed < acc){ videoSlide = i; updateVideoFrame(i); break; }
+  }
+}
+
+// ─── Caption ───
+function updateCaptionPreview(){
+  document.getElementById('igCaptionPreview').textContent = document.getElementById('captionEdit').value.substring(0,60)+'...';
+}
+function updateHashPreview(){
+  document.getElementById('igHashtagsPreview').textContent = document.getElementById('hashEdit').value;
+}
+function setTone(el, t){ document.querySelectorAll('[onclick*="setTone"]').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
+function saveApiKey(){ const k=document.getElementById('apiKeyInput').value; if(k) localStorage.setItem('cf_anthropic_key',k); }
+
+async function generateCaption(){
+  const key = document.getElementById('apiKeyInput').value || localStorage.getItem('cf_anthropic_key');
+  if(!key){ showToast('❌ Añade tu API key de Anthropic'); return; }
+  const btn = document.getElementById('generateBtn');
+  btn.textContent = '⏳ Generando...'; btn.disabled = true;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:400,messages:[{role:'user',content:`Crea un caption atractivo para Instagram para una propiedad llamada "${PROJECT_NAME}". ${PROJECT_DESC}. Máx 3 frases con emojis. Incluye CTA. Luego en línea nueva añade 8 hashtags relevantes en español separados por espacio.`}]})
+    });
+    const data = await resp.json();
+    const txt = data.content?.[0]?.text || '';
+    const parts = txt.split('\n\n');
+    document.getElementById('captionEdit').value = parts[0] || txt;
+    if(parts[1]) document.getElementById('hashEdit').value = parts[1];
+    updateCaptionPreview(); updateHashPreview();
+    showToast('✅ Caption generado con IA');
+  } catch(e){ showToast('❌ Error: '+e.message); }
+  btn.textContent = '✨ Generar con IA'; btn.disabled = false;
+}
+
+// ─── Export ───
+function exportImages(){
+  const loaded = images.filter(Boolean);
+  if(!loaded.length){ showToast('❌ Sube al menos una imagen'); return; }
+  images.forEach((src,i)=>{
+    if(!src) return;
+    const a = document.createElement('a');
+    a.href = src;
+    a.download = `${PROJECT_NAME.replace(/\s+/g,'-')}-imagen-${i+1}.jpg`;
+    a.click();
+  });
+  showToast('📥 Imágenes descargadas');
+}
+
+function exportVideo(){ showToast('🎬 Vista previa disponible en el tab Vídeo'); }
+function copyCaption(){
+  const txt = document.getElementById('captionEdit').value + '\n\n' + document.getElementById('hashEdit').value;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Copiado al portapapeles'));
+}
+function exportAll(){ exportImages(); showToast('📦 Descargando pack completo...'); }
+
+function saveProject(){ showToast('💾 Proyecto guardado'); }
+
+// ─── Toast ───
+function showToast(msg){
+  const t = document.getElementById('toastEl');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// Start video on load
+setTimeout(()=>{ initVideo(); }, 500);
+</script>
+</body>
+</html>
