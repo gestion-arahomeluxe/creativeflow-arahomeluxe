@@ -302,11 +302,22 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
   <div id="galleryActions" style="display:none">
     <div class="sb-title">📊 Acciones de campaña</div>
     <div style="display:flex;flex-direction:column;gap:5px">
-      <button class="btn btn-ghost btn-sm btn-w" onclick="showGridPreview()">📱 Vista perfil IG</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="showGridPreview()">📱 Vista perfil Instagram</button>
+      <button class="btn btn-ghost btn-sm btn-w" onclick="generarCalendario()">📅 Calendario editorial</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="exportAllCaptions()">📄 Exportar captions .txt</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="generarBrief()">🗂️ Brief de cliente</button>
       <button class="btn btn-ghost btn-sm btn-w" onclick="generarEnIngles()">🌍 Captions en inglés</button>
-      <button class="btn btn-gold btn-sm btn-w" style="margin-top:4px" onclick="downloadAll()">⬇️ Descargar todo</button>
+      <button class="btn btn-gold btn-sm btn-w" style="margin-top:4px" onclick="downloadAll()">⬇️ Descargar todo (PNG)</button>
+    </div>
+    <div style="margin-top:10px">
+      <div class="sb-title" style="margin-bottom:5px">⚡ Caption rápido</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" style="flex:1;font-size:10px" onclick="quickCaption('urgencia')">🚨 Urgencia</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;font-size:10px" onclick="quickCaption('lifestyle')">🌟 Lifestyle</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;font-size:10px" onclick="quickCaption('oferta')">🏷️ Oferta</button>
+      </div>
+      <div id="quickCapResult" style="display:none;margin-top:8px;background:#13131f;border:1px solid #c9a96e33;border-radius:7px;padding:10px;font-size:11px;color:#9ca3af;line-height:1.55;max-height:120px;overflow-y:auto;white-space:pre-wrap"></div>
+      <button id="quickCapCopyBtn" class="btn btn-ghost btn-sm btn-w" style="display:none;margin-top:6px" onclick="copyQuickCap()">📋 Copiar caption</button>
     </div>
   </div>
   <div class="divider"></div>
@@ -2008,6 +2019,208 @@ async function generarBrief(){
   }
   setTimeout(()=>URL.revokeObjectURL(url), 5000);
   toast('🗂️ Brief de cliente generado · Ábrelo para imprimir o exportar PDF');
+}
+
+// ──────────────────────────────────────────────────────────────
+// QUICK CAPTION (urgencia / lifestyle / oferta)
+// ──────────────────────────────────────────────────────────────
+let _lastQuickCap = '';
+async function quickCaption(type){
+  const name  = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const feats = document.getElementById('bFeats').value.trim();
+  const tone  = document.getElementById('bTone').value;
+  const c     = ST.creatives.find(x => x.id === ST.activeId);
+  const hl    = c?.headline || '';
+
+  const PROMPTS = {
+    urgencia: `Escribe UN caption de urgencia para Instagram de la propiedad de lujo "${name}".
+Debe crear FOMO (miedo a perder la oportunidad). Usa frases como "últimas plazas", "solo quedan X semanas libres", "no dejes pasar". Características: ${feats}. Titular relacionado: "${hl}". Tono: ${tone}.
+Incluye: línea de apertura con emoji urgente, 2-3 líneas de persuasión, CTA directo ("Reserva ahora" o similar), hashtags de lujo.
+Solo el texto del caption, sin explicaciones.`,
+
+    lifestyle: `Escribe UN caption lifestyle aspiracional para Instagram de la propiedad de lujo "${name}".
+Pinta un cuadro mental de la experiencia ideal. Características: ${feats}. Titular: "${hl}". Tono: ${tone}.
+Usa lenguaje evocador y sensorial (el olor del mediterráneo, el sonido del agua, la luz del atardecer...).
+Incluye: apertura poética con emoji, descripción sensorial 3-4 líneas, CTA inspiracional, hashtags.
+Solo el texto del caption, sin explicaciones.`,
+
+    oferta: `Escribe UN caption de promoción especial para Instagram de la propiedad de lujo "${name}".
+Menciona una oferta irresistible (sin inventar precios). Características: ${feats}. Titular: "${hl}". Tono: ${tone}.
+Incluye: apertura con emoji celebración, detalles de la oferta, fechas disponibles (usa "verano 2026"), CTA con enlace en bio, hashtags.
+Solo el texto del caption, sin explicaciones.`
+  };
+
+  const box = document.getElementById('quickCapResult');
+  const btn = document.getElementById('quickCapCopyBtn');
+  box.textContent = '⏳ Generando caption...';
+  box.style.display = 'block'; btn.style.display = 'none';
+
+  const raw = await callClaude(PROMPTS[type], 380);
+  if(!raw){ box.textContent = '❌ Error al generar. Comprueba tu API key.'; return; }
+  _lastQuickCap = raw.trim();
+  box.textContent = _lastQuickCap;
+  btn.style.display = 'block';
+  toast(`✅ Caption de ${type} generado`);
+}
+
+function copyQuickCap(){
+  if(!_lastQuickCap) return;
+  navigator.clipboard.writeText(_lastQuickCap).then(()=>toast('📋 Caption copiado'));
+}
+
+// ──────────────────────────────────────────────────────────────
+// EDITORIAL CALENDAR — genera HTML de 4 semanas
+// ──────────────────────────────────────────────────────────────
+async function generarCalendario(){
+  if(!ST.creatives.length){ toast('❌ Genera una campaña primero'); return; }
+
+  const name    = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const date    = new Date();
+  const dateStr = date.toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'});
+
+  showLoader(true, 'Creando calendario editorial...', 30);
+
+  const creativesSummary = ST.creatives.slice(0,8).map((c,i)=>
+    `Creative ${i+1}: "${c.headline}" (${c.layout}, ${c.fmt||'post'})`
+  ).join('\n');
+
+  const prompt = `Eres un experto en social media para el sector de lujo vacacional.
+Crea un calendario editorial de Instagram para 4 semanas para la propiedad de lujo "${name}".
+Campaña: "${ST.campaign.name}". Concepto: "${ST.campaign.angle}".
+
+Creatives disponibles:
+${creativesSummary}
+
+Responde ÚNICAMENTE con un JSON válido. Sin texto antes ni después:
+{
+  "semanas": [
+    {
+      "num": 1,
+      "tema": "Tema de la semana (2-4 palabras)",
+      "posts": [
+        {
+          "dia": "Martes",
+          "fecha": "10 Jun",
+          "hora": "20:00",
+          "formato": "Post",
+          "creative": 1,
+          "objetivo": "Notoriedad",
+          "caption_preview": "Primera línea del caption (max 60 chars)"
+        }
+      ]
+    }
+  ]
+}
+
+Genera 4 semanas. Cada semana tiene 3-4 publicaciones (martes, jueves, sábado/domingo).
+Alterna entre Post, Story y Reel. Usa los creatives numerados disponibles.
+Fechas empezando desde hoy (${dateStr}).`;
+
+  setLoaderStep('Claude planificando 4 semanas...', 55);
+  const raw = await callClaude(prompt, 1800);
+  showLoader(false);
+  if(!raw){ toast('❌ Error al generar calendario'); return; }
+
+  let data;
+  try {
+    const match = raw.match(/\{[\s\S]*\}/);
+    data = JSON.parse(match ? match[0] : raw);
+  } catch(e){ toast('❌ Error al parsear calendario'); return; }
+
+  const semanas = data.semanas || [];
+  const OBJETIVO_COLORS = {
+    'Notoriedad': '#3b82f6', 'Engagement': '#10b981', 'Conversión': '#c9a96e',
+    'Fidelización': '#8b5cf6', 'Alcance': '#f59e0b'
+  };
+  const FMT_ICONS = { Post:'📷', Story:'📱', Reel:'🎬', Carrusel:'🎠' };
+
+  const weekRows = semanas.map((s, si) => `
+    <div style="margin-bottom:28px">
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #c9a96e">
+        <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#c9a96e">Semana ${s.num}</div>
+        <div style="font-size:13px;color:#666;font-style:italic">${escHtml(s.tema || '')}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:#f5f3ef">
+            <th style="padding:8px 10px;text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;font-weight:700;width:90px">Día · Hora</th>
+            <th style="padding:8px 10px;text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;font-weight:700;width:70px">Formato</th>
+            <th style="padding:8px 10px;text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Creative · Apertura del caption</th>
+            <th style="padding:8px 10px;text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;font-weight:700;width:90px">Objetivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${(s.posts||[]).map((p,pi)=>`
+          <tr style="border-bottom:1px solid #eee;${pi%2===0?'background:#fff':'background:#fdfbf7'}">
+            <td style="padding:10px;font-size:12px;font-weight:700;color:#333;white-space:nowrap">${escHtml(p.dia||'')} ${escHtml(p.fecha||'')}<div style="font-size:10px;font-weight:400;color:#999">${escHtml(p.hora||'')}</div></td>
+            <td style="padding:10px;font-size:13px">${FMT_ICONS[p.formato]||'📷'} <span style="font-size:10px;color:#666">${escHtml(p.formato||'Post')}</span></td>
+            <td style="padding:10px">
+              <div style="font-size:11px;color:#c9a96e;font-weight:700;margin-bottom:3px">Creative #${p.creative||1}</div>
+              <div style="font-size:11px;color:#555;font-style:italic">"${escHtml(p.caption_preview||'...')}"</div>
+            </td>
+            <td style="padding:10px"><span style="background:${OBJETIVO_COLORS[p.objetivo]||'#6b7280'}22;color:${OBJETIVO_COLORS[p.objetivo]||'#6b7280'};padding:3px 8px;border-radius:12px;font-size:10px;font-weight:700">${escHtml(p.objetivo||'')}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `).join('');
+
+  const totalPosts = semanas.reduce((acc,s)=>acc+(s.posts||[]).length,0);
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"/><title>Calendario Editorial · ${escHtml(name)} · ${dateStr}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',Helvetica,Arial,sans-serif;color:#222;background:#fff;padding:40px 48px;max-width:960px;margin:0 auto}
+@media print{body{padding:20px 24px} .no-print{display:none} @page{size:A4 landscape;margin:15mm}}
+</style></head>
+<body>
+<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #c9a96e;padding-bottom:20px;margin-bottom:28px">
+  <div>
+    <div style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#c9a96e">✦ ${escHtml(name)}</div>
+    <div style="font-size:14px;color:#666;margin-top:4px">Calendario Editorial Instagram · ${dateStr}</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#333">${escHtml(ST.campaign.name)}</div>
+    <div style="font-size:11px;color:#999;margin-top:3px">${totalPosts} publicaciones · 4 semanas · CreativeFlow AI</div>
+  </div>
+</div>
+
+<div style="background:#fdfbf7;border-radius:10px;padding:16px 20px;border:1px solid #e8ddc8;margin-bottom:28px;display:flex;gap:24px;flex-wrap:wrap">
+  <div><div style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Campaña</div><div style="font-size:14px;font-weight:700;color:#333">${escHtml(ST.campaign.name)}</div></div>
+  <div><div style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Total posts</div><div style="font-size:14px;font-weight:700;color:#c9a96e">${totalPosts}</div></div>
+  <div><div style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Duración</div><div style="font-size:14px;font-weight:700;color:#333">4 semanas</div></div>
+  <div style="flex:1;min-width:200px"><div style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Concepto</div><div style="font-size:12px;color:#555;font-style:italic">${escHtml(ST.campaign.angle||'')}</div></div>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+  ${Object.entries(OBJETIVO_COLORS).map(([k,v])=>`<span style="background:${v}22;color:${v};padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700">● ${k}</span>`).join('')}
+</div>
+
+${weekRows}
+
+<div style="margin-top:24px;padding:14px 18px;background:#0a0a0f;border-radius:10px;color:#9ca3af;font-size:11px;line-height:1.7">
+  <strong style="color:#c9a96e">Mejores horarios:</strong> Mar/Jue 20:00 · Sáb 12:00 · Dom 21:00 &nbsp;|&nbsp;
+  <strong style="color:#c9a96e">Hashtags:</strong> ${escHtml((ST.campaign.hashtags||'').substring(0,80))}...
+</div>
+
+<div class="no-print" style="margin-top:20px;display:flex;gap:10px;justify-content:center">
+  <button onclick="window.print()" style="padding:10px 24px;background:#c9a96e;color:#0a0a0f;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">🖨️ Imprimir / Guardar PDF</button>
+  <button onclick="window.close()" style="padding:10px 24px;background:#1a1a2e;color:#9ca3af;border:1px solid #2d2d44;border-radius:8px;font-size:13px;cursor:pointer">✕ Cerrar</button>
+</div>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if(!w){
+    const a = document.createElement('a');
+    a.href = url; a.download = `calendario-${name.replace(/\s+/g,'-').toLowerCase()}.html`;
+    a.click();
+  }
+  setTimeout(()=>URL.revokeObjectURL(url), 6000);
+  toast(`📅 Calendario de ${totalPosts} posts generado · 4 semanas`);
 }
 
 // Close modals on bg click
