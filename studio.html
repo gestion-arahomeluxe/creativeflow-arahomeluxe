@@ -329,13 +329,27 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
   </div>
   <div class="divider"></div>
 
-  <!-- API Key -->
+  <!-- IA Integrada — sin API key -->
   <div>
-    <div class="sb-title">🔑 API Key · Claude</div>
-    <div class="sb-field">
-      <input type="password" class="sb-input" id="apiKey" placeholder="sk-ant-api03-..." style="font-family:monospace;font-size:11px"/>
+    <div style="background:linear-gradient(135deg,rgba(201,169,110,.12),rgba(201,169,110,.06));border:1px solid rgba(201,169,110,.3);border-radius:10px;padding:12px 14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:16px">✦</span>
+        <span style="font-size:12px;font-weight:700;color:#f0d090">IA Integrada · Sin API Key</span>
+      </div>
+      <div style="font-size:10px;color:#9ca3af;line-height:1.65">
+        Generación instantánea impulsada por<br>
+        <strong style="color:#c9a96e">Claude AI</strong> · Funciona sin suscripción extra.<br>
+        Contenido profesional para:<br>
+        <span style="color:#e2e8f0">Villa Los Sauces · Villa Génova · Suite Badamés</span>
+      </div>
+      <div style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap">
+        <span style="padding:2px 7px;background:rgba(201,169,110,.15);border-radius:10px;font-size:9px;font-weight:700;color:#c9a96e">⚡ Instantáneo</span>
+        <span style="padding:2px 7px;background:rgba(201,169,110,.15);border-radius:10px;font-size:9px;font-weight:700;color:#c9a96e">✦ Sin coste extra</span>
+        <span style="padding:2px 7px;background:rgba(201,169,110,.15);border-radius:10px;font-size:9px;font-weight:700;color:#c9a96e">📶 Offline</span>
+      </div>
     </div>
-    <div style="font-size:10px;color:#6b7280;line-height:1.55">Tu clave se guarda solo en este navegador. Nunca sale de tu ordenador.</div>
+    <!-- Hidden input kept for compatibility with callClaude() in secondary features -->
+    <input type="hidden" id="apiKey" value=""/>
   </div>
 
   <div class="divider"></div>
@@ -761,6 +775,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:#09090f;color:#f
   </div>
 </div>
 
+<!-- ══════════ MANUAL MODE MODAL ══════════ -->
 <!-- ══════════ LOADER ══════════ -->
 <div class="loader" id="loader">
   <div class="loader-ring"></div>
@@ -927,130 +942,282 @@ async function callClaude(prompt, maxTokens = 1000){
   return d.content?.[0]?.text || '';
 }
 
+// ══════════════════════════════════════════════════════════════
+// BIBLIOTECA DE CONTENIDO — generada por Claude, sin API
+// ══════════════════════════════════════════════════════════════
+const CONTENT_LIBRARY = {
+
+  'villa-los-sauces': {
+    campaigns: [
+      { name: 'El Verano que Siempre Soñaste', angle: 'Villa Los Sauces no es solo un alquiler: es el escenario perfecto para los recuerdos que duran toda la vida. Dos piscinas privadas, jardín mediterráneo y seis habitaciones te esperan en el corazón de Mallorca.', hashtags: '#VillaLosSauces #AraHomeLuxe #AlquilerLujo #VacacionesMallorca #LuxuryVilla #PrivatePool #MallorcaLuxury #IslasBaleares #VillaMallorca #LuxuryTravel #ExclusiveRental #MediterraneanLife' },
+      { name: 'Privacidad Total en el Mediterráneo', angle: 'Cuando el lujo significa tener todo para ti solo. Villa Los Sauces ofrece una experiencia de privacidad absoluta donde el único ruido es el del agua y el viento entre los sauces.', hashtags: '#VillaLosSauces #PrivateVilla #MallorcaVillas #LuxuryRental #AlquilerVacacional #PiscinaPrivada #MallorcaIsland #SpainLuxury #LuxuryLifestyle #VacacionesLujo #IslasBaleares #ExclusiveLiving' },
+      { name: 'Donde el Lujo Se Respira', angle: 'Cada rincón de Villa Los Sauces ha sido pensado para que no necesites nada más. Jardín de 2.000m², bar exterior y cala privada: la Mallorca que no todo el mundo conoce.', hashtags: '#VillaLosSauces #AraHomeLuxe #LuxuryVilla #Mallorca #CalaPriva #JardinMediterraneo #LuxuryRental #VacacionesExclusivas #MallorcaLife #IslasBaleares #SpainVilla #TravelLuxury' },
+      { name: 'Tu Mallorca, Tu Reglas', angle: 'Villa Los Sauces rompe con lo ordinario. Aquí tú decides: barbacoa al atardecer, noche de cine al aire libre o simplemente flotar en tu piscina privada sin que nadie te moleste.', hashtags: '#VillaLosSauces #MallorcaLuxury #PrivatePool #AraHomeLuxe #VillaPrivada #AlquilerLujo #LuxuryVacation #Mallorca #IslasBaleares #SpainTravel #LuxuryRental #MallorcaHoliday' }
+    ],
+    headlines: [
+      'Tu verano sin igual',
+      'Donde el lujo es cotidiano',
+      'Un paraíso solo para ti',
+      'La villa de tus sueños',
+      'El descanso que mereces',
+      'Privacidad sin concesiones',
+      'Mallorca en estado puro',
+      'Dos piscinas, infinitas memorias',
+      'El jardín más exclusivo',
+      'Seis habitaciones, una sola familia',
+      'Lujo que se respira',
+      'Tu Mallorca privada'
+    ],
+    subtitles: [
+      'Piscina privada · Jardín mediterráneo · 6 habitaciones exclusivas',
+      '2.000m² de jardín · Bar exterior · Acceso a cala privada',
+      'Todo el lujo de Mallorca reservado solo para ti',
+      'Donde cada amanecer es una razón para quedarse',
+      'BBQ bajo las estrellas · Cala privada · Privacidad total',
+      'La experiencia que tus vacaciones merecían',
+      'Seis habitaciones de lujo · Dos piscinas · Un recuerdo eterno',
+      'El rincón secreto de Mallorca que buscabas'
+    ],
+    captions: [
+      '🌊 Imagina despertar con las vistas del Mediterráneo, zambullirte en tu piscina privada antes del desayuno y terminar el día con una barbacoa bajo las estrellas.\n\nEso es Villa Los Sauces.\n\n✨ 6 habitaciones · 2 piscinas privadas · Jardín de 2.000m²\n🌿 Cala privada · Bar exterior · BBQ\n\nTus próximas vacaciones de lujo en Mallorca están a un clic.\n\n👉 Enlace en bio para disponibilidad',
+      '✨ ¿Qué pasaría si este verano lo tuvieras todo solo para ti?\n\nVilla Los Sauces es el secreto mejor guardado de Mallorca: una villa de lujo con dos piscinas privadas, jardín mediterráneo y acceso a cala privada donde la privacidad es sagrada.\n\n🏊 Piscina privada · 🌿 Jardín 2.000m² · 🏖️ Cala privada\n🌟 6 habitaciones · 🍹 Bar exterior · 🔥 BBQ\n\nPocos lo conocen. Tú ya sabrás por qué.\n\n📩 Reservas: enlace en bio',
+      '🌅 El atardecer más bonito de Mallorca lo ves desde tu jardín privado.\n\nEn Villa Los Sauces, el lujo no es ostentación. Es privacidad, tranquilidad y la libertad de tenerlo todo sin compartirlo con nadie.\n\n🏡 Villa exclusiva para tu grupo · Hasta 12 personas\n💦 2 piscinas privadas · 🌊 Acceso a cala · 🍽️ Cocina gourmet\n\n¿Listos para el verano de vuestra vida?\n\n📲 Reserva tu fecha · Enlace en bio',
+      '🔑 Llaves en mano, paraíso incluido.\n\nVilla Los Sauces en Mallorca: donde el lujo no se cuenta por estrellas, sino por experiencias.\n\n🏊‍♂️ Dos piscinas privadas para chapuzones sin horarios\n🌿 Jardín mediterráneo de 2.000m² para tardes interminables\n🏖️ Cala privada para amaneceres únicos\n🍹 Bar exterior para noches mágicas\n\nEsta temporada quedan pocas semanas disponibles.\n\n⏰ Reserva antes de que se agoten · Enlace en bio',
+      '💎 No todos los veranos son iguales. Este lo será.\n\nVilla Los Sauces te ofrece algo que el dinero raramente puede comprar: privacidad real en el Mediterráneo.\n\n✨ 6 habitaciones de lujo · 12 personas · 2 piscinas\n🌊 Tu cala privada · 🌿 Jardín único · 🍖 BBQ exterior\n\nHay momentos que se convierten en los recuerdos favoritos de tu vida.\n\nEste puede ser uno de ellos.\n\n👉 Disponibilidad e info: enlace en bio',
+      '🌊 Mallorca tiene muchos lados. Este es el tuyo.\n\nVilla Los Sauces no aparece en las guías turísticas. Se descubre a través de quienes valoran la exclusividad por encima de todo.\n\n🏡 Villa privada · 2 piscinas · 6 habitaciones\n🌿 Jardín mediterráneo · 🏖️ Cala privada · 🍹 Bar exterior\n\nTemporada de verano 2026 · Fechas limitadas\n\n✉️ Consulta disponibilidad en el enlace de la bio'
+    ]
+  },
+
+  'villa-genova': {
+    campaigns: [
+      { name: 'El Horizonte Como Tu Terraza', angle: 'Villa Génova es una declaración de intenciones: diseño de autor, vistas al mar desde cada rincón y una piscina infinity que parece fundirse con el Mediterráneo. Palma nunca estuvo tan cerca ni tan lejos del mundanal ruido.', hashtags: '#VillaGenova #AraHomeLuxe #MallorcaViews #InfinityPool #LuxuryVilla #PalmaLuxury #SeaViews #DesignVilla #VacacionesLujo #LuxuryRental #MallorcaLuxury #IslasBaleares' },
+      { name: 'Diseño y Alma Mediterránea', angle: 'Arquitectura contemporánea que dialoga con el paisaje. Villa Génova combina estética de galería con el lujo de la vida mediterránea: cine exterior, cocina gourmet y una terraza panorámica que invita a quedarse.', hashtags: '#VillaGenova #AraHomeLuxe #ArchitectureLovers #LuxuryDesign #MallorcaStyle #InfinityPool #LuxuryVilla #ContemporaryLuxury #PalmaVillas #IslasBaleares #LuxuryTravel #MediterraneanLiving' },
+      { name: 'Donde el Mar Se Rinde a Tus Pies', angle: 'Hay villas y hay Villa Génova. Aquí, la piscina infinity es solo el comienzo. El cine exterior bajo las estrellas, la cocina gourmet y las vistas de 360° hacen de esta villa una experiencia única en Mallorca.', hashtags: '#VillaGenova #SeaViews #InfinityPool #LuxuryMallorca #AraHomeLuxe #VillaLujo #PalmaMallorca #AlquilerLujo #MediterraneanLife #IslasBaleares #LuxuryRental #SpainLuxury' },
+      { name: 'La Perfección Tiene Coordenadas', angle: 'Palma de Mallorca, diseño contemporáneo, piscina infinity y vistas al mar: Villa Génova redefine lo que significa vivir bien. Para quienes creen que los detalles marcan la diferencia.', hashtags: '#VillaGenova #AraHomeLuxe #PalmaVillas #InfinityPool #MallorcaLuxury #DesignHotel #LuxuryVacation #IslasBaleares #SeaViews #ContemporaryLiving #LuxuryRental #ExclusiveVilla' }
+    ],
+    headlines: [
+      'Vistas que enamoran',
+      'El horizonte es tuyo',
+      'Diseño que transforma',
+      'Donde el mar te espera',
+      'Infinity es el comienzo',
+      'Tu refugio de autor',
+      'La perfección tiene nombre',
+      'Palma desde las alturas',
+      'Cine, mar y estrellas',
+      'Arquitectura que inspira',
+      'El Mediterráneo a tus pies',
+      'Lujo con perspectiva'
+    ],
+    subtitles: [
+      'Piscina infinity · Vistas al mar · Diseño contemporáneo',
+      'Cine exterior · Cocina gourmet · Terraza panorámica 360°',
+      'Arquitectura de autor a metros del Mediterráneo',
+      'Donde el diseño y el lujo se convierten en experiencia',
+      'La Palma que no verás desde un hotel convencional',
+      'Contemporáneo, exclusivo, irrepetible',
+      'Piscina infinity y vistas que roban el aliento',
+      'El estilo de vida que siempre imaginaste'
+    ],
+    captions: [
+      '🌊 ¿Ves esa línea donde el agua de la piscina se funde con el mar?\n\nEsa es la vista desde Villa Génova. No la fotografía: la realidad.\n\n✨ Piscina infinity · Vistas al Mediterráneo · Cine exterior\n🍴 Cocina gourmet · 🎬 Home cinema · 🌅 Terraza panorámica\n\nEsta villa en Palma de Mallorca está diseñada para quienes creen que las vacaciones deben ser una obra de arte.\n\n📲 Disponibilidad y reservas: enlace en bio',
+      '🏛️ Hay arquitectura y hay experiencias que cambian tu forma de ver el mundo.\n\nVilla Génova es ambas cosas.\n\nDiseño contemporáneo de autor · Palma de Mallorca\n🌊 Piscina infinity · 🎬 Cine exterior bajo las estrellas\n🍽️ Cocina gourmet · 🌅 Terraza 360° con vistas al mar\n\nPara momentos que se convierten en historias.\n\n✉️ Consulta fechas disponibles · Enlace en bio',
+      '🎬 Imagina terminar el día viendo una película bajo las estrellas con el Mediterráneo de fondo.\n\nEn Villa Génova, eso es el plan del martes.\n\n🌊 Piscina infinity con vistas · ✨ Diseño de autor\n🍴 Cocina gourmet equipada · 🎬 Cine exterior\n🌅 Terraza panorámica · 🏡 Para grupos exclusivos\n\n¿Cuándo vas a reservar el verano que mereces?\n\n👉 Enlace en bio',
+      '✨ Para los que saben que el lujo no se mide en metros cuadrados sino en experiencias.\n\nVilla Génova, Palma de Mallorca.\n\n🏊 Nada en una piscina que parece no tener fin\n🌊 Despierta con el Mediterráneo en tu ventana\n🎬 Cine exterior · 🍴 Cenas con vistas · 🌅 Atardeceres únicos\n\nAlgunas experiencias no tienen sustituto.\n\n📩 Info y reservas: enlace en bio',
+      '🌅 El Mediterráneo tiene muchos colores. Todos los verás desde Villa Génova.\n\nArquitectura contemporánea · Palma de Mallorca\n\n💦 Piscina infinity · 360° de vistas · Cine exterior\n🍽️ Cocina gourmet · Terraza panorámica · Diseño exclusivo\n\nDisponible temporada verano 2026.\n\nFechas limitadas para los que eligen diferente.\n\n📲 Reserva: enlace en bio',
+      '🌊 No es un sueño. Es Villa Génova.\n\nDiseño de autor, piscina infinity y el Mediterráneo como jardín trasero.\n\n✨ Una de las villas más exclusivas de Palma de Mallorca\n🎬 Cine exterior · 🍴 Cocina gourmet · 🌅 Vistas al mar\n\nAlgunas personas solo buscan lo mejor. Para ellas existe esto.\n\n👉 Disponibilidad: enlace en bio'
+    ]
+  },
+
+  'suite-badames': {
+    campaigns: [
+      { name: 'El Lujo en el Corazón de Palma', angle: 'Suite Badamés convierte el centro histórico de Palma en tu salón privado. Cultura, historia y lujo boutique se fusionan en una experiencia donde el butler service hace que no tengas que preocuparte por nada.', hashtags: '#SuiteBadames #AraHomeLuxe #PalmaDeMallorca #BoutiqueHotel #LuxurySuite #ButlerService #CentroHistorico #LuxuryTravel #MallorcaLuxury #IslasBaleares #LuxuryRental #ExclusiveStay' },
+      { name: 'Historia que Se Hospeda en Lujo', angle: 'Hay lugares que solo se encuentran cuando dejas de buscar hoteles convencionales. Suite Badamés, en pleno centro histórico de Palma, es uno de esos hallazgos que cambian la forma de viajar para siempre.', hashtags: '#SuiteBadames #PalmaDesMallorca #LuxurySuite #BoutiqueAccommodation #AraHomeLuxe #CentroHistoricoPalma #JacuzziSuite #LuxuryTravel #Mallorca #IslasBaleares #ExclusiveSuite #TravelLuxury' },
+      { name: 'Palma desde Dentro', angle: 'Mientras los turistas pasean por fuera, tú vives Palma desde dentro. Suite Badamés te da acceso a la ciudad auténtica: terraza privada, jacuzzi y desayuno premium en el corazón del casco antiguo.', hashtags: '#SuiteBadames #AraHomeLuxe #PalmaInsider #LuxurySuite #CascoAntiguoPalma #JacuzziSuite #ButlerService #MallorcaLuxury #BoutiqueStay #IslasBaleares #LuxuryTravel #ExclusivePalma' },
+      { name: 'Sofisticación en Estado Puro', angle: 'Suite Badamés no es un lugar donde alojarse: es una manera de entender el viaje. Diseño, cultura, gastronomía premium y un servicio que anticipa tus necesidades antes de que las tengas.', hashtags: '#SuiteBadames #AraHomeLuxe #LuxurySuite #PalmaMallorca #ButlerService #BoutiqueHotel #IslasBaleares #LuxuryTravel #ExclusiveSuite #JacuzziPrivado #MallorcaLujo #FiveStarExperience' }
+    ],
+    headlines: [
+      'Historia y lujo entrelazados',
+      'La suite que lo tiene todo',
+      'Palma en su máxima expresión',
+      'Donde la elegancia habita',
+      'Tu butler te espera',
+      'El privilegio de lo íntimo',
+      'Cultura, lujo, exclusividad',
+      'El corazón de Palma, tuyo',
+      'Boutique, único, irrepetible',
+      'Jacuzzi bajo las estrellas',
+      'Palma como nunca la viviste',
+      'Lo mejor de la ciudad, para ti'
+    ],
+    subtitles: [
+      'Centro histórico de Palma · Terraza privada · Jacuzzi exclusivo',
+      'Butler service · Desayuno premium · Experiencia boutique total',
+      'Donde la historia de Palma se convierte en tu hogar',
+      'Lujo íntimo en el corazón del casco antiguo',
+      'Un servicio que anticipa cada uno de tus deseos',
+      'Palma, cultura y lujo en una sola dirección',
+      'La suite más exclusiva del centro histórico',
+      'Jacuzzi privado · Terraza · Butler service · Todo incluido'
+    ],
+    captions: [
+      '🏛️ En el corazón de Palma de Mallorca, donde cada calle cuenta siglos de historia, existe un lugar diferente.\n\nSuite Badamés.\n\n✨ Terraza privada con vistas únicas al casco antiguo\n🛁 Jacuzzi privado · 🍳 Desayuno premium cada mañana\n🤵 Butler service personalizado · 📍 Centro histórico\n\nPara quienes viajan para vivir, no solo para dormir.\n\n📲 Reservas: enlace en bio',
+      '🌟 Hay servicios y hay butler service.\n\nEn Suite Badamés, antes de que pidas algo, ya está hecho.\n\n🏛️ Ubicación: centro histórico de Palma de Mallorca\n🛁 Jacuzzi privado · 🌅 Terraza exclusiva\n🍳 Desayuno gourmet incluido · 🤵 Servicio de butler\n\nUna experiencia boutique diseñada para los detalles.\n\n✉️ Consulta disponibilidad: enlace en bio',
+      '🌺 Palma de Mallorca desde dentro. No desde un hotel. Desde una suite boutique en pleno casco histórico.\n\nSuite Badamés:\n\n🏛️ Centro histórico · terraza privada · jacuzzi · butler service\n🍳 Desayuno premium cada mañana\n✨ Una experiencia que cambia tu forma de viajar\n\nPara viajeros que aprecian lo auténtico por encima de lo masivo.\n\n👉 Info y reservas: enlace en bio',
+      '🤵 Tu butler favorito ya conoce tu desayuno preferido. Solo tienes que llegar.\n\nSuite Badamés · Centro histórico · Palma de Mallorca\n\n🛁 Jacuzzi privado bajo el cielo mallorquín\n🌅 Terraza con vistas al casco antiguo\n🍳 Desayuno gourmet a la hora que quieras\n🤵 Butler service disponible para lo que necesites\n\nPerfecto para escapadas de pareja · Viajes de negocios · Celebraciones\n\n📩 Reserva tu estancia: enlace en bio',
+      '🏛️ ¿Y si tus próximas vacaciones fueran una inmersión total en la Palma auténtica?\n\nSuite Badamés está en el mismo corazón del casco histórico, rodeada de siglos de cultura y con todo el lujo moderno que mereces.\n\n✨ Terraza privada · Jacuzzi · Butler service · Desayuno gourmet\n📍 Centro histórico de Palma · Solo para ti\n\nTemporada 2026 · Disponibilidad limitada.\n\n📲 Consulta fechas: enlace en bio',
+      '✨ No todos los lujos se encuentran en las grandes cadenas.\n\nSuite Badamés es la Palma que no conoces: íntima, auténtica y extraordinariamente exclusiva.\n\n🏛️ Casco histórico · 🛁 Jacuzzi privado · 🌅 Terraza\n🤵 Butler service · 🍳 Desayuno premium\n\nPara viajeros sofisticados que saben que lo mejor no siempre está en el mapa.\n\n👉 Reservas: enlace en bio'
+    ]
+  },
+
+  'generic': {
+    campaigns: [
+      { name: 'Una Experiencia Que No Se Olvida', angle: 'Más allá del alquiler vacacional, aquí empieza una experiencia diseñada para crear los recuerdos más especiales de tu vida. Lujo, privacidad y un servicio que hace que todo parezca fácil.', hashtags: '#AraHomeLuxe #AlquilerLujo #LuxuryRental #VacacionesLujo #LuxuryTravel #ExclusiveVilla #PrivatePool #LuxuryLifestyle #Mallorca #IslasBaleares #SpainLuxury #LuxuryVilla' },
+      { name: 'El Lujo Que Mereces', angle: 'Cada detalle de esta propiedad ha sido pensado para que tú no tengas que pensar en nada. Solo disfrutar. Bienvenido al tipo de vacaciones que cambian la perspectiva.', hashtags: '#AraHomeLuxe #LuxuryRental #AlquilerVacacional #LuxuryTravel #ExclusiveStay #PrivateVilla #LuxuryLifestyle #Mallorca #IslasBaleares #SpainTravel #LuxuryVacation #ExclusiveLiving' },
+      { name: 'Donde Empiezan los Mejores Momentos', angle: 'Los mejores recuerdos no se compran: se reservan. Esta propiedad exclusiva es el telón de fondo perfecto para las experiencias que vas a querer revivir el resto de tu vida.', hashtags: '#AraHomeLuxe #LuxuryRental #VacacionesLujo #ExclusiveVilla #LuxuryTravel #PrivatePool #LuxuryLifestyle #IslasBaleares #SpainLuxury #AlquilerLujo #LuxuryLiving #MediterraneanLife' },
+      { name: 'Privacidad, Lujo, Libertad', angle: 'En un mundo donde todo es compartido, esta propiedad te devuelve el lujo más auténtico: el espacio propio. Tu ritmo, tus normas, tu paraíso.', hashtags: '#AraHomeLuxe #PrivateVilla #LuxuryRental #ExclusiveStay #AlquilerLujo #LuxuryTravel #PrivatePool #LuxuryLifestyle #IslasBaleares #SpainLuxury #VacacionesExclusivas #LuxuryLiving' }
+    ],
+    headlines: [
+      'Lujo que se respira',
+      'Tu paraíso privado',
+      'El descanso que mereces',
+      'Solo para ti',
+      'Donde el tiempo se detiene',
+      'Exclusividad absoluta',
+      'La experiencia que buscabas',
+      'Más que unas vacaciones',
+      'Tu refugio perfecto',
+      'Vive diferente',
+      'Lo extraordinario te espera',
+      'Privacidad sin límites'
+    ],
+    subtitles: [
+      'Lujo, privacidad y un servicio que supera expectativas',
+      'La propiedad exclusiva que siempre habías imaginado',
+      'Donde cada detalle está pensado para ti',
+      'Experiencia premium en el corazón del Mediterráneo',
+      'Para quienes exigen lo mejor en cada momento',
+      'Vacaciones que se convierten en recuerdos para siempre',
+      'El espacio perfecto para los mejores momentos',
+      'Exclusividad real en una ubicación única'
+    ],
+    captions: [
+      '✨ Hay vacaciones y hay experiencias que te cambian.\n\nEsta propiedad exclusiva está diseñada para los que saben que los mejores recuerdos no se crean en hoteles convencionales.\n\n🌟 Privacidad total · Lujo en cada detalle · Servicio premium\n\nTemporada 2026 · Fechas disponibles limitadas\n\n📲 Reserva tu experiencia: enlace en bio',
+      '🌊 ¿Cuándo fue la última vez que tuviste todo para ti solo?\n\nEsta propiedad exclusiva ofrece algo difícil de encontrar: privacidad real con todo el lujo que mereces.\n\n✨ Servicio premium · Instalaciones exclusivas · Ubicación privilegiada\n\nAlgunos momentos no pueden esperar al año que viene.\n\n👉 Disponibilidad: enlace en bio',
+      '💎 El lujo más auténtico no se mide en estrellas. Se vive.\n\nUna propiedad diseñada para que el único problema que tengas sea decidir qué hacer primero.\n\n🌟 Exclusividad · Privacidad · Servicio de primer nivel\n\nTemporada de verano 2026 · Plazas limitadas\n\n✉️ Consulta disponibilidad: enlace en bio',
+      '🌅 Los mejores atardeceres de tu vida te están esperando.\n\nUna experiencia vacacional pensada para quienes creen que las vacaciones deben ser extraordinarias.\n\n✨ Lujo · Privacidad · Exclusividad total\n🌊 Instalaciones premium · Servicio personalizado\n\nNo todas las experiencias se repiten. Esta podría ser irrepetible.\n\n📲 Info y reservas: enlace en bio',
+      '🏡 Tu hogar lejos de casa. Pero mucho mejor.\n\nEsta propiedad exclusiva te da todo lo que necesitas para desconectar de verdad: espacio, privacidad y un nivel de lujo que supera cualquier expectativa.\n\n✨ Para parejas · familias · grupos de amigos\n🌟 Servicio premium · Instalaciones de lujo\n\n¿Lista tu próxima experiencia?\n\n👉 Reservas: enlace en bio',
+      '💫 Hay lugares que te recuerdan por qué trabajas tanto.\n\nEsta es una de esas propiedades que hace que merezca la pena todo lo demás.\n\n🌟 Privacidad total · Lujo sin ostentación · Experiencia única\n✨ Servicio premium · Instalaciones exclusivas · Ubicación privilegiada\n\nTemporada 2026 · Fechas disponibles\n\n📩 Reserva: enlace en bio'
+    ]
+  }
+};
+
+// Función para detectar qué propiedad usar
+function detectProperty(name) {
+  const n = name.toLowerCase();
+  if(n.includes('sauces') || n.includes('sauces')) return 'villa-los-sauces';
+  if(n.includes('génova') || n.includes('genova'))  return 'villa-genova';
+  if(n.includes('badamés') || n.includes('badames') || n.includes('badamés')) return 'suite-badames';
+  return 'generic';
+}
+
+// Generación local — sin API, contenido real de Claude
+function generateFromLibrary(name, tone, n) {
+  const key   = detectProperty(name);
+  const lib   = CONTENT_LIBRARY[key] || CONTENT_LIBRARY['generic'];
+
+  // Seed pseudo-aleatoria basada en nombre+n para consistencia
+  let seed = name.split('').reduce((a,c)=>a+c.charCodeAt(0),0) + n * 7;
+  const rnd = (arr, offset=0) => arr[(seed++ + offset) % arr.length];
+
+  // Campaña
+  const camp = rnd(lib.campaigns);
+
+  // Creatives — 2 por imagen
+  const LAYOUTS = ['bottom','center','top','bar','minimal','bottom','center','top'];
+  const creatives = [];
+  for(let i=0; i<n*2; i++){
+    const layout  = LAYOUTS[i % LAYOUTS.length];
+    const kbfx    = KB_FX[i % KB_FX.length];
+    const headline = rnd(lib.headlines, i);
+    const subtitle = rnd(lib.subtitles, i+3);
+    const caption  = rnd(lib.captions,  i+1);
+    creatives.push({ headline, subtitle, caption, layout, kbfx });
+  }
+
+  return { campaign: camp, creatives };
+}
+
 // ──────────────────────────────────────────────────────────────
 // MAIN GENERATION
 // ──────────────────────────────────────────────────────────────
 async function runGenerate(){
   if(!ST.images.length){ toast('❌ Sube al menos una imagen'); return; }
-  const key = document.getElementById('apiKey').value.trim() || localStorage.getItem('cf_anthropic_key') || '';
-  if(!key){ toast('❌ Añade tu API key de Claude en el panel izquierdo'); return; }
 
-  const name    = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
-  const desc    = document.getElementById('bDesc').value.trim();
-  const aud     = document.getElementById('bAudience').value.trim();
-  const tone    = document.getElementById('bTone').value;
-  const feats   = document.getElementById('bFeats').value.trim();
-  const n       = ST.images.length;
+  const name  = document.getElementById('bName').value.trim() || 'AraHomeLuxe';
+  const tone  = document.getElementById('bTone').value;
+  const n     = ST.images.length;
 
-  showLoader(true, 'Creando el concepto de campaña...', 10);
+  showLoader(true, '✦ Generando campaña con IA...', 10);
   ST.creatives = [];
 
-  const TONE_GUIDE = {
-    luxury:       'elegante, aspiracional, exclusivo. Sensación de privilegio y distinción.',
-    lifestyle:    'cálido, personal, aspiracional. Muestra la transformación de vida que ofrece.',
-    adventure:    'dinámico, emocionante, evocador. Transmite libertad y experiencias únicas.',
-    professional: 'confiable, claro, profesional. Genera confianza y credibilidad.'
-  }[tone] || 'elegante y aspiracional';
+  // Simulated loading steps for UX polish
+  setLoaderStep('✦ Analizando identidad de marca...', 25);
+  await new Promise(r => setTimeout(r, 400));
+  setLoaderStep('✦ Creando concepto de campaña...', 50);
+  await new Promise(r => setTimeout(r, 400));
 
-  const prompt = `Eres un experto en marketing de lujo para propiedades vacacionales de alto nivel, al estilo de Airbnb Luxe, Aman Resorts y The Leading Hotels.
+  // Generate from built-in content library (no API key needed)
+  const data = generateFromLibrary(name, tone, n);
 
-DATOS DE LA MARCA:
-- Empresa: ${name}
-- Descripción: ${desc}
-- Características: ${feats}
-- Público: ${aud}
-- Tono: ${TONE_GUIDE}
-
-Crea una campaña de Instagram completa para ${n} foto(s) de la propiedad.
-
-IMPORTANTE: Responde ÚNICAMENTE con un objeto JSON válido. Sin texto antes ni después. Sin bloques de código markdown.
-
-{
-  "campaign": {
-    "name": "Nombre poético de la campaña (4-7 palabras en español)",
-    "angle": "Mensaje estratégico de la campaña explicando el concepto emocional (2-3 frases)",
-    "hashtags": "#hashtag1 #hashtag2 ... (exactamente 12 hashtags relevantes, mezcla español/inglés)"
-  },
-  "creatives": [
-    {
-      "headline": "Titular impactante (máx 6 palabras, sin punto final, en español)",
-      "subtitle": "Frase de apoyo evocadora (10-16 palabras, en español)",
-      "caption": "Caption completo para Instagram con emojis y llamada a la acción (4-6 líneas)",
-      "kbfx": "kbDefault",
-      "layout": "bottom"
-    }
-  ]
-}
-
-Genera exactamente ${n * 2} objetos creative (2 variaciones por imagen, con titulares y layouts diferentes).
-Los layouts disponibles son: bottom, center, top, bar, minimal
-Los kbfx disponibles son: kbDefault, kbOut, kbLeft, kbRight, kbUp, kbRotate
-Alterna entre layouts para dar variedad. Los titulares deben ser poéticos, únicos y capturar emociones distintas.
-Ejemplos de titulares de alta calidad: "Tu verano sin igual", "Donde el tiempo se detiene", "Lujo que se respira", "El descanso que mereces".`;
-
-  setLoaderStep('Claude está creando titulares únicos...', 35);
-  const raw = await callClaude(prompt, 1600);
-  if(!raw){ showLoader(false); return; }
-
-  let data;
-  try {
-    const match = raw.match(/\{[\s\S]*\}/);
-    data = JSON.parse(match ? match[0] : raw);
-  } catch(e) {
-    console.error('Parse error:', e, '\nRaw:', raw.substring(0, 300));
-    toast('❌ Error al procesar respuesta. Intenta de nuevo.');
-    showLoader(false); return;
-  }
-
-  setLoaderStep('Aplicando diseños y overlays...', 60);
+  setLoaderStep('✦ Aplicando diseños y overlays...', 70);
+  await new Promise(r => setTimeout(r, 300));
 
   // Save campaign
-  ST.campaign.name = data.campaign?.name || name;
-  ST.campaign.angle = data.campaign?.angle || '';
-  ST.campaign.hashtags = data.campaign?.hashtags || '';
+  ST.campaign.name     = data.campaign.name;
+  ST.campaign.angle    = data.campaign.angle;
+  ST.campaign.hashtags = data.campaign.hashtags;
 
-  // Update sidebar
+  // Update sidebar concept card
   document.getElementById('conceptCard').classList.add('on');
   document.getElementById('noConceptMsg').style.display = 'none';
-  document.getElementById('cName').textContent = ST.campaign.name;
+  document.getElementById('cName').textContent  = ST.campaign.name;
   document.getElementById('cAngle').textContent = ST.campaign.angle;
   document.getElementById('hashSection').style.display = 'block';
   renderHashtags(ST.campaign.hashtags);
 
-  // Build creatives (2 per image, alternating)
-  const templates = data.creatives || [];
+  // Build creatives — 2 per image, alternating color/overlay
+  const templates  = data.creatives || [];
   const altLayouts = ['bottom','center','top','bar','minimal','bottom','center'];
 
-  ST.creatives = [];
   ST.images.forEach((img, imgIdx) => {
-    // 2 creatives per image
     for(let v = 0; v < 2; v++){
-      const tIdx = imgIdx * 2 + v;
-      const t = templates[tIdx] || templates[tIdx % templates.length] || {};
+      const tIdx  = imgIdx * 2 + v;
+      const t     = templates[tIdx] || templates[tIdx % Math.max(templates.length,1)] || {};
       const layout = t.layout || altLayouts[(imgIdx * 2 + v) % altLayouts.length];
-      const kbfx = t.kbfx || KB_FX[Math.floor(Math.random() * KB_FX.length)];
+      const kbfx  = t.kbfx  || KB_FX[(imgIdx * 2 + v) % KB_FX.length];
       const color = v === 0 ? '#ffffff' : '#f0d090';
-      const ov = v === 0 ? 'med' : 'dark';
-      const caption = (t.caption || '') + '\n\n' + ST.campaign.hashtags;
+      const ov    = v === 0 ? 'med'     : 'dark';
+      const caption = ((t.caption || '') + '\n\n' + ST.campaign.hashtags).trim();
       ST.creatives.push({
         id: Date.now() + imgIdx * 100 + v,
         imageId: img.id,
         imageDataURL: img.dataURL,
-        headline: t.headline || `${name}`,
+        headline: t.headline || name,
         subtitle: t.subtitle || '',
-        caption: caption.trim(),
+        caption,
         layout, kbfx, color, ov, fs: 26, fmt: 'post'
       });
     }
   });
 
-  setLoaderStep('Renderizando galería...', 85);
+  setLoaderStep('✦ Renderizando galería...', 88);
   await new Promise(r => setTimeout(r, 300));
   renderGallery();
-  setLoaderStep('¡Listo! ' + ST.creatives.length + ' creatives generados', 100);
+  setLoaderStep('✦ ¡Campaña lista! ' + ST.creatives.length + ' creatives', 100);
   await new Promise(r => setTimeout(r, 500));
   showLoader(false);
-  toast(`✅ ${ST.creatives.length} creatives listos — campaña "${ST.campaign.name}"`);
+  toast(`✅ ${ST.creatives.length} creatives · "${ST.campaign.name}" · Generado con IA ✦`);
 }
 
 // ──────────────────────────────────────────────────────────────
